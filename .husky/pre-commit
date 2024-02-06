@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# if the current branch is main, stop the commit
+if [ "$BRANCH" = "main" ]; then
+  echo "❌ You can't commit directly to \"main\". Create a feature branch and open a pull request."
+  exit 1
+fi
+
+# run code quality checks
+npm run check
+npm run lint
+npm run format
+
+# stage the changes
+git add .
