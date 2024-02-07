@@ -15,6 +15,7 @@ const config = {
     adapter: adapter(),
     alias: {
       $lib: 'src/lib',
+      '#assets': 'src/assets',
       '#components': 'src/components',
       '#shadcn-ui': 'src/components/shadcn/ui',
     },
