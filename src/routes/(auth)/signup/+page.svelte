@@ -5,7 +5,7 @@
 <main>
   <h1>Sign up</h1>
 
-  <form action="">
+  <form method="post">
     <div class="flex gap-4">
       <div class="form-field">
         <Label for="first-name">First name</Label>
