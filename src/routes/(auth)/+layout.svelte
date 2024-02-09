@@ -2,7 +2,7 @@
 
 <div class="layout">
   <a href="/">
-    <enhanced:img src="../../assets/survie.svg" alt="Survie logo" width="40" height="40" />
+    <enhanced:img src="#assets/survie.svg" alt="Survie logo" width="40" height="40" />
   </a>
 
   <slot />
@@ -10,16 +10,16 @@
 
 <style lang="postcss">
   .layout {
-    @apply w-[340px] mx-auto py-[120px];
+    @apply mx-auto w-[340px] py-[120px];
 
     & :global(h1) {
-      @apply text-2xl font-medium mt-5 mb-6;
+      @apply mb-6 mt-5 text-2xl font-medium;
     }
   }
 
   :global(.layout form) {
     & :global(label) {
-      @apply font-normal text-base;
+      @apply text-base font-normal;
     }
     & :global(input::placeholder) {
       @apply text-[15px];
