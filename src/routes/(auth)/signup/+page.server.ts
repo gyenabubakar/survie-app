@@ -13,12 +13,12 @@ export const actions = {
         formData,
         signupFormSchema,
         signupFormFieldErrors
-      );
+      ) as typeof signupFormFieldErrors | null;
 
       delete formData.password;
       const data = formData as Omit<SignupFormZodType, 'password'>;
 
-      return fail(400, { validationErrors, data });
+      return fail(400, { data, validationErrors });
     }
   },
 };

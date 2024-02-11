@@ -1,13 +1,29 @@
 <script lang="ts">
+  import type { SubmitFunction } from '@sveltejs/kit';
+  import { enhance } from '$app/forms';
   import { Label, Button, Input, Checkbox } from '#shadcn-ui';
+  import FormValidationError from '#components/FormValidationError.svelte';
 
   export let form;
+
+  const handleSubmit: SubmitFunction = () => {
+    if (form?.validationErrors) {
+      form.validationErrors = null;
+    }
+    return async ({ update }) => {
+      await update();
+    };
+  };
 </script>
+
+<svelte:head>
+  <title>Sign up | Survie</title>
+</svelte:head>
 
 <main>
   <h1>Sign up</h1>
 
-  <form method="post">
+  <form method="post" use:enhance={handleSubmit}>
     <div class="flex gap-4">
       <div class="form-field">
         <Label for="first-name">First name</Label>
@@ -19,6 +35,7 @@
           value={form?.data?.firstName ?? ''}
           required
         />
+        <FormValidationError message={form?.validationErrors?.firstName} />
       </div>
 
       <div class="form-field">
@@ -31,6 +48,7 @@
           value={form?.data?.lastName ?? ''}
           required
         />
+        <FormValidationError message={form?.validationErrors?.lastName} />
       </div>
     </div>
 
@@ -44,14 +62,16 @@
         value={form?.data?.email ?? ''}
         required
       />
+      <FormValidationError message={form?.validationErrors?.email} />
     </div>
 
     <div class="form-field">
       <Label for="password">Password</Label>
       <Input type="password" id="password" name="password" placeholder="******" required />
+      <FormValidationError message={form?.validationErrors?.password} />
     </div>
 
-    <div class="form-field space-x-2">
+    <div class="form-field space-x-2" class:no-mb={!!form?.validationErrors?.agreedToTerms}>
       <Checkbox
         id="terms"
         checked={form?.data.agreedToTerms === 'on'}
@@ -59,6 +79,7 @@
       />
       <Label for="terms">I agree to the <a href="/#">terms of use</a>.</Label>
     </div>
+    <FormValidationError class="mb-4" message={form?.validationErrors?.agreedToTerms} />
 
     <Button type="submit">Create Account</Button>
   </form>
