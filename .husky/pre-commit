@@ -10,8 +10,8 @@ fi
 
 # run code quality checks
 npm run check
-npm run lint
 npm run format
+npm run lint
 
 # stage the changes
 git add .
