@@ -1,3 +1,4 @@
+<!--suppress JSUnusedGlobalSymbols, ReservedWordAsName -->
 <script lang="ts">
   import { Checkbox as CheckboxPrimitive } from 'bits-ui';
   import { Check, Minus } from 'phosphor-svelte';
@@ -14,8 +15,6 @@
   let className: $$Props['class'] = undefined;
   export let checked: $$Props['checked'] = false;
   export { className as class };
-
-  $: console.log('checked —', checked);
 </script>
 
 <CheckboxPrimitive.Root

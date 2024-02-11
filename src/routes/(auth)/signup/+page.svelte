@@ -3,15 +3,21 @@
   import { enhance } from '$app/forms';
   import { Label, Button, Input, Checkbox } from '#shadcn-ui';
   import FormValidationError from '#components/FormValidationError.svelte';
+  import Loading from '#components/Loading.svelte';
 
   export let form;
 
-  const handleSubmit: SubmitFunction = () => {
-    if (form?.validationErrors) {
-      form.validationErrors = null;
-    }
+  let submitting = false;
+
+  const handleSubmit: SubmitFunction = ({ cancel }) => {
+    if (submitting) return cancel();
+    submitting = true;
+
+    if (form?.validationErrors) form.validationErrors = null;
+
     return async ({ update }) => {
       await update();
+      submitting = false;
     };
   };
 </script>
@@ -81,7 +87,18 @@
     </div>
     <FormValidationError class="mb-4" message={form?.validationErrors?.agreedToTerms} />
 
-    <Button type="submit">Create Account</Button>
+    <Button
+      type="submit"
+      disabled={submitting}
+      aria-live="polite"
+      aria-label={!submitting ? undefined : 'Signing up, please wait'}
+    >
+      {#if !submitting}
+        Create Account
+      {:else}
+        <Loading size="23px" aria-hidden="true" />
+      {/if}
+    </Button>
   </form>
 
   <p class="text-slate-500 text-center mt-12">
