@@ -4,6 +4,7 @@
   import { Label, Button, Input, Checkbox } from '#shadcn-ui';
   import FormValidationError from '#components/FormValidationError.svelte';
   import Loading from '#components/Loading.svelte';
+  import FormResponseError from '#components/FormResponseError.svelte';
 
   export let form;
 
@@ -28,6 +29,10 @@
 
 <main>
   <h1>Sign up</h1>
+
+  {#if form && 'error' in form}
+    <FormResponseError message={String(form.error)} />
+  {/if}
 
   <form method="post" use:enhance={handleSubmit}>
     <div class="flex gap-4">
