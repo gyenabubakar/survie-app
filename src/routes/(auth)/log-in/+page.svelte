@@ -51,7 +51,14 @@
         <Label for="password">Password</Label>
         <a href="/reset-password">Forgot password?</a>
       </div>
-      <Input type="password" id="password" name="password" placeholder="******" required />
+      <Input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="******"
+        required
+        canTogglePasswordVisibility
+      />
       <FormValidationError message={form?.validationErrors?.password} />
     </div>
 
