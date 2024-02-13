@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
-export function getValidationErrors<T extends z.ZodRawShape>(
+export function getValidationErrors<T>(
   data: object,
-  formSchema: z.ZodObject<T>,
+  formSchema: z.Schema,
   fieldErrors: Record<string, string>
-): Record<string, string> | null {
+): T | null {
   const result = formSchema.safeParse(data);
   if (result.success) return null;
 
@@ -14,5 +14,5 @@ export function getValidationErrors<T extends z.ZodRawShape>(
     errors[field] = fieldErrors[field];
   }
 
-  return errors;
+  return errors as T;
 }

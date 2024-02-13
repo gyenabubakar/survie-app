@@ -1,22 +1,22 @@
 import { fail } from '@sveltejs/kit';
 import { delay } from '$lib';
 import { getValidationErrors } from '$lib/form-schemas';
-import { signupFormFieldErrors, signupFormSchema } from '$lib/form-schemas/signup';
+import { loginFormFieldErrors, loginFormSchema } from '$lib/form-schemas/login';
 import type { SignupFormZodType } from '$lib/form-schemas/signup';
 
 export const actions = {
   async default({ request }) {
     const formData = Object.fromEntries(await request.formData());
-    const body = signupFormSchema.safeParse(formData);
+    const body = loginFormSchema.safeParse(formData);
 
     await delay(3000);
 
     if (!body.success) {
-      const validationErrors = getValidationErrors(
+      const validationErrors = getValidationErrors<typeof loginFormFieldErrors>(
         formData,
-        signupFormSchema,
-        signupFormFieldErrors
-      ) as typeof signupFormFieldErrors | null;
+        loginFormSchema,
+        loginFormFieldErrors
+      );
 
       delete formData.password;
       const data = formData as Omit<SignupFormZodType, 'password'>;

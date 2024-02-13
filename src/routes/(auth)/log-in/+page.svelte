@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SubmitFunction } from '@sveltejs/kit';
   import { enhance } from '$app/forms';
-  import { Label, Button, Input, Checkbox } from '#shadcn-ui';
+  import { Label, Button, Input } from '#shadcn-ui';
   import FormValidationError from '#components/FormValidationError.svelte';
   import Loading from '#components/Loading.svelte';
   import FormResponseError from '#components/FormResponseError.svelte';
@@ -24,45 +24,17 @@
 </script>
 
 <svelte:head>
-  <title>Sign up | Survie</title>
+  <title>Log in | Survie</title>
 </svelte:head>
 
 <main>
-  <h1>Sign up</h1>
+  <h1>Log in</h1>
 
   {#if form && 'error' in form}
     <FormResponseError message={String(form.error)} />
   {/if}
 
   <form method="post" use:enhance={handleSubmit}>
-    <div class="flex gap-4">
-      <div class="form-field">
-        <Label for="first-name">First name</Label>
-        <Input
-          type="text"
-          id="first-name"
-          name="firstName"
-          placeholder="Gyen"
-          value={form?.data?.firstName ?? ''}
-          required
-        />
-        <FormValidationError message={form?.validationErrors?.firstName} />
-      </div>
-
-      <div class="form-field">
-        <Label for="last-name">Last name</Label>
-        <Input
-          type="text"
-          id="last-name"
-          name="lastName"
-          placeholder="Abubakar"
-          value={form?.data?.lastName ?? ''}
-          required
-        />
-        <FormValidationError message={form?.validationErrors?.lastName} />
-      </div>
-    </div>
-
     <div class="form-field">
       <Label for="email">Email</Label>
       <Input
@@ -77,29 +49,22 @@
     </div>
 
     <div class="form-field">
-      <Label for="password">Password</Label>
+      <div class="flex justify-between">
+        <Label for="password">Password</Label>
+        <a href="/reset-password">Forgot password?</a>
+      </div>
       <Input type="password" id="password" name="password" placeholder="******" required />
       <FormValidationError message={form?.validationErrors?.password} />
     </div>
-
-    <div class="form-field space-x-2" class:no-mb={!!form?.validationErrors?.agreedToTerms}>
-      <Checkbox
-        id="terms"
-        checked={form?.data.agreedToTerms === 'on'}
-        inputAttrs={{ id: 'terms-input', name: 'agreedToTerms' }}
-      />
-      <Label for="terms">I agree to the <a href="/#">terms of use</a>.</Label>
-    </div>
-    <FormValidationError class="mb-4" message={form?.validationErrors?.agreedToTerms} />
 
     <Button
       type="submit"
       disabled={submitting}
       aria-live="polite"
-      aria-label={!submitting ? undefined : 'Signing up, please wait'}
+      aria-label={!submitting ? undefined : 'Logging in, please wait'}
     >
       {#if !submitting}
-        Create Account
+        Log in
       {:else}
         <Loading size="23px" aria-hidden="true" />
       {/if}
@@ -107,6 +72,6 @@
   </form>
 
   <p class="text-slate-500 text-center mt-12">
-    Already have an account? <a href="/log-in">Log in instead</a>.
+    Don't have an account? <a href="/sign-up">Sign up instead</a>.
   </p>
 </main>
