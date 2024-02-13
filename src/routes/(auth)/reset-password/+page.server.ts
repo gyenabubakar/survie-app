@@ -7,9 +7,11 @@ export const actions = {
     // TODO: Remove this
     await delay(3000);
 
-    const result = await validateForm('sign-up', request);
+    const result = await validateForm('reset-password', request);
     if ('validationErrors' in result) {
       return fail(400, { data: result.data, validationErrors: result.validationErrors });
     }
+
+    return { success: true };
   },
 };

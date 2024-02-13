@@ -1,27 +1,15 @@
 import { fail } from '@sveltejs/kit';
+import { validateForm } from '$lib/form-schemas';
 import { delay } from '$lib';
-import { getValidationErrors } from '$lib/form-schemas';
-import { loginFormFieldErrors, loginFormSchema } from '$lib/form-schemas/login';
-import type { SignupFormZodType } from '$lib/form-schemas/signup';
 
 export const actions = {
   async default({ request }) {
-    const formData = Object.fromEntries(await request.formData());
-    const body = loginFormSchema.safeParse(formData);
-
+    // TODO: Remove this
     await delay(3000);
 
-    if (!body.success) {
-      const validationErrors = getValidationErrors<typeof loginFormFieldErrors>(
-        formData,
-        loginFormSchema,
-        loginFormFieldErrors
-      );
-
-      delete formData.password;
-      const data = formData as Omit<SignupFormZodType, 'password'>;
-
-      return fail(400, { data, validationErrors });
+    const result = await validateForm('log-in', request);
+    if ('validationErrors' in result) {
+      return fail(400, { data: result.data, validationErrors: result.validationErrors });
     }
   },
 };

@@ -5,17 +5,24 @@
   import { cn } from '#components/shadcn/utils';
   import type { InputEvents } from '.';
 
-  type $$Props = HTMLInputAttributes;
+  type $$Props = HTMLInputAttributes & {
+    class?: string;
+    value?: string;
+    canTogglePasswordVisibility?: boolean;
+  };
   type $$Events = InputEvents;
 
   let className: $$Props['class'] = undefined;
-  export let value: $$Props['value'] = undefined;
   export { className as class };
+  export let value: $$Props['value'] = undefined;
+  export let canTogglePasswordVisibility = false;
 
   const inputType = $$props.type as HTMLInputAttributes['type'];
   let isPasswordInput = inputType === 'password';
 
-  function handleTogglePasswordVisibility(event: MouseEvent) {
+  function togglePasswordVisibility(event: MouseEvent) {
+    if (!canTogglePasswordVisibility) return;
+
     const button = event.target as HTMLButtonElement;
     const input = button
       .closest('[data-input-wrapper]')
@@ -23,6 +30,7 @@
 
     const currentType = input.getAttribute('type') as HTMLInputAttributes['type'];
     const newType = currentType === 'password' ? 'text' : 'password';
+
     input.setAttribute('type', newType);
     isPasswordInput = newType === 'password';
   }
@@ -53,19 +61,22 @@
   />
 {:else}
   <div data-input-wrapper class="relative">
-    <button
-      type="button"
-      aria-label={isPasswordInput ? 'Hide password' : 'Show password'}
-      class="absolute top-1/2 right-3 transform -translate-y-1/2"
-      on:click={handleTogglePasswordVisibility}
-    >
-      <svelte:component this={isPasswordInput ? Eye : EyeSlash} class="w-5 h-5" />
-    </button>
+    {#if canTogglePasswordVisibility}
+      <button
+        type="button"
+        aria-label={isPasswordInput ? 'Hide password' : 'Show password'}
+        class="absolute top-1/2 right-3 transform -translate-y-1/2"
+        on:click={togglePasswordVisibility}
+      >
+        <svelte:component this={isPasswordInput ? Eye : EyeSlash} class="w-5 h-5" />
+      </button>
+    {/if}
 
     <input
       class={cn(
-        'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-[15px] placeholder:text-[15px] shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 pr-10',
-        className
+        'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-[15px] placeholder:text-[15px] shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+        className,
+        canTogglePasswordVisibility && 'pr-10'
       )}
       bind:value
       on:blur
