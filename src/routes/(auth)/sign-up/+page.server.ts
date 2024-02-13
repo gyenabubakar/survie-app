@@ -1,8 +1,8 @@
 import { fail } from '@sveltejs/kit';
+import { delay } from '$lib';
 import { getValidationErrors } from '$lib/form-schemas';
 import { signupFormFieldErrors, signupFormSchema } from '$lib/form-schemas/signup';
 import type { SignupFormZodType } from '$lib/form-schemas/signup';
-import { delay } from '$lib';
 
 export const actions = {
   async default({ request }) {

@@ -7,7 +7,9 @@ export const signupFormSchema = z.object({
   password: z.string().min(8),
   agreedToTerms: z.literal('on'),
 });
+
 export type SignupFormZodType = z.infer<typeof signupFormSchema>;
+
 export const signupFormFieldErrors: Record<keyof SignupFormZodType, string> = {
   firstName: 'Must be at least 2 letters.',
   lastName: 'Must be at least 2 letters.',

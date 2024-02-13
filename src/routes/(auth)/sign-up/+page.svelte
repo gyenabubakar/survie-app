@@ -107,6 +107,6 @@
   </form>
 
   <p class="text-slate-500 text-center mt-12">
-    Already have an account? <a href="/login">Log in instead</a>.
+    Already have an account? <a href="/log-in">Log in instead</a>.
   </p>
 </main>
