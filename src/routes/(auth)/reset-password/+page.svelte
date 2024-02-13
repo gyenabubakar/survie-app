@@ -2,7 +2,7 @@
   import type { SubmitFunction } from '@sveltejs/kit';
   import { enhance } from '$app/forms';
   import { Label, Button, Input } from '#shadcn-ui';
-  import { FormValidationError, FormResponseError, Loading } from '#components';
+  import { FormValidationError, FormMessage, Loading } from '#components';
 
   export let form;
 
@@ -29,7 +29,12 @@
   <h1>Reset Password</h1>
 
   {#if form && 'error' in form}
-    <FormResponseError message={String(form.error)} />
+    <FormMessage>{form.error}</FormMessage>
+  {:else if form?.success}
+    <FormMessage variant="success">
+      We sent you an email to verify that it's you.<br />
+      Follow the link in the email to reset your password.
+    </FormMessage>
   {/if}
 
   <form method="post" use:enhance={handleSubmit}>

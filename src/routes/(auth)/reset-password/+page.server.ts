@@ -11,5 +11,7 @@ export const actions = {
     if ('validationErrors' in result) {
       return fail(400, { data: result.data, validationErrors: result.validationErrors });
     }
+
+    return { success: true };
   },
 };

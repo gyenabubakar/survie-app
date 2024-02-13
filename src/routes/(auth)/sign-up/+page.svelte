@@ -2,7 +2,7 @@
   import type { SubmitFunction } from '@sveltejs/kit';
   import { enhance } from '$app/forms';
   import { Label, Button, Input, Checkbox } from '#shadcn-ui';
-  import { FormValidationError, FormResponseError, Loading } from '#components';
+  import { FormValidationError, FormMessage, Loading } from '#components';
 
   export let form;
 
@@ -31,7 +31,7 @@
   <h1>Sign up</h1>
 
   {#if form && 'error' in form}
-    <FormResponseError message={String(form.error)} />
+    <FormMessage>{form.error}</FormMessage>
   {/if}
 
   <form method="post" use:enhance={handleSubmit}>
