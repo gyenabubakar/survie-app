@@ -2,11 +2,11 @@
   import type { SubmitFunction } from '@sveltejs/kit';
   import { enhance } from '$app/forms';
   import { Label, Button, Input, Checkbox } from '#shadcn-ui';
-  import FormValidationError from '#components/FormValidationError.svelte';
-  import Loading from '#components/Loading.svelte';
-  import FormResponseError from '#components/FormResponseError.svelte';
+  import { FormValidationError, FormResponseError, Loading } from '#components';
 
   export let form;
+
+  $: console.log('signup form:', form);
 
   let submitting = false;
 

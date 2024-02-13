@@ -22,11 +22,11 @@
 </script>
 
 <svelte:head>
-  <title>Log in | Survie</title>
+  <title>Reset Password | Survie</title>
 </svelte:head>
 
 <main>
-  <h1>Log in</h1>
+  <h1>Reset Password</h1>
 
   {#if form && 'error' in form}
     <FormResponseError message={String(form.error)} />
@@ -46,23 +46,14 @@
       <FormValidationError message={form?.validationErrors?.email} />
     </div>
 
-    <div class="form-field">
-      <div class="flex justify-between">
-        <Label for="password">Password</Label>
-        <a href="/reset-password">Forgot password?</a>
-      </div>
-      <Input type="password" id="password" name="password" placeholder="******" required />
-      <FormValidationError message={form?.validationErrors?.password} />
-    </div>
-
     <Button
       type="submit"
       disabled={submitting}
       aria-live="polite"
-      aria-label={!submitting ? undefined : 'Logging in, please wait'}
+      aria-label={!submitting ? undefined : 'Sending verification email, please wait'}
     >
       {#if !submitting}
-        Log in
+        Send verification email
       {:else}
         <Loading size="23px" aria-hidden="true" />
       {/if}
@@ -70,6 +61,6 @@
   </form>
 
   <p class="text-slate-500 text-center mt-12">
-    Don't have an account? <a href="/sign-up">Sign up instead</a>.
+    Back to <a href="/log-in">log in page</a>.
   </p>
 </main>

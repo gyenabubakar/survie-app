@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const signupFormSchema = z.object({
+export const formSchema = z.object({
   firstName: z.string().min(2),
   lastName: z.string().min(2),
   email: z.string().email(),
@@ -8,9 +8,9 @@ export const signupFormSchema = z.object({
   agreedToTerms: z.literal('on'),
 });
 
-export type SignupFormZodType = z.infer<typeof signupFormSchema>;
+export type FormSchemaZodType = z.infer<typeof formSchema>;
 
-export const signupFormFieldErrors: Record<keyof SignupFormZodType, string> = {
+export const formFieldErrors: Record<keyof FormSchemaZodType, string> = {
   firstName: 'Must be at least 2 letters.',
   lastName: 'Must be at least 2 letters.',
   email: 'Email is invalid.',
