@@ -71,7 +71,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border transition-all duration-200;
   }
   body {
     font-family: 'Alegreya Sans', sans-serif;
@@ -79,6 +79,18 @@
   }
   a {
     @apply text-blue-500 hover:text-blue-600;
+  }
+}
+
+form {
+  label {
+    @apply text-base font-normal text-gray-500;
+  }
+  input::placeholder {
+    @apply text-[15px];
+  }
+  button[type='submit'] {
+    @apply w-full;
   }
 }
 

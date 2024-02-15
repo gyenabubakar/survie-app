@@ -9,5 +9,5 @@
 </script>
 
 {#if message}
-  <p class={cn('text-red-500 text-sm', className)}>{message}</p>
+  <p class={cn('text-red-500 text-sm mt-0.5', className)} aria-live="polite">{message}</p>
 {/if}
