@@ -16,16 +16,4 @@
       @apply mb-6 mt-4 text-2xl font-medium;
     }
   }
-
-  :global(.layout form) {
-    & :global(label) {
-      @apply text-base font-normal;
-    }
-    & :global(input::placeholder) {
-      @apply text-[15px];
-    }
-    & :global(button[type='submit']) {
-      @apply w-full;
-    }
-  }
 </style>

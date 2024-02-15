@@ -1,6 +1,11 @@
+<!--suppress CssUnusedSymbol, ReservedWordAsName -->
 <script lang="ts">
+  import { cn } from '#components/shadcn/utils';
+
   const DURATION_UNIT_REGEX = /s|ms$/;
 
+  let className: string | undefined = undefined;
+  export { className as class };
   export let color = '#fff';
   export let duration = '1.2s';
   export let size = '60px';
@@ -15,7 +20,7 @@
 </script>
 
 <div
-  class="wrapper"
+  class={cn('wrapper', className)}
   style:--size={size}
   style:--color={color}
   style:--duration={duration}
