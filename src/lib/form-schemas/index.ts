@@ -13,6 +13,7 @@ export function getValidationErrors<T>(
   if (result.success) return null;
 
   const errors: Record<string, string> = {};
+
   for (const error of result.error.errors) {
     const field = error.path[0];
     errors[field] = error.code === 'custom' ? error.message : fieldErrors[field];
@@ -48,7 +49,7 @@ export async function validateForm(
   let formSchema: FormSchemaType;
   let formFieldErrors: FormFieldErrorsType;
 
-  const formData = Object.fromEntries(await request.formData());
+  const data = Object.fromEntries(await request.formData());
 
   switch (form) {
     case 'sign-up':
@@ -71,29 +72,21 @@ export async function validateForm(
       throw new Error('Invalid form type: ' + form);
   }
 
-  const body: BodyType = formSchema.safeParse(formData);
-
-  if (body.success) return { data: formData };
+  const { success: isValid } = formSchema.safeParse(data);
+  if (isValid) return { data };
 
   const validationErrors = getValidationErrors<typeof formFieldErrors>(
-    formData,
+    data,
     formSchema,
     formFieldErrors
   );
 
-  if ('password' in formData) delete formData.password;
+  if ('password' in data) delete data.password;
 
-  return { validationErrors, data: formData };
+  return { validationErrors, data };
 }
 
 /** Type definitions */
-
-type BodyType =
-  | z.SafeParseReturnType<signup.FormSchemaZodType, signup.FormSchemaZodType>
-  | z.SafeParseReturnType<login.FormSchemaZodType, login.FormSchemaZodType>
-  | z.SafeParseReturnType<reset.FormSchemaZodType, reset.FormSchemaZodType>
-  | z.SafeParseReturnType<companyInfo.FormSchemaZodType, companyInfo.FormSchemaZodType>;
-
 type FormSchemaType =
   | typeof signup.formSchema
   | typeof login.formSchema
@@ -106,7 +99,7 @@ type FormFieldErrorsType =
   | typeof reset.formFieldErrors
   | typeof companyInfo.formFieldErrors;
 
-/** Overloaded validateForm function return types */
+/** Overloaded `validateForm()` return types */
 
 type ValidFormResult<T> = { data: T };
 
