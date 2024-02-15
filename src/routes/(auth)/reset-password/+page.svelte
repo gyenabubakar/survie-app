@@ -1,15 +1,21 @@
 <script lang="ts">
+  import { z } from 'zod';
   import type { SubmitFunction } from '@sveltejs/kit';
   import { enhance } from '$app/forms';
   import { Label, Button, Input } from '#shadcn-ui';
   import { FormValidationError, FormMessage, Loading } from '#components';
+  import { formFieldErrors } from '$lib/form-schemas/reset-password';
 
   export let form;
 
+  let email = form?.data?.email ?? '';
   let submitting = false;
 
+  $: emailIsValid = email ? z.string().email().safeParse(email).success : null;
+  $: canSubmitForm = !!emailIsValid && !submitting;
+
   const handleSubmit: SubmitFunction = ({ cancel }) => {
-    if (submitting) return cancel();
+    if (!canSubmitForm) return cancel();
     submitting = true;
 
     if (form?.validationErrors) form.validationErrors = null;
@@ -37,33 +43,41 @@
     </FormMessage>
   {/if}
 
-  <form method="post" use:enhance={handleSubmit}>
-    <div class="form-field">
-      <Label for="email">Email</Label>
-      <Input
-        type="email"
-        id="email"
-        name="email"
-        placeholder="name@company.com"
-        value={form?.data?.email ?? ''}
-        required
-      />
-      <FormValidationError message={form?.validationErrors?.email} />
-    </div>
+  {#if !form?.success}
+    <form method="post" use:enhance={handleSubmit}>
+      <div class="form-field">
+        <Label for="email">Email</Label>
+        <Input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="name@company.com"
+          bind:value={email}
+          required
+        />
 
-    <Button
-      type="submit"
-      disabled={submitting}
-      aria-live="polite"
-      aria-label={!submitting ? undefined : 'Sending verification email, please wait'}
-    >
-      {#if !submitting}
-        Send verification email
-      {:else}
-        <Loading size="23px" aria-hidden="true" />
-      {/if}
-    </Button>
-  </form>
+        {#if emailIsValid === false || !!form?.validationErrors?.email}
+          {@const message = form?.validationErrors?.email ?? formFieldErrors.email}
+          <FormValidationError {message} />
+        {/if}
+      </div>
+
+      <Button
+        type="submit"
+        disabled={!canSubmitForm}
+        aria-live="polite"
+        aria-label={!submitting
+          ? 'Send verification email'
+          : 'Sending verification email, please wait'}
+      >
+        {#if !submitting}
+          Send verification email
+        {:else}
+          <Loading size="23px" aria-hidden="true" />
+        {/if}
+      </Button>
+    </form>
+  {/if}
 
   <p class="text-slate-500 text-center mt-12">
     Back to <a href="/log-in">log in page</a>.
