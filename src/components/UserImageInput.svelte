@@ -1,17 +1,27 @@
 <script lang="ts">
   import { Images } from 'phosphor-svelte';
+  import { toast } from 'svelte-sonner';
+  import { isSupportedImageFile } from '$lib';
 
   export let label: string;
   export let input: HTMLInputElement | undefined = undefined;
-
-  let file: File | undefined;
+  export let file: File | undefined = undefined;
 
   $: temporaryImageURL = file ? URL.createObjectURL(file) : undefined;
 
   function handleInputChanged(event: Event) {
     const target = event.target as HTMLInputElement;
-    if (!file) {
-      file = target.files?.[0];
+    const selectedFile = target.files?.[0];
+
+    if (selectedFile) {
+      if (isSupportedImageFile(selectedFile)) {
+        file = selectedFile;
+      } else {
+        toast.error('Invalid file type.', {
+          description: "Please select a JPEG/PNG file that's less than 2MB in size.",
+          position: 'top-right',
+        });
+      }
     }
   }
 

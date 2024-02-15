@@ -1,8 +1,8 @@
 // noinspection UnnecessaryLocalVariableJS
 
 import { z } from 'zod';
-
-const TWO_MEGABYTES = 1024 * 1024 * 2;
+import { isSupportedImageFile } from '$lib';
+import { PNG_JPEG_REGEX, TWO_MEGABYTES } from '$lib/constants';
 
 export const formFieldErrors = {
   name: 'Only letters, numbers, spaces, and hyphens are allowed. Must be between 3 and 100 characters.',
@@ -19,17 +19,13 @@ export const formSchema = z.object({
   image: z.custom(
     (data) => {
       if (!data) return true;
-
-      const isSupportedImage = data instanceof File && data.type.startsWith('image/');
-      const isNotBiggerThan2MB = isSupportedImage && data.size <= TWO_MEGABYTES;
-
-      return isNotBiggerThan2MB;
+      return isSupportedImageFile(data);
     },
     (data) => {
+      const isFile = data instanceof File;
       const params: z.CustomErrorParams = { message: 'Invalid image type.', path: ['image'] };
 
-      const isFile = data instanceof File;
-      if (!isFile || (isFile && !/^image\/(png|jpe?g)$/.test(data.type))) {
+      if (!isFile || (isFile && !PNG_JPEG_REGEX.test(data.type))) {
         params.message = formFieldErrors.image;
       }
 

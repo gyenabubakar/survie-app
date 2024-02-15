@@ -19,6 +19,7 @@
   let submitting = false;
 
   let fileInput: HTMLInputElement | undefined;
+  let imageFile: File | undefined;
 
   $: nameIsInvalid = name.length > 0 ? /^[a-zA-Z0-9\s-]{3,100}$/.test(name) : null;
   $: slugIsValid = slug.length > 0 ? /^[a-z-]{3,50}$/.test(slug) : null;
@@ -94,9 +95,13 @@
 
       <div class="form-field">
         <Label class="inline-block mb-4">Add your company icon (optional)</Label>
-        <UserImageInput label="Upload your company icon." bind:input={fileInput} />
+        <UserImageInput
+          label="Upload your company icon."
+          bind:input={fileInput}
+          bind:file={imageFile}
+        />
 
-        {#if !!form?.validationErrors?.image}
+        {#if !!form?.validationErrors?.image && imageFile}
           {@const message = form?.validationErrors?.image ?? formFieldErrors.image}
           <FormValidationError {message} />
         {/if}
