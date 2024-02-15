@@ -4,10 +4,16 @@
   export let label: string;
   export let input: HTMLInputElement | undefined = undefined;
 
-  let files: FileList | undefined;
+  let file: File | undefined;
 
-  $: temporaryImageURL = files && files[0] ? URL.createObjectURL(files[0]) : undefined;
-  $: console.log(files);
+  $: temporaryImageURL = file ? URL.createObjectURL(file) : undefined;
+
+  function handleInputChanged(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (!file) {
+      file = target.files?.[0];
+    }
+  }
 
   function handleKeyUp(event: KeyboardEvent) {
     if (['Enter', ' '].includes(event.key)) {
@@ -44,13 +50,13 @@
 </div>
 
 <input
-  bind:files
   bind:this={input}
   name="image"
   type="file"
   class="hidden"
   accept="image/jpeg, image/png"
   maxlength="1"
+  on:change={handleInputChanged}
 />
 
 <style lang="postcss">
