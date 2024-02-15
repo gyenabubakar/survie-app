@@ -19,6 +19,9 @@ const config = {
       '#components': 'src/components',
       '#shadcn-ui': 'src/components/shadcn/ui',
     },
+    csrf: {
+      checkOrigin: !process.env.IS_DEV,
+    },
   },
 };
 

@@ -15,14 +15,16 @@
   let fileInput: HTMLInputElement | undefined;
   let imageFile: File | undefined;
 
-  $: nameIsInvalid = name.length > 0 ? /^[a-zA-Z0-9\s-]{3,100}$/.test(name) : null;
+  $: nameIsValid = name.length > 0 ? /^[a-zA-Z0-9\s-]{3,100}$/.test(name) : null;
   $: slugIsValid = slug.length > 0 ? /^[a-z-]{3,50}$/.test(slug) : null;
-  $: canSubmitForm = nameIsInvalid === true && slugIsValid === true && !submitting;
+  $: canSubmitForm = !!nameIsValid && !!slugIsValid && !submitting;
 
   const submit: SubmitFunction = ({ cancel, formData }) => {
     if (!canSubmitForm) return cancel();
-
     submitting = true;
+
+    if (form?.validationErrors) form.validationErrors = null;
+
     const file = formData.get('image') as File;
 
     if (file instanceof File && file.size === 0) {
@@ -56,7 +58,7 @@
       <Label for="company-name">Company name</Label>
       <Input type="text" id="company-name" name="name" bind:value={name} required />
 
-      {#if nameIsInvalid === false || !!form?.validationErrors?.name}
+      {#if nameIsValid === false || !!form?.validationErrors?.name}
         {@const message = form?.validationErrors?.name ?? formFieldErrors.name}
         <FormValidationError {message} />
       {/if}
@@ -72,7 +74,7 @@
         required
       />
 
-      {#if (slug && slugIsValid) || !!form?.validationErrors?.slug}
+      {#if slugIsValid}
         <span class="text-sm text-gray-400">
           Your company's URL will be <strong>
             {PUBLIC_DOMAIN}/<span class="text-black">{slug}</span>
@@ -105,6 +107,8 @@
       class="relative mt-4"
       style="width: max-content;"
       disabled={!canSubmitForm}
+      aria-live="polite"
+      aria-label={submitting ? 'Saving, please wait' : 'Continue'}
     >
       <span class:invisible={submitting}>Continue</span>
       {#if submitting}

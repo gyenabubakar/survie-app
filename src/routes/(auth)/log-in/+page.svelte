@@ -1,15 +1,23 @@
 <script lang="ts">
+  import { z } from 'zod';
   import type { SubmitFunction } from '@sveltejs/kit';
   import { enhance } from '$app/forms';
+  import { formFieldErrors } from '$lib/form-schemas/log-in';
   import { Label, Button, Input } from '#shadcn-ui';
   import { FormValidationError, FormMessage, Loading } from '#components';
 
   export let form;
 
+  let email = form?.data?.email ?? '';
+  let password = '';
   let submitting = false;
 
+  $: emailIsValid = email ? z.string().email().safeParse(email).success : null;
+  $: passwordIsValid = password ? z.string().min(8).safeParse(password).success : null;
+  $: canSubmitForm = !!emailIsValid && !!passwordIsValid && !submitting;
+
   const handleSubmit: SubmitFunction = ({ cancel }) => {
-    if (submitting) return cancel();
+    if (!canSubmitForm) return cancel();
     submitting = true;
 
     if (form?.validationErrors) form.validationErrors = null;
@@ -40,10 +48,14 @@
         id="email"
         name="email"
         placeholder="name@company.com"
-        value={form?.data?.email ?? ''}
+        bind:value={email}
         required
       />
-      <FormValidationError message={form?.validationErrors?.email} />
+
+      {#if emailIsValid === false || form?.validationErrors?.email}
+        {@const message = form?.validationErrors?.email ?? formFieldErrors.email}
+        <FormValidationError {message} />
+      {/if}
     </div>
 
     <div class="form-field">
@@ -57,16 +69,22 @@
         name="password"
         placeholder="******"
         required
+        bind:value={password}
         canTogglePasswordVisibility
       />
+
+      {#if passwordIsValid === false || form?.validationErrors?.password}
+        {@const message = form?.validationErrors?.password ?? formFieldErrors.password}
+        <FormValidationError {message} />
+      {/if}
       <FormValidationError message={form?.validationErrors?.password} />
     </div>
 
     <Button
       type="submit"
-      disabled={submitting}
+      disabled={!canSubmitForm}
       aria-live="polite"
-      aria-label={!submitting ? undefined : 'Logging in, please wait'}
+      aria-label={!submitting ? 'Log in' : 'Logging in, please wait'}
     >
       {#if !submitting}
         Log in

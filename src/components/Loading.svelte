@@ -24,6 +24,7 @@
   style:--size={size}
   style:--color={color}
   style:--duration={duration}
+  aria-hidden="true"
   {...$$restProps}
 >
   {#each range(5, 1) as version}

@@ -1,20 +1,43 @@
 <script lang="ts">
+  import { z } from 'zod';
   import type { SubmitFunction } from '@sveltejs/kit';
   import { enhance } from '$app/forms';
+  import { formFieldErrors } from '$lib/form-schemas/sign-up';
   import { Label, Button, Input, Checkbox } from '#shadcn-ui';
   import { FormValidationError, FormMessage, Loading } from '#components';
 
+  const NAME_REGEX = /^\s*([a-zA-Z]+(?:[\s-][a-zA-Z]+)*){2,255}\s*$/;
+
   export let form;
 
-  $: console.log('signup form:', form);
+  let firstName = form?.data?.firstName ?? '';
+  let lastName = form?.data?.lastName ?? '';
+  let email = form?.data?.email ?? '';
+  let password = '';
 
+  let agreedToTerms = form?.data?.agreedToTerms === 'on';
   let submitting = false;
+  let showAgreedToTermsError = false;
+
+  $: fnameIsValid = firstName ? NAME_REGEX.test(firstName) : null;
+  $: lnameIsValid = lastName ? NAME_REGEX.test(lastName) : null;
+  $: emailIsValid = email ? z.string().email().safeParse(email).success : null;
+  $: passwordIsValid = password ? z.string().min(8).safeParse(password).success : null;
+  $: textFieldsAreValid = !!fnameIsValid && !!lnameIsValid && !!emailIsValid && !!passwordIsValid;
+  $: canSubmitForm = textFieldsAreValid && agreedToTerms && !submitting;
 
   const handleSubmit: SubmitFunction = ({ cancel }) => {
-    if (submitting) return cancel();
+    if (!agreedToTerms) {
+      showAgreedToTermsError = true;
+      return cancel();
+    }
+    if (!canSubmitForm) return cancel();
     submitting = true;
 
-    if (form?.validationErrors) form.validationErrors = null;
+    if (form?.validationErrors) {
+      form.validationErrors = null;
+      showAgreedToTermsError = false;
+    }
 
     return async ({ update }) => {
       await update();
@@ -32,6 +55,10 @@
 
   {#if form && 'error' in form}
     <FormMessage>{form.error}</FormMessage>
+  {:else if form?.success}
+    <FormMessage variant="success">
+      Your account has been created. Please check your email to verify your account.
+    </FormMessage>
   {/if}
 
   <form method="post" use:enhance={handleSubmit}>
@@ -43,10 +70,14 @@
           id="first-name"
           name="firstName"
           placeholder="Gyen"
-          value={form?.data?.firstName ?? ''}
+          bind:value={firstName}
           required
         />
-        <FormValidationError message={form?.validationErrors?.firstName} />
+
+        {#if fnameIsValid === false || !!form?.validationErrors?.firstName}
+          {@const message = form?.validationErrors?.firstName ?? formFieldErrors.firstName}
+          <FormValidationError {message} />
+        {/if}
       </div>
 
       <div class="form-field">
@@ -56,10 +87,14 @@
           id="last-name"
           name="lastName"
           placeholder="Abubakar"
-          value={form?.data?.lastName ?? ''}
+          bind:value={lastName}
           required
         />
-        <FormValidationError message={form?.validationErrors?.lastName} />
+
+        {#if lnameIsValid === false || !!form?.validationErrors?.lastName}
+          {@const message = form?.validationErrors?.lastName ?? formFieldErrors.lastName}
+          <FormValidationError {message} />
+        {/if}
       </div>
     </div>
 
@@ -70,33 +105,54 @@
         id="email"
         name="email"
         placeholder="name@company.com"
-        value={form?.data?.email ?? ''}
+        bind:value={email}
         required
       />
-      <FormValidationError message={form?.validationErrors?.email} />
+
+      {#if emailIsValid === false || !!form?.validationErrors?.email}
+        {@const message = form?.validationErrors?.email ?? formFieldErrors.email}
+        <FormValidationError {message} />
+      {/if}
     </div>
 
     <div class="form-field">
       <Label for="password">Password</Label>
-      <Input type="password" id="password" name="password" placeholder="******" required />
-      <FormValidationError message={form?.validationErrors?.password} />
+      <Input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="******"
+        bind:value={password}
+        required
+      />
+
+      {#if passwordIsValid === false || !!form?.validationErrors?.password}
+        {@const message = form?.validationErrors?.password ?? formFieldErrors.password}
+        <FormValidationError {message} />
+      {/if}
     </div>
 
-    <div class="form-field space-x-2" class:no-mb={!!form?.validationErrors?.agreedToTerms}>
+    <div
+      class="form-field space-x-2"
+      class:no-mb={showAgreedToTermsError || !!form?.validationErrors?.agreedToTerms}
+    >
       <Checkbox
         id="terms"
-        checked={form?.data.agreedToTerms === 'on'}
+        bind:checked={agreedToTerms}
         inputAttrs={{ id: 'terms-input', name: 'agreedToTerms' }}
       />
       <Label for="terms">I agree to the <a href="/#">terms of use</a>.</Label>
     </div>
-    <FormValidationError class="mb-4" message={form?.validationErrors?.agreedToTerms} />
+
+    {#if showAgreedToTermsError || !!form?.validationErrors?.agreedToTerms}
+      <FormValidationError message={formFieldErrors.agreedToTerms} class="mb-4" />
+    {/if}
 
     <Button
       type="submit"
-      disabled={submitting}
+      disabled={!canSubmitForm}
       aria-live="polite"
-      aria-label={!submitting ? undefined : 'Signing up, please wait'}
+      aria-label={!submitting ? 'Create Account' : 'Creating, please wait'}
     >
       {#if !submitting}
         Create Account

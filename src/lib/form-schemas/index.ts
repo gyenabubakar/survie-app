@@ -3,6 +3,7 @@ import * as signup from './sign-up';
 import * as login from './log-in';
 import * as reset from './reset-password';
 import * as companyInfo from './company-info';
+import * as newPassword from './new-password';
 
 export function getValidationErrors<T>(
   data: object,
@@ -13,6 +14,7 @@ export function getValidationErrors<T>(
   if (result.success) return null;
 
   const errors: Record<string, string> = {};
+
   for (const error of result.error.errors) {
     const field = error.path[0];
     errors[field] = error.code === 'custom' ? error.message : fieldErrors[field];
@@ -21,34 +23,39 @@ export function getValidationErrors<T>(
   return errors as T;
 }
 
-export async function validateForm(
+export function validateForm(
   form: 'sign-up',
   request: Request
 ): Promise<SignupValidFormResult | SignupInvalidFormResult>;
 
-export async function validateForm(
+export function validateForm(
   form: 'log-in',
   request: Request
 ): Promise<LoginValidFormResult | LoginInvalidFormResult>;
 
-export async function validateForm(
+export function validateForm(
   form: 'reset-password',
   request: Request
 ): Promise<ResetValidFormResult | ResetInvalidFormResult>;
 
-export async function validateForm(
+export function validateForm(
   form: 'company-info',
   request: Request
 ): Promise<CompanyInfoValidFormResult | CompanyInfoInvalidFormResult>;
 
+export function validateForm(
+  form: 'auth-new-password',
+  request: Request
+): Promise<NewPasswordValidFormResult | NewPasswordInvalidFormResult>;
+
 export async function validateForm(
-  form: 'sign-up' | 'log-in' | 'reset-password' | 'company-info',
+  form: 'sign-up' | 'log-in' | 'reset-password' | 'company-info' | 'auth-new-password',
   request: Request
 ) {
   let formSchema: FormSchemaType;
   let formFieldErrors: FormFieldErrorsType;
 
-  const formData = Object.fromEntries(await request.formData());
+  const data = Object.fromEntries(await request.formData());
 
   switch (form) {
     case 'sign-up':
@@ -67,50 +74,48 @@ export async function validateForm(
       formSchema = companyInfo.formSchema;
       formFieldErrors = companyInfo.formFieldErrors;
       break;
+    case 'auth-new-password':
+      formSchema = newPassword.formSchema;
+      formFieldErrors = newPassword.formFieldErrors;
+      break;
     default:
       throw new Error('Invalid form type: ' + form);
   }
 
-  const body: BodyType = formSchema.safeParse(formData);
-
-  if (body.success) return { data: formData };
+  const { success } = formSchema.safeParse(data);
+  if (success) return { data };
 
   const validationErrors = getValidationErrors<typeof formFieldErrors>(
-    formData,
+    data,
     formSchema,
     formFieldErrors
   );
 
-  if ('password' in formData) delete formData.password;
+  if ('password' in data) delete data.password;
 
-  return { validationErrors, data: formData };
+  return { validationErrors, data };
 }
 
 /** Type definitions */
-
-type BodyType =
-  | z.SafeParseReturnType<signup.FormSchemaZodType, signup.FormSchemaZodType>
-  | z.SafeParseReturnType<login.FormSchemaZodType, login.FormSchemaZodType>
-  | z.SafeParseReturnType<reset.FormSchemaZodType, reset.FormSchemaZodType>
-  | z.SafeParseReturnType<companyInfo.FormSchemaZodType, companyInfo.FormSchemaZodType>;
-
 type FormSchemaType =
   | typeof signup.formSchema
   | typeof login.formSchema
   | typeof reset.formSchema
-  | typeof companyInfo.formSchema;
+  | typeof companyInfo.formSchema
+  | typeof newPassword.formSchema;
 
 type FormFieldErrorsType =
   | typeof signup.formFieldErrors
   | typeof login.formFieldErrors
   | typeof reset.formFieldErrors
-  | typeof companyInfo.formFieldErrors;
+  | typeof companyInfo.formFieldErrors
+  | typeof newPassword.formFieldErrors;
 
-/** Overloaded validateForm function return types */
+/** Overloaded `validateForm()` return types */
 
 type ValidFormResult<T> = { data: T };
 
-type SignupValidFormResult = ValidFormResult<signup.FormSchemaZodType>;
+type SignupValidFormResult = ValidFormResult<Omit<signup.FormSchemaZodType, 'password'>>;
 type SignupInvalidFormResult = {
   validationErrors: typeof signup.formFieldErrors | null;
   data: Omit<signup.FormSchemaZodType, 'password'>;
@@ -132,4 +137,10 @@ type CompanyInfoValidFormResult = ValidFormResult<companyInfo.FormSchemaZodType>
 type CompanyInfoInvalidFormResult = {
   validationErrors: typeof companyInfo.formFieldErrors | null;
   data: companyInfo.FormSchemaZodType;
+};
+
+type NewPasswordValidFormResult = ValidFormResult<newPassword.FormSchemaZodType>;
+type NewPasswordInvalidFormResult = {
+  validationErrors: typeof newPassword.formFieldErrors | null;
+  data: newPassword.FormSchemaZodType;
 };

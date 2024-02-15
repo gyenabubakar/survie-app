@@ -10,7 +10,7 @@
 
 <style lang="postcss">
   .layout {
-    @apply mx-auto w-[340px] py-[120px];
+    @apply mx-auto w-[340px] py-[140px];
 
     & :global(h1) {
       @apply mb-6 mt-4 text-2xl font-medium;

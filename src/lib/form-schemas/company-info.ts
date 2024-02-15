@@ -13,8 +13,8 @@ export const formFieldErrors = {
 export const formSchema = z.object({
   name: z
     .string()
-    .regex(/^[a-zA-Z0-9\s-]{3,100}$/)
-    .transform((data) => data.trim()),
+    .trim()
+    .regex(/^[a-zA-Z0-9\s-]{3,100}$/),
   slug: z.string().regex(/^[a-z-]{3,50}$/),
   image: z.custom(
     (data) => {
