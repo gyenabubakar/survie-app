@@ -2,11 +2,12 @@
   import { Images } from 'phosphor-svelte';
 
   export let label: string;
+  export let input: HTMLInputElement | undefined = undefined;
 
-  let input: HTMLInputElement | undefined;
   let files: FileList | undefined;
 
   $: temporaryImageURL = files && files[0] ? URL.createObjectURL(files[0]) : undefined;
+  $: console.log(files);
 
   function handleKeyUp(event: KeyboardEvent) {
     if (['Enter', ' '].includes(event.key)) {
@@ -37,7 +38,7 @@
   <div>
     <p>{label}</p>
     <p class="text-gray-400 text-sm">
-      Square/circular images work best. Minimum 256px x 256px. JPEG/PNG.
+      Square/circular images work best. JPEG/PNG only. Maximum 2MB.
     </p>
   </div>
 </div>
@@ -45,6 +46,7 @@
 <input
   bind:files
   bind:this={input}
+  name="image"
   type="file"
   class="hidden"
   accept="image/jpeg, image/png"
