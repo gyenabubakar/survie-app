@@ -3,6 +3,12 @@
 <script lang="ts">
   import { cn } from '#components/shadcn/utils';
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  type $$Props = {
+    class?: string;
+    message: string | null | undefined;
+  };
+
   let className: string | undefined = undefined;
   export { className as class };
   export let message: string | undefined | null;

@@ -4,16 +4,26 @@
   import { goto } from '$app/navigation';
   import { Label, Button, Input } from '#shadcn-ui';
   import { FormValidationError, FormMessage, Loading } from '#components';
+  import { formFieldErrors } from '$lib/form-schemas/new-password';
 
   export let form;
 
+  let password = '';
+  let password2 = '';
   let submitting = false;
 
+  $: passwordIsValid = password ? password.length >= 8 : null;
+  $: password2IsValid = password2 ? password2.length >= 8 : null;
+  $: passwordsMatch = password === password2;
+  $: showPasswordMismatchError = !passwordsMatch && passwordIsValid && password2IsValid;
+  $: canSubmitForm = !!passwordIsValid && !!password2IsValid && !!passwordsMatch && !submitting;
+
   const handleSubmit: SubmitFunction = ({ cancel }) => {
-    if (submitting) return cancel();
+    if (!canSubmitForm) return cancel();
     submitting = true;
 
     if (form?.validationErrors) form.validationErrors = undefined;
+    if (form?.error) form.error = undefined;
 
     return async ({ update }) => {
       await update();
@@ -35,28 +45,44 @@
   {#if form?.error}
     <FormMessage>{form.error}</FormMessage>
   {:else if form?.success}
-    <FormMessage variant="success">Your password has been changed successfully.</FormMessage>
+    <FormMessage variant="success">You've changed your password successfully.</FormMessage>
   {/if}
 
   {#if !form?.success}
     <form method="post" use:enhance={handleSubmit}>
       <div class="form-field">
         <Label for="password">New Password</Label>
-        <Input type="password" id="password" name="password" required />
-        <FormValidationError message={form?.validationErrors?.password} />
+        <Input type="password" id="password" name="password" required bind:value={password} />
+
+        {#if passwordIsValid === false || form?.validationErrors?.password}
+          {@const message = form?.validationErrors?.password ?? formFieldErrors.password}
+          <FormValidationError {message} />
+        {/if}
       </div>
 
       <div class="form-field">
         <Label for="confirm-password">Confirm Password</Label>
-        <Input type="password" id="confirm-password" name="confirmPassword" required />
-        <FormValidationError message={form?.validationErrors?.confirmPassword} />
+        <Input
+          type="password"
+          id="confirm-password"
+          name="confirmPassword"
+          required
+          bind:value={password2}
+        />
+
+        {#if showPasswordMismatchError}
+          <FormValidationError message="Passwords do not match." />
+        {:else if password2IsValid === false || form?.validationErrors?.password}
+          {@const message = form?.validationErrors?.confirmPassword ?? formFieldErrors.password}
+          <FormValidationError {message} />
+        {/if}
       </div>
 
       <Button
         type="submit"
-        disabled={submitting}
+        disabled={!canSubmitForm}
         aria-live="polite"
-        aria-label={!submitting ? undefined : 'Changing password, please wait'}
+        aria-label={!submitting ? 'Change password' : 'Changing password, please wait'}
       >
         {#if !submitting}
           Change password
@@ -68,7 +94,13 @@
   {/if}
 
   {#if form?.success}
-    <Button type="button" role="link" class="w-full" on:click={() => goto('/log-in')}>
+    <Button
+      type="button"
+      role="link"
+      class="w-full"
+      aria-live="polite"
+      on:click={() => goto('/log-in')}
+    >
       Log in
     </Button>
   {/if}

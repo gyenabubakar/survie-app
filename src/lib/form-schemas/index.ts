@@ -3,6 +3,7 @@ import * as signup from './sign-up';
 import * as login from './log-in';
 import * as reset from './reset-password';
 import * as companyInfo from './company-info';
+import * as newPassword from './new-password';
 
 export function getValidationErrors<T>(
   data: object,
@@ -43,7 +44,12 @@ export async function validateForm(
 ): Promise<CompanyInfoValidFormResult | CompanyInfoInvalidFormResult>;
 
 export async function validateForm(
-  form: 'sign-up' | 'log-in' | 'reset-password' | 'company-info',
+  form: 'auth-new-password',
+  request: Request
+): Promise<NewPasswordValidFormResult | NewPasswordInvalidFormResult>;
+
+export async function validateForm(
+  form: 'sign-up' | 'log-in' | 'reset-password' | 'company-info' | 'auth-new-password',
   request: Request
 ) {
   let formSchema: FormSchemaType;
@@ -68,6 +74,10 @@ export async function validateForm(
       formSchema = companyInfo.formSchema;
       formFieldErrors = companyInfo.formFieldErrors;
       break;
+    case 'auth-new-password':
+      formSchema = newPassword.formSchema;
+      formFieldErrors = newPassword.formFieldErrors;
+      break;
     default:
       throw new Error('Invalid form type: ' + form);
   }
@@ -91,13 +101,15 @@ type FormSchemaType =
   | typeof signup.formSchema
   | typeof login.formSchema
   | typeof reset.formSchema
-  | typeof companyInfo.formSchema;
+  | typeof companyInfo.formSchema
+  | typeof newPassword.formSchema;
 
 type FormFieldErrorsType =
   | typeof signup.formFieldErrors
   | typeof login.formFieldErrors
   | typeof reset.formFieldErrors
-  | typeof companyInfo.formFieldErrors;
+  | typeof companyInfo.formFieldErrors
+  | typeof newPassword.formFieldErrors;
 
 /** Overloaded `validateForm()` return types */
 
@@ -125,4 +137,10 @@ type CompanyInfoValidFormResult = ValidFormResult<companyInfo.FormSchemaZodType>
 type CompanyInfoInvalidFormResult = {
   validationErrors: typeof companyInfo.formFieldErrors | null;
   data: companyInfo.FormSchemaZodType;
+};
+
+type NewPasswordValidFormResult = ValidFormResult<newPassword.FormSchemaZodType>;
+type NewPasswordInvalidFormResult = {
+  validationErrors: typeof newPassword.formFieldErrors | null;
+  data: newPassword.FormSchemaZodType;
 };

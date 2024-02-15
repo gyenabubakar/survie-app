@@ -1,34 +1,26 @@
 import { fail } from '@sveltejs/kit';
 import { delay } from '$lib';
-import { formSchema, type FormSchemaZodType } from '$lib/form-schemas/new-password';
+import { validateForm } from '$lib/form-schemas';
 
 export const actions = {
   async default({ request }) {
     // TODO: Remove this
     await delay(3000);
 
-    const formData = Object.fromEntries(await request.formData());
+    const result = await validateForm('auth-new-password', request);
+    if ('validationErrors' in result && result.validationErrors) {
+      const { validationErrors } = result;
+      if (validationErrors['*']) {
+        const error = validationErrors['*'] as string | undefined;
+        delete validationErrors['*'];
 
-    const result = formSchema.safeParse(formData);
-    if (!result.success) {
-      let validationErrors: Record<string, string> | undefined;
+        return fail(400, {
+          error,
+          validationErrors: validationErrors as typeof validationErrors | undefined,
+        });
+      }
 
-      result.error.errors.forEach((error) => {
-        const field = error.path[0] as keyof FormSchemaZodType | undefined;
-        if (typeof field === 'string' && error.code === 'too_small') {
-          if (!validationErrors) validationErrors = {};
-          validationErrors[field] = 'Must be at least 8 characters.';
-        }
-      });
-
-      const error = result.error.errors.find((error) => error.code === 'custom')
-        ? 'Passwords do not match.'
-        : undefined;
-
-      return fail(400, {
-        error,
-        validationErrors: validationErrors as Record<keyof FormSchemaZodType, string> | undefined,
-      });
+      return fail(400, { validationErrors });
     }
 
     return { success: true };
