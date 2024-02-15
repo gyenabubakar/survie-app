@@ -99,9 +99,7 @@
       role="link"
       class="w-full"
       aria-live="polite"
-      on:click={() => goto('/log-in')}
+      on:click={() => goto('/log-in')}>Log in</Button
     >
-      Log in
-    </Button>
   {/if}
 </main>

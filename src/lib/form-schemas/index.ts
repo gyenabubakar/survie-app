@@ -23,27 +23,27 @@ export function getValidationErrors<T>(
   return errors as T;
 }
 
-export async function validateForm(
+export function validateForm(
   form: 'sign-up',
   request: Request
 ): Promise<SignupValidFormResult | SignupInvalidFormResult>;
 
-export async function validateForm(
+export function validateForm(
   form: 'log-in',
   request: Request
 ): Promise<LoginValidFormResult | LoginInvalidFormResult>;
 
-export async function validateForm(
+export function validateForm(
   form: 'reset-password',
   request: Request
 ): Promise<ResetValidFormResult | ResetInvalidFormResult>;
 
-export async function validateForm(
+export function validateForm(
   form: 'company-info',
   request: Request
 ): Promise<CompanyInfoValidFormResult | CompanyInfoInvalidFormResult>;
 
-export async function validateForm(
+export function validateForm(
   form: 'auth-new-password',
   request: Request
 ): Promise<NewPasswordValidFormResult | NewPasswordInvalidFormResult>;
@@ -82,8 +82,8 @@ export async function validateForm(
       throw new Error('Invalid form type: ' + form);
   }
 
-  const { success: isValid } = formSchema.safeParse(data);
-  if (isValid) return { data };
+  const { success } = formSchema.safeParse(data);
+  if (success) return { data };
 
   const validationErrors = getValidationErrors<typeof formFieldErrors>(
     data,
@@ -115,7 +115,7 @@ type FormFieldErrorsType =
 
 type ValidFormResult<T> = { data: T };
 
-type SignupValidFormResult = ValidFormResult<signup.FormSchemaZodType>;
+type SignupValidFormResult = ValidFormResult<Omit<signup.FormSchemaZodType, 'password'>>;
 type SignupInvalidFormResult = {
   validationErrors: typeof signup.formFieldErrors | null;
   data: Omit<signup.FormSchemaZodType, 'password'>;

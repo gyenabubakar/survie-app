@@ -9,7 +9,10 @@ export const actions = {
 
     const result = await validateForm('sign-up', request);
     if ('validationErrors' in result) {
-      return fail(400, { data: result.data, validationErrors: result.validationErrors });
+      const { validationErrors, data } = result;
+      return fail(400, { data, validationErrors });
     }
+
+    return { success: true };
   },
 };
