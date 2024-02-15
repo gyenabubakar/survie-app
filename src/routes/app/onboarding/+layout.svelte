@@ -4,13 +4,10 @@
 </script>
 
 <div class="layout">
-  <nav class="py-8">
-    <Container size="2xl">
-      <Logo />
-    </Container>
-  </nav>
-
-  <slot />
+  <Container size="sm" class="pt-[140px]">
+    <Logo />
+    <slot />
+  </Container>
 </div>
 
 <style lang="postcss">
