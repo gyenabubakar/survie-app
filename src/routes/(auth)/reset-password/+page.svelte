@@ -2,9 +2,9 @@
   import { z } from 'zod';
   import type { SubmitFunction } from '@sveltejs/kit';
   import { enhance } from '$app/forms';
+  import { formFieldErrors } from '$lib/form-schemas/reset-password';
   import { Label, Button, Input } from '#shadcn-ui';
   import { FormValidationError, FormMessage, Loading } from '#components';
-  import { formFieldErrors } from '$lib/form-schemas/reset-password';
 
   export let form;
 
