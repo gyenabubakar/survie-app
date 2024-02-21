@@ -2,16 +2,14 @@
   import type { SubmitFunction } from '@sveltejs/kit';
   import { enhance } from '$app/forms';
   import { browser } from '$app/environment';
-  import { PUBLIC_DOMAIN } from '$env/static/public';
-  import { companyFormFieldErrors } from '$lib/form-schemas/onboarding';
+  import { profileFormFieldErrors } from '$lib/form-schemas/onboarding';
   import { Button, Input, Label } from '#shadcn-ui';
-  import { FormValidationError, Loading, UrlSlugInput, UserImageInput } from '#components';
+  import { FormValidationError, Loading, UserImageInput } from '#components';
   import { Cropper } from '#components/cropper';
 
   export let form;
 
-  let name = form?.data?.name ?? '';
-  let slug = form?.data?.slug ?? '';
+  let jobTitle = form?.data?.jobTitle ?? '';
   let submitting = false;
   let formElement: HTMLFormElement | undefined;
 
@@ -19,9 +17,8 @@
   let imageFile: File | undefined;
   let showImageCropper = false;
 
-  $: nameIsValid = name ? /^[a-zA-Z0-9\s-]{3,100}$/.test(name.trim()) : null;
-  $: slugIsValid = slug ? /^[a-z-]{3,50}$/.test(slug) : null;
-  $: canSubmitForm = !!nameIsValid && !!slugIsValid && !submitting;
+  $: jobTitleIsValid = jobTitle ? /^[\w\s-]{3,100}$/.test(jobTitle.trim()) : null;
+  $: canSubmitForm = !!jobTitleIsValid && !submitting;
 
   function closeCropper(event: CustomEvent<File>) {
     if (event.detail) imageFile = event.detail;
@@ -64,14 +61,13 @@
 </script>
 
 <svelte:head>
-  <title>Company info — Onboarding | Survie</title>
+  <title>User profile — Onboarding | Survie</title>
 </svelte:head>
 
 <main>
-  <h1>Let's confirm your company info.</h1>
+  <h1>Now, let's get some basic info about you.</h1>
   <p class="description">
-    We just need some basic company info from you to get started. You can set this up for your own
-    personal use.
+    We need your job title and profile picture to show with any surveys you create.
   </p>
 
   <form
@@ -82,50 +78,26 @@
     use:enhance={submit}
   >
     <div class="form-field">
-      <Label for="company-name">Company name</Label>
-      <Input type="text" id="company-name" name="name" bind:value={name} required />
+      <Label for="company-name">Job title</Label>
+      <Input type="text" id="job-title" name="jobTitle" bind:value={jobTitle} required />
 
-      {#if nameIsValid === false || !!form?.validationErrors?.name}
-        {@const message = form?.validationErrors?.name ?? companyFormFieldErrors.name}
+      {#if jobTitleIsValid === false || !!form?.validationErrors?.jobTitle}
+        {@const message = form?.validationErrors?.jobTitle ?? profileFormFieldErrors.jobTitle}
         <FormValidationError {message} />
       {/if}
     </div>
 
     <div class="form-field">
-      <Label for="company-slug">URL slug</Label>
-      <UrlSlugInput
-        id="company-slug"
-        name="slug"
-        bind:value={slug}
-        domain={PUBLIC_DOMAIN}
-        required
-      />
-
-      {#if slugIsValid}
-        <span class="text-sm text-gray-400">
-          Your company's URL will be <strong>
-            {PUBLIC_DOMAIN}/@<span class="text-black">{slug}</span>
-          </strong>
-        </span>
-      {/if}
-
-      {#if slugIsValid === false || !!form?.validationErrors?.slug}
-        {@const message = form?.validationErrors?.slug ?? companyFormFieldErrors.slug}
-        <FormValidationError {message} />
-      {/if}
-    </div>
-
-    <div class="form-field">
-      <Label class="inline-block mb-4">Add your company icon (optional)</Label>
+      <Label class="inline-block mb-4">Add your profile picture (optional)</Label>
       <UserImageInput
-        label="Upload your company icon."
+        label="Upload your profile picture"
         bind:input={fileInput}
         bind:file={imageFile}
         on:edit={() => (showImageCropper = true)}
       />
 
       {#if !!form?.validationErrors?.image && imageFile}
-        {@const message = form?.validationErrors?.image ?? companyFormFieldErrors.image}
+        {@const message = form?.validationErrors?.image ?? profileFormFieldErrors.image}
         <FormValidationError {message} />
       {/if}
     </div>

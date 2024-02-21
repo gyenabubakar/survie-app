@@ -2,7 +2,7 @@ import { z } from 'zod';
 import * as signup from './sign-up';
 import * as login from './log-in';
 import * as reset from './reset-password';
-import * as companyInfo from './company-info';
+import * as onboarding from './onboarding';
 import * as newPassword from './new-password';
 
 export function getValidationErrors<T>(
@@ -39,19 +39,30 @@ export function validateForm(
 ): Promise<ResetValidFormResult | ResetInvalidFormResult>;
 
 export function validateForm(
-  form: 'company-info',
-  request: Request
-): Promise<CompanyInfoValidFormResult | CompanyInfoInvalidFormResult>;
-
-export function validateForm(
   form: 'auth-new-password',
   request: Request
 ): Promise<NewPasswordValidFormResult | NewPasswordInvalidFormResult>;
 
-export async function validateForm(
-  form: 'sign-up' | 'log-in' | 'reset-password' | 'company-info' | 'auth-new-password',
+export function validateForm(
+  form: 'onboarding-company',
   request: Request
-) {
+): Promise<CompanyInfoValidFormResult | CompanyInfoInvalidFormResult>;
+
+export function validateForm(
+  form: 'onboarding-profile',
+  request: Request
+): Promise<ProfileValidFormResult | ProfileInvalidFormResult>;
+
+export async function validateForm(
+  form:
+    | 'sign-up'
+    | 'log-in'
+    | 'reset-password'
+    | 'auth-new-password'
+    | 'onboarding-company'
+    | 'onboarding-profile',
+  request: Request
+): Promise<ValidFormResultType | InvalidFormResultType> {
   let formSchema: FormSchemaType;
   let formFieldErrors: FormFieldErrorsType;
 
@@ -70,20 +81,24 @@ export async function validateForm(
       formSchema = reset.formSchema;
       formFieldErrors = reset.formFieldErrors;
       break;
-    case 'company-info':
-      formSchema = companyInfo.formSchema;
-      formFieldErrors = companyInfo.formFieldErrors;
-      break;
     case 'auth-new-password':
       formSchema = newPassword.formSchema;
       formFieldErrors = newPassword.formFieldErrors;
+      break;
+    case 'onboarding-company':
+      formSchema = onboarding.companyFormSchema;
+      formFieldErrors = onboarding.companyFormFieldErrors;
+      break;
+    case 'onboarding-profile':
+      formSchema = onboarding.profileFormSchema;
+      formFieldErrors = onboarding.profileFormFieldErrors;
       break;
     default:
       throw new Error('Invalid form type: ' + form);
   }
 
   const { success } = formSchema.safeParse(data);
-  if (success) return { data };
+  if (success) return { data } as ValidFormResultType;
 
   const validationErrors = getValidationErrors<typeof formFieldErrors>(
     data,
@@ -93,7 +108,7 @@ export async function validateForm(
 
   if ('password' in data) delete data.password;
 
-  return { validationErrors, data };
+  return { validationErrors, data } as InvalidFormResultType;
 }
 
 /** Type definitions */
@@ -101,15 +116,17 @@ type FormSchemaType =
   | typeof signup.formSchema
   | typeof login.formSchema
   | typeof reset.formSchema
-  | typeof companyInfo.formSchema
-  | typeof newPassword.formSchema;
+  | typeof newPassword.formSchema
+  | typeof onboarding.companyFormSchema
+  | typeof onboarding.profileFormSchema;
 
 type FormFieldErrorsType =
   | typeof signup.formFieldErrors
   | typeof login.formFieldErrors
   | typeof reset.formFieldErrors
-  | typeof companyInfo.formFieldErrors
-  | typeof newPassword.formFieldErrors;
+  | typeof newPassword.formFieldErrors
+  | typeof onboarding.companyFormFieldErrors
+  | typeof onboarding.profileFormFieldErrors;
 
 /** Overloaded `validateForm()` return types */
 
@@ -133,14 +150,37 @@ type ResetInvalidFormResult = {
   data: reset.FormSchemaZodType;
 };
 
-type CompanyInfoValidFormResult = ValidFormResult<companyInfo.FormSchemaZodType>;
-type CompanyInfoInvalidFormResult = {
-  validationErrors: typeof companyInfo.formFieldErrors | null;
-  data: companyInfo.FormSchemaZodType;
-};
-
 type NewPasswordValidFormResult = ValidFormResult<newPassword.FormSchemaZodType>;
 type NewPasswordInvalidFormResult = {
   validationErrors: typeof newPassword.formFieldErrors | null;
   data: newPassword.FormSchemaZodType;
 };
+
+type CompanyInfoValidFormResult = ValidFormResult<onboarding.CompanyFormSchemaZodType>;
+type CompanyInfoInvalidFormResult = {
+  validationErrors: typeof onboarding.companyFormFieldErrors | null;
+  data: onboarding.CompanyFormSchemaZodType;
+};
+
+type ProfileValidFormResult = ValidFormResult<onboarding.ProfileFormSchemaZodType>;
+type ProfileInvalidFormResult = {
+  validationErrors: typeof onboarding.profileFormFieldErrors | null;
+  data: onboarding.ProfileFormSchemaZodType;
+};
+
+/** All return types */
+type ValidFormResultType =
+  | SignupValidFormResult
+  | LoginValidFormResult
+  | ResetValidFormResult
+  | NewPasswordValidFormResult
+  | CompanyInfoValidFormResult
+  | ProfileValidFormResult;
+
+type InvalidFormResultType =
+  | SignupInvalidFormResult
+  | LoginInvalidFormResult
+  | ResetInvalidFormResult
+  | NewPasswordInvalidFormResult
+  | CompanyInfoInvalidFormResult
+  | ProfileInvalidFormResult;
