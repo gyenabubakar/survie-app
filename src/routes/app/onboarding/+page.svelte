@@ -1,23 +1,29 @@
 <script lang="ts">
   import type { SubmitFunction } from '@sveltejs/kit';
   import { enhance } from '$app/forms';
+  import { browser } from '$app/environment';
   import { PUBLIC_DOMAIN } from '$env/static/public';
   import { formFieldErrors } from '$lib/form-schemas/company-info';
   import { Button, Input, Label } from '#shadcn-ui';
   import { FormValidationError, Loading, UrlSlugInput, UserImageInput } from '#components';
+  import { Cropper } from '#components/cropper';
 
   export let form;
 
   let name = form?.data?.name ?? '';
   let slug = form?.data?.slug ?? '';
   let submitting = false;
+  let formElement: HTMLFormElement | undefined;
 
   let fileInput: HTMLInputElement | undefined;
   let imageFile: File | undefined;
+  let showImageCropper = false;
 
-  $: nameIsValid = name.length > 0 ? /^[a-zA-Z0-9\s-]{3,100}$/.test(name) : null;
-  $: slugIsValid = slug.length > 0 ? /^[a-z-]{3,50}$/.test(slug) : null;
+  $: nameIsValid = name ? /^[a-zA-Z0-9\s-]{3,100}$/.test(name) : null;
+  $: slugIsValid = slug ? /^[a-z-]{3,50}$/.test(slug) : null;
   $: canSubmitForm = !!nameIsValid && !!slugIsValid && !submitting;
+
+  $: console.log('imageFile:', imageFile);
 
   const submit: SubmitFunction = ({ cancel, formData }) => {
     if (!canSubmitForm) return cancel();
@@ -27,9 +33,15 @@
 
     const file = formData.get('image') as File;
 
-    if (file instanceof File && file.size === 0) {
-      formData.delete('image');
+    if (file instanceof File) {
+      if (file.size === 0) {
+        formData.delete('image');
+      } else if (imageFile) {
+        formData.set('image', imageFile);
+      }
     }
+
+    console.log('submit:', formData.get('image'));
 
     return async ({ update }) => {
       await update();
@@ -53,7 +65,13 @@
     personal use.
   </p>
 
-  <form method="post" autocomplete="off" enctype="multipart/form-data" use:enhance={submit}>
+  <form
+    bind:this={formElement}
+    method="post"
+    autocomplete="off"
+    enctype="multipart/form-data"
+    use:enhance={submit}
+  >
     <div class="form-field">
       <Label for="company-name">Company name</Label>
       <Input type="text" id="company-name" name="name" bind:value={name} required />
@@ -77,7 +95,7 @@
       {#if slugIsValid}
         <span class="text-sm text-gray-400">
           Your company's URL will be <strong>
-            {PUBLIC_DOMAIN}/<span class="text-black">{slug}</span>
+            {PUBLIC_DOMAIN}/@<span class="text-black">{slug}</span>
           </strong>
         </span>
       {/if}
@@ -94,6 +112,7 @@
         label="Upload your company icon."
         bind:input={fileInput}
         bind:file={imageFile}
+        on:edit={() => (showImageCropper = true)}
       />
 
       {#if !!form?.validationErrors?.image && imageFile}
@@ -117,3 +136,15 @@
     </Button>
   </form>
 </main>
+
+{#if browser && imageFile && showImageCropper}
+  <Cropper
+    bind:file={imageFile}
+    on:close={({ detail }) => {
+      if (detail) imageFile = detail;
+      showImageCropper = false;
+    }}
+  />
+{/if}
+
+<!--<ImageCropperModal />-->
