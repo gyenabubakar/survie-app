@@ -1,7 +1,10 @@
 <script lang="ts">
-  import { Images } from 'phosphor-svelte';
+  import { createEventDispatcher } from 'svelte';
+  import { Images, PencilSimple } from 'phosphor-svelte';
   import { toast } from 'svelte-sonner';
   import { isSupportedImageFile } from '$lib';
+
+  const dispatch = createEventDispatcher();
 
   export let label: string;
   export let input: HTMLInputElement | undefined = undefined;
@@ -36,7 +39,6 @@
   class="user-image-input"
   role="button"
   tabindex="0"
-  aria-hidden="true"
   aria-label="Upload a new image."
   on:keydown|preventDefault={handleKeyUp}
   on:click={() => input?.click()}
@@ -48,6 +50,17 @@
   >
     {#if !temporaryImageURL}
       <Images class="w-6 h-6 text-gray-400" />
+    {/if}
+
+    {#if temporaryImageURL}
+      <button
+        type="button"
+        title="Edit image"
+        class="w-6 h-6 bg-pink-600 text-white rounded-full flex items-center justify-center absolute -right-1 top-0"
+        on:click|stopPropagation|capture={() => dispatch('edit', { file })}
+      >
+        <PencilSimple weight="fill" />
+      </button>
     {/if}
   </div>
 
@@ -61,11 +74,13 @@
 
 <input
   bind:this={input}
+  id="imageFile"
   name="image"
   type="file"
   class="hidden"
   accept="image/jpeg, image/png"
   maxlength="1"
+  aria-hidden="true"
   on:change={handleInputChanged}
 />
 
@@ -79,7 +94,7 @@
   }
 
   .image {
-    @apply mr-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-gray-50;
+    @apply relative mr-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-50;
 
     &.has-image {
       @apply bg-cover bg-center;

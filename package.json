@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "engines": {
-    "node": "18.18.x"
+    "node": "20.x"
   },
   "scripts": {
     "dev": "IS_DEV=true vite dev --port=4444",
@@ -18,8 +18,9 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "bits-ui": "^0.17.0",
+    "bits-ui": "^0.18.1",
     "clsx": "^2.1.0",
+    "cropperjs": "^1.6.1",
     "mode-watcher": "^0.2.1",
     "phosphor-svelte": "^1.4.2",
     "svelte-sonner": "^0.3.17",

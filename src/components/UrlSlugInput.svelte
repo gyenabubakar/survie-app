@@ -27,14 +27,15 @@
   on:click={handleClick}
   on:keydown|self={() => input?.focus()}
 >
-  <span>{domain}/</span>
+  <span>{domain}/@</span>
   <input bind:this={input} bind:value type="text" {...$$restProps} />
 </div>
 
 <style lang="postcss">
   .input-wrapper {
-    @apply relative;
-    @apply flex h-9 w-full overflow-hidden rounded-md border border-input bg-transparent text-[15px] shadow-sm transition-colors placeholder:text-[15px] placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50;
+    @apply relative flex h-9 w-full overflow-hidden rounded-md border border-input bg-transparent text-[15px];
+    @apply shadow-sm transition-colors placeholder:text-[15px] placeholder:text-muted-foreground;
+    @apply focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50;
 
     &:has(input:focus-visible) {
       @apply ring-1 ring-ring;
