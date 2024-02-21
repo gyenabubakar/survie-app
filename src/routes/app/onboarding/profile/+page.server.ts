@@ -7,7 +7,7 @@ export const actions = {
     // TODO: Remove this
     await delay(3000);
 
-    const result = await validateForm('onboarding-company', request);
+    const result = await validateForm('onboarding-profile', request);
     if ('validationErrors' in result) {
       delete result.data.image;
       const { data, validationErrors } = result;
