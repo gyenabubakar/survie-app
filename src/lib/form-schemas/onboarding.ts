@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { isSupportedImageFile } from '$lib';
 import { PNG_JPEG_REGEX, TWO_MEGABYTES } from '$lib/constants';
 
-function getImageSchema(message: string) {
+function validateImage(message: string) {
   return z.custom(
     (data) => {
       if (!data) return true;
@@ -38,7 +38,7 @@ export const companyFormSchema = z.object({
     .trim()
     .regex(/^[a-zA-Z0-9\s-]{3,100}$/),
   slug: z.string().regex(/^[a-z-]{3,50}$/),
-  image: getImageSchema(companyFormFieldErrors.image),
+  image: validateImage(companyFormFieldErrors.image),
 });
 export type CompanyFormSchemaZodType = z.infer<typeof companyFormSchema>;
 
@@ -52,6 +52,6 @@ export const profileFormSchema = z.object({
     .string()
     .regex(/^[\w\s-]{3,100}$/)
     .trim(),
-  image: getImageSchema(profileFormFieldErrors.image),
+  image: validateImage(profileFormFieldErrors.image),
 });
 export type ProfileFormSchemaZodType = z.infer<typeof profileFormSchema>;
