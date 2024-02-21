@@ -1,3 +1,4 @@
+<!--suppress CssUnusedSymbol -->
 <script lang="ts">
   import 'cropperjs/dist/cropper.css';
   import { createEventDispatcher, onMount } from 'svelte';
@@ -326,5 +327,47 @@
     & :global(svg) {
       @apply h-4 w-4 transition-none;
     }
+  }
+
+  :global(.cropper-view-box) {
+    @apply outline-[3px] outline-white;
+  }
+
+  :global(.cropper-point) {
+    @apply z-20 !h-3 !w-3 !rounded-full !bg-white !opacity-100;
+  }
+  :global(.cropper-point.point-se) {
+    @apply -bottom-[5px] -right-[7px];
+  }
+  :global(.cropper-point.point-sw) {
+    @apply -bottom-[5px] -left-[7px];
+  }
+  :global(.cropper-point.point-ne) {
+    @apply -right-[7px] -top-[5px];
+  }
+  :global(.cropper-point.point-nw) {
+    @apply -left-[7px] -top-[5px];
+  }
+
+  :global(.cropper-point.point-e),
+  :global(.cropper-point.point-w) {
+    @apply !h-6;
+  }
+  :global(.cropper-point.point-e) {
+    @apply -right-[7px];
+  }
+  :global(.cropper-point.point-w) {
+    @apply -left-[7px];
+  }
+
+  :global(.cropper-point.point-n),
+  :global(.cropper-point.point-s) {
+    @apply !w-6;
+  }
+  :global(.cropper-point.point-n) {
+    @apply -top-[7px];
+  }
+  :global(.cropper-point.point-s) {
+    @apply -bottom-[7px];
   }
 </style>

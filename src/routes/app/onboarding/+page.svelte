@@ -149,5 +149,3 @@
 {#if browser && imageFile && showImageCropper}
   <Cropper bind:file={imageFile} on:close={closeCropper} on:remove-file={removeImageFile} />
 {/if}
-
-<!--<ImageCropperModal />-->
