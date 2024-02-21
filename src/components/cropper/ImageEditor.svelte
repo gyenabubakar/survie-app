@@ -2,17 +2,8 @@
   import 'cropperjs/dist/cropper.css';
   import { createEventDispatcher, onMount } from 'svelte';
   import Cropper from 'cropperjs';
-  import { defaultData, type Data, type EditorToolbarAction } from '#components/cropper';
-  import {
-    ArrowClockwise,
-    ArrowCounterClockwise,
-    ArrowsHorizontal,
-    ArrowsOutCardinal,
-    ArrowsVertical,
-    Crop,
-    MagnifyingGlassMinus,
-    MagnifyingGlassPlus,
-  } from 'phosphor-svelte';
+  import { defaultData, toolbarActions } from '#components/cropper';
+  import type { Data, EditorToolbarAction } from '#components/cropper';
 
   const dispatch = createEventDispatcher();
 
@@ -284,77 +275,16 @@
 
   {#if cropper}
     <div class="toolbar">
-      <button
-        class="toolbar__button"
-        title="Move (M)"
-        aria-label="Move tool (M)"
-        on:click={handleToolbarActionClick('move')}
-      >
-        <ArrowsOutCardinal weight="bold" aria-hidden="true" />
-      </button>
-
-      <button
-        class="toolbar__button"
-        title="Crop (C)"
-        aria-label="Crop tool (C)"
-        on:click={handleToolbarActionClick('crop')}
-      >
-        <Crop weight="bold" aria-hidden="true" />
-      </button>
-
-      <button
-        class="toolbar__button"
-        title="Zoom In (I)"
-        aria-label="Zoom in (I)"
-        on:click={handleToolbarActionClick('zoom-in')}
-      >
-        <MagnifyingGlassPlus weight="bold" aria-hidden="true" />
-      </button>
-
-      <button
-        class="toolbar__button"
-        title="Zoom Out (O)"
-        aria-label="Zoom out (O)"
-        on:click={handleToolbarActionClick('zoom-out')}
-      >
-        <MagnifyingGlassMinus weight="bold" aria-hidden="true" />
-      </button>
-
-      <button
-        class="toolbar__button"
-        title="Rotate Left (L)"
-        aria-label="Rotate left (L)"
-        on:click={handleToolbarActionClick('rotate-left')}
-      >
-        <ArrowCounterClockwise weight="bold" aria-hidden="true" />
-      </button>
-
-      <button
-        class="toolbar__button"
-        title="Rotate Right (R)"
-        aria-label="Rotate right (R)"
-        on:click={handleToolbarActionClick('rotate-right')}
-      >
-        <ArrowClockwise weight="bold" aria-hidden="true" />
-      </button>
-
-      <button
-        class="toolbar__button"
-        title="Flip Horizontal (H)"
-        aria-label="Flip horizontal (H)"
-        on:click={handleToolbarActionClick('flip-horizontal')}
-      >
-        <ArrowsHorizontal weight="bold" aria-hidden="true" />
-      </button>
-
-      <button
-        class="toolbar__button"
-        title="Flip Vertical (V)"
-        aria-label="Flip vertical (V)"
-        on:click={handleToolbarActionClick('flip-vertical')}
-      >
-        <ArrowsVertical weight="bold" aria-hidden="true" />
-      </button>
+      {#each toolbarActions as tool, index (index)}
+        <button
+          class="toolbar__button"
+          title={tool.name}
+          aria-label={tool.name}
+          on:click={handleToolbarActionClick(tool.action)}
+        >
+          <svelte:component this={tool.icon} weight="bold" aria-hidden="true" />
+        </button>
+      {/each}
     </div>
   {/if}
 </div>
