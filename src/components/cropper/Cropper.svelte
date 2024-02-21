@@ -45,6 +45,7 @@
         break;
       case 'remove':
         editor?.reset();
+        dispatch('remove-file');
         break;
       case 'save':
         dispatch('close', localFile);

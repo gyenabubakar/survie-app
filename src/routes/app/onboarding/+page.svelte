@@ -23,7 +23,18 @@
   $: slugIsValid = slug ? /^[a-z-]{3,50}$/.test(slug) : null;
   $: canSubmitForm = !!nameIsValid && !!slugIsValid && !submitting;
 
-  $: console.log('imageFile:', imageFile);
+  function closeCropper(event: CustomEvent<File>) {
+    if (event.detail) imageFile = event.detail;
+    showImageCropper = false;
+  }
+
+  function removeImageFile() {
+    if (formElement) {
+      const input = formElement.imageFile as HTMLInputElement;
+      input.value = '';
+      imageFile = undefined;
+    }
+  }
 
   const submit: SubmitFunction = ({ cancel, formData }) => {
     if (!canSubmitForm) return cancel();
@@ -40,8 +51,6 @@
         formData.set('image', imageFile);
       }
     }
-
-    console.log('submit:', formData.get('image'));
 
     return async ({ update }) => {
       await update();
@@ -138,13 +147,7 @@
 </main>
 
 {#if browser && imageFile && showImageCropper}
-  <Cropper
-    bind:file={imageFile}
-    on:close={({ detail }) => {
-      if (detail) imageFile = detail;
-      showImageCropper = false;
-    }}
-  />
+  <Cropper bind:file={imageFile} on:close={closeCropper} on:remove-file={removeImageFile} />
 {/if}
 
 <!--<ImageCropperModal />-->
