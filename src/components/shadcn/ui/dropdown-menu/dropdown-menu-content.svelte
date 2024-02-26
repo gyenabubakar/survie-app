@@ -5,10 +5,10 @@
   type $$Props = DropdownMenuPrimitive.ContentProps;
 
   let className: $$Props['class'] = undefined;
+  export { className as class };
   export let sideOffset: $$Props['sideOffset'] = 4;
   export let transition: $$Props['transition'] = flyAndScale;
   export let transitionConfig: $$Props['transitionConfig'] = undefined;
-  export { className as class };
 </script>
 
 <DropdownMenuPrimitive.Content
