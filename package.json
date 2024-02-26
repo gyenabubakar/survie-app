@@ -18,11 +18,12 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "bits-ui": "^0.18.1",
+    "bits-ui": "^0.18.2",
     "clsx": "^2.1.0",
     "cropperjs": "^1.6.1",
     "mode-watcher": "^0.2.1",
     "phosphor-svelte": "^1.4.2",
+    "svelte-radix": "^1.0.1",
     "svelte-sonner": "^0.3.17",
     "tailwind-merge": "^2.2.1",
     "tailwind-variants": "^0.1.20",

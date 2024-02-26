@@ -2,6 +2,7 @@
   import { fly } from 'svelte/transition';
   import { Copy } from 'phosphor-svelte';
   import { PUBLIC_DOMAIN } from '$env/static/public';
+  import { goto } from '$app/navigation';
   import { Button, Input } from '#shadcn-ui';
   import { Loading } from '#components';
 
@@ -48,7 +49,7 @@
     </Button>
   </div>
 
-  <Button class="mt-10">Continue</Button>
+  <Button class="mt-10" on:click={() => goto('/app')}>Continue</Button>
 </main>
 
 <style lang="postcss">
