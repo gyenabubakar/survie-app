@@ -1,45 +1,13 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
+  import { Card } from '#shadcn-ui/card';
   import { Container } from '#components';
-  import { Card, CardContent } from '#shadcn-ui/card';
-  import { TrendDown, TrendUp } from 'phosphor-svelte';
+  import { RecentSurvey, Statistics } from '#components/dashboard';
+  import { ArrowUpRight, RocketLaunch } from 'phosphor-svelte';
+  import { cn } from '#components/shadcn/utils';
+  import { Button } from '#shadcn-ui';
 
-  interface Stat {
-    title: string;
-    value: number;
-    valueUnit?: string;
-    percentage?: number;
-    trend: 'up' | 'down' | 'none';
-    footer?: string;
-  }
-
-  const stats: Stat[] = [
-    {
-      title: 'Surveys created',
-      value: 0,
-      percentage: 0,
-      trend: 'none',
-    },
-    {
-      title: 'Survey responses this month',
-      value: 10,
-      percentage: 100,
-      trend: 'up',
-    },
-    {
-      title: 'Question views this month',
-      value: 0,
-      percentage: -100,
-      trend: 'down',
-    },
-    {
-      title: 'Question engagement rate',
-      value: 0,
-      valueUnit: '%',
-      trend: 'none',
-      footer: 'Views vs question completions',
-    },
-  ];
+  export let data;
 </script>
 
 <svelte:head>
@@ -47,74 +15,59 @@
 </svelte:head>
 
 <main>
-  <Container>
-    <h1 class="text-3xl font-bold">Dashboard</h1>
-    <div class="grid grid-cols-4 gap-4 mt-4">
-      {#each stats as stat, index (index)}
-        <Card>
-          <CardContent class="card-content">
-            <p class="text-sm text-gray-500">{stat.title}</p>
-            <p class="text-3xl font-bold my-1" style="font-family: monospace">
-              {stat.value}{stat.valueUnit ?? ''}
+  <Container size="lg">
+    <h1 class="text-3xl font-bold mb-4">Dashboard</h1>
+    <Statistics stats={data.stats} />
+
+    <section>
+      <h2 class="text-2xl font-medium mb-4 mt-14">Recent surveys</h2>
+      <div class="grid grid-cols-3 gap-6">
+        <div class="col-span-2">
+          <Card class={cn(data.recentSurveys.length ? 'h-auto' : 'h-[130px]')}>
+            {#each data.recentSurveys as survey (survey.id)}
+              <RecentSurvey {...survey} />
+            {:else}
+              <div class="w-full h-full flex items-center justify-center text-gray-500">
+                <span>You haven't created any surveys yet.</span>
+              </div>
+            {/each}
+          </Card>
+
+          {#if data.recentSurveys.length}
+            <div class="mt-4">
+              <a href="/app/surveys" class="flex items-center font-medium max-w-max">
+                <span>See all surveys</span>
+                <ArrowUpRight weight="bold" class="ml-2" />
+              </a>
+            </div>
+          {/if}
+        </div>
+
+        <div>
+          <Card class="p-6">
+            <div class="flex justify-center">
+              <div
+                class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center"
+              >
+                <RocketLaunch size="20px" />
+              </div>
+            </div>
+            <p class="text-center mt-2 mb-1">Create a new survey.</p>
+            <p class="text-center text-sm text-gray-400">
+              Click the button below and start collecting responses in minutes.
             </p>
-            <p
-              class="stat-footer"
-              class:trend-none={stat.trend === 'none'}
-              class:trend-up={stat.trend === 'up'}
-              class:trend-down={stat.trend === 'down'}
-            >
-              {#if stat.footer}
-                {stat.footer}
-              {:else}
-                {#if stat.trend !== 'none'}
-                  <svelte:component
-                    this={stat.trend === 'up' ? TrendUp : TrendDown}
-                    weight="bold"
-                    size="18px"
-                  />
-                {/if}
-                <span style="font-family: monospace" class="stat-footer--percentage">
-                  {stat.percentage}%
-                </span>
-                &nbsp;&nbsp;from last month
-              {/if}
-            </p>
-          </CardContent>
-        </Card>
-      {/each}
-    </div>
+            <div class="mt-2">
+              <Button class="w-full">Create survey</Button>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </section>
   </Container>
 </main>
 
 <style lang="postcss">
   main {
     @apply py-12;
-  }
-
-  .stat-footer {
-    @apply flex items-center text-sm text-gray-500;
-
-    & .stat-footer--percentage {
-      @apply ml-1 font-medium;
-    }
-
-    &:global(.trend-none svg),
-    &.trend-none .stat-footer--percentage {
-      @apply text-gray-600;
-    }
-
-    &:global(.trend-up svg),
-    &.trend-up .stat-footer--percentage {
-      @apply text-green-500;
-    }
-
-    &:global(.trend-down svg),
-    &.trend-down .stat-footer--percentage {
-      @apply text-red-500;
-    }
-  }
-
-  :global(.card-content) {
-    @apply p-4;
   }
 </style>
