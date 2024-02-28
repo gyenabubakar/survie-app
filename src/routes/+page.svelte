@@ -1,5 +1,6 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import { Button } from '#shadcn-ui/button';
 </script>
 
-<Button>Click me</Button>
+<Button on:click={() => goto('/sign-up')}>Sign up</Button>
