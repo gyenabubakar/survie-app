@@ -1,4 +1,4 @@
-import type { RecentSurveyType, StatType } from '#components/dashboard/types';
+import type { RecentResponseType, RecentSurveyType, StatType } from '#components/dashboard/types';
 
 const stats: StatType[] = [
   {
@@ -28,31 +28,54 @@ const stats: StatType[] = [
   },
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const recentSurveys: RecentSurveyType[] = [
   {
     id: crypto.randomUUID(),
-    title: 'Customer satisfaction survey',
+    title: 'Customer satisfaction',
     description: 'How satisfied are you with our service?',
     active: false,
     responsesIn24h: 0,
   },
   {
     id: crypto.randomUUID(),
-    title: 'Employee engagement survey',
+    title: 'Employee engagement',
     description: 'How engaged are you with your work?',
     active: true,
     responsesIn24h: 13,
   },
   {
     id: crypto.randomUUID(),
-    title: 'Product feedback survey',
+    title: 'Product feedback',
     description: 'What do you think of our new product?',
     active: false,
     responsesIn24h: 0,
   },
 ];
 
+const recentResponses: RecentResponseType[] = [
+  {
+    id: crypto.randomUUID(),
+    username: 'Anonymous #b364404',
+    avatar: null,
+    survey: recentSurveys[1].title,
+    completedAt: '2024-02-28T13:27:06.398Z',
+  },
+  {
+    id: crypto.randomUUID(),
+    username: 'Anonymous #a3b4c4',
+    avatar: null,
+    survey: recentSurveys[0].title,
+    completedAt: '2024-02-28T12:25:16.398Z',
+  },
+  {
+    id: crypto.randomUUID(),
+    username: 'Anonymous #a3b4c4',
+    avatar: null,
+    survey: recentSurveys[0].title,
+    completedAt: '2024-02-28T13:29:02.760Z', // always parse with toISOString
+  },
+];
+
 export function load() {
-  return { stats, recentSurveys: [] as RecentSurveyType[] };
+  return { stats, recentSurveys, recentResponses };
 }

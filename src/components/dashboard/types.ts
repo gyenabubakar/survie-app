@@ -14,3 +14,11 @@ export interface RecentSurveyType {
   active: boolean;
   responsesIn24h: number;
 }
+
+export interface RecentResponseType {
+  id: string;
+  username: string;
+  avatar: string | null;
+  survey: string;
+  completedAt: string;
+}

@@ -2,7 +2,7 @@
 <script lang="ts">
   import { Card } from '#shadcn-ui/card';
   import { Container } from '#components';
-  import { RecentSurvey, Statistics } from '#components/dashboard';
+  import { RecentResponse, RecentSurvey, Statistics } from '#components/dashboard';
   import { ArrowUpRight, RocketLaunch } from 'phosphor-svelte';
   import { cn } from '#components/shadcn/utils';
   import { Button } from '#shadcn-ui';
@@ -37,6 +37,27 @@
             <div class="mt-4">
               <a href="/app/surveys" class="flex items-center font-medium max-w-max">
                 <span>See all surveys</span>
+                <ArrowUpRight weight="bold" class="ml-2" />
+              </a>
+            </div>
+          {/if}
+
+          <!-- Recent responses -->
+          <h2 class="text-2xl font-medium mb-4 mt-14">Recent responses</h2>
+          <Card class={cn(data.recentSurveys.length ? 'h-auto' : 'h-[130px]')}>
+            {#each data.recentResponses as response (response.id)}
+              <RecentResponse {...response} />
+            {:else}
+              <div class="w-full h-full flex items-center justify-center text-gray-500">
+                <span>You haven't received any responses yet.</span>
+              </div>
+            {/each}
+          </Card>
+
+          {#if data.recentSurveys.length}
+            <div class="mt-4">
+              <a href="/app/responses" class="flex items-center font-medium max-w-max">
+                <span>See all responses</span>
                 <ArrowUpRight weight="bold" class="ml-2" />
               </a>
             </div>

@@ -2,14 +2,14 @@
   import { DotsThreeOutline, Fire } from 'phosphor-svelte';
   import { Button } from '#shadcn-ui';
 
-  // export let id: string;
+  export let id: string;
   export let title: string;
   export let description: string;
   export let active: boolean;
   export let responsesIn24h: number;
 </script>
 
-<div data-name="RecentSurvey" class="p-6 relative">
+<div class="p-6 relative" data-id={id} data-name="RecentSurvey">
   <Button variant="outline" size="icon" class="h-[30px] absolute right-4 top-4">
     <DotsThreeOutline weight="fill" size="20px" class="text-gray-400" />
   </Button>
