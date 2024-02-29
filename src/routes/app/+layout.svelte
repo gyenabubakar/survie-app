@@ -11,7 +11,12 @@
     DropdownMenuItem,
   } from '#shadcn-ui/dropdown-menu';
   import { Popover, PopoverTrigger, PopoverContent } from '#shadcn-ui/popover';
+  import { createNotificationStore } from '$lib/stores/notifications';
+  import { fakeAvatar } from '$lib/fakes';
   import { Container, Logo } from '#components';
+  import { cn } from '#components/shadcn/utils';
+
+  const { notifications, hasUnread } = createNotificationStore();
 
   function isActiveLink(path: string) {
     return $page.url.pathname === path;
@@ -88,18 +93,32 @@
         </PopoverContent>
       </Popover>
 
-      <button class="mx-4">
-        <Bell size="24px" class="text-gray-400" />
-      </button>
+      <Popover>
+        <PopoverTrigger>
+          <button class="relative flex items-center mx-3">
+            <Bell size="24px" class={cn($hasUnread ? 'text-gray-600' : 'text-gray-400')} />
+            {#if $hasUnread}
+              <span
+                class="absolute w-3 h-3 bg-red-500 rounded-full top-0 right-0 border-2 border-white"
+              />
+            {/if}
+          </button>
+        </PopoverTrigger>
+        <PopoverContent
+          class={cn(!$notifications.length && 'min-h-[115px] flex items-center justify-center')}
+        >
+          {#if $notifications.length}
+            Hi
+          {:else}
+            <p class="text-sm text-gray-500">You don't have any notifications at yet.</p>
+          {/if}
+        </PopoverContent>
+      </Popover>
 
       <DropdownMenu>
         <DropdownMenuTrigger>
           <button>
-            <img
-              src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Avatar"
-              class="w-[35px] h-[35px] rounded-full"
-            />
+            <img src={fakeAvatar} alt="Avatar" class="w-[35px] h-[35px] rounded-full" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>

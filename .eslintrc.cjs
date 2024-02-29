@@ -28,4 +28,7 @@ module.exports = {
       },
     },
   ],
+  rules: {
+    '@typescript-eslint/method-signature-style': ['error', 'property'],
+  },
 };
