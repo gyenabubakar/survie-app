@@ -11,6 +11,7 @@
     DropdownMenuItem,
   } from '#shadcn-ui/dropdown-menu';
   import { Popover, PopoverTrigger, PopoverContent } from '#shadcn-ui/popover';
+  import { Avatar, AvatarFallback, AvatarImage } from '#shadcn-ui/avatar';
   import { createNotificationStore } from '$lib/stores/notifications';
   import { fakeAvatar } from '$lib/fakes';
   import { Container, Logo } from '#components';
@@ -117,8 +118,11 @@
 
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <button>
-            <img src={fakeAvatar} alt="Avatar" class="w-[35px] h-[35px] rounded-full" />
+          <button class="flex items-center justify-center">
+            <Avatar class="w-[35px] h-[35px]">
+              <AvatarImage src={fakeAvatar} alt="Avatar" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
