@@ -2,7 +2,7 @@ import { getContext, setContext } from 'svelte';
 import { derived, writable } from 'svelte/store';
 import type { Writable, Readable } from 'svelte/store';
 
-export type NotificationType = 'NEW_TEAM_MEMBER';
+export type NotificationType = 'JOINED_TEAM';
 export interface NotificationInitiator {
   id: string;
   name: string;
@@ -26,7 +26,7 @@ export interface NotificationStore {
 const STORE_KEY = Symbol('NotificationStore');
 
 export function createNotificationStore(): NotificationStore {
-  const __store = writable<Notification[]>([getFakeNotification()]);
+  const __store = writable<Notification[]>([getFakeNotification(), getFakeNotification()]);
 
   const store = {
     notifications: __store,
@@ -56,12 +56,12 @@ export function useNotificationStore() {
 
 function getFakeNotification(): Notification {
   return {
-    id: '1',
-    type: 'NEW_TEAM_MEMBER',
+    id: crypto.randomUUID(),
+    type: 'JOINED_TEAM',
     initiator: {
       id: '1',
-      name: 'John Doe',
-      avatar: 'https://randomuser.me/api/portraits/',
+      name: 'Jane Doe',
+      avatar: 'https://randomuser.me/api/portraits/women/60.jpg',
     },
     read: false,
     createdAt: '2024-02-28T13:29:02.760Z',

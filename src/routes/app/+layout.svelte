@@ -16,6 +16,7 @@
   import { fakeAvatar } from '$lib/fakes';
   import { Container, Logo } from '#components';
   import { cn } from '#components/shadcn/utils';
+  import { Notification } from '#components/dashboard';
 
   const { notifications, hasUnread } = createNotificationStore();
 
@@ -54,6 +55,7 @@
                 </a>
               </li>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent>
               <DropdownMenuGroup>
                 <DropdownMenuItem>
@@ -106,13 +108,16 @@
           </button>
         </PopoverTrigger>
         <PopoverContent
-          class={cn(!$notifications.length && 'min-h-[115px] flex items-center justify-center')}
+          class={cn(
+            'w-[300px] p-0',
+            !$notifications.length && 'min-h-[115px] flex items-center justify-center'
+          )}
         >
-          {#if $notifications.length}
-            Hi
+          {#each $notifications as notification (notification.id)}
+            <Notification {...notification} />
           {:else}
             <p class="text-sm text-gray-500">You don't have any notifications at yet.</p>
-          {/if}
+          {/each}
         </PopoverContent>
       </Popover>
 

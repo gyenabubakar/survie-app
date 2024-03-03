@@ -1,16 +1,13 @@
 <script lang="ts">
-  import { formatDistanceToNow, parseISO } from 'date-fns';
   import { Button } from '#shadcn-ui';
   import { Avatar, AvatarFallback, AvatarImage } from '#shadcn-ui/avatar';
-  import { getInitials } from '$lib';
+  import { getInitials, getTimeElapsed } from '$lib';
 
   export let id: string;
   export let avatar: string | null;
   export let username: string;
   export let survey: string;
   export let completedAt: string;
-
-  $: elapsedTime = formatDistanceToNow(parseISO(completedAt), { addSuffix: true });
 </script>
 
 <div class="flex items-center justify-between p-5" data-id={id} data-name="RecentResponse">
@@ -26,7 +23,7 @@
       <p class="leading-5">{username}</p>
       <p class="text-sm text-gray-400">
         Completed the <span class="text-gray-950">{survey}</span> survey
-        <span>{elapsedTime}</span>.
+        <span>{getTimeElapsed(completedAt)}</span>.
       </p>
     </div>
   </div>
