@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { Button } from '#shadcn-ui';
-  import { Avatar, AvatarFallback, AvatarImage } from '#shadcn-ui/avatar';
-  import { getInitials, getTimeElapsed } from '$lib';
+  import { Button } from 'shadcn-ui';
+  import { Avatar, AvatarFallback, AvatarImage } from 'shadcn-ui/avatar';
+  import { getInitials, getTimeElapsed } from '#lib';
 
   export let id: string;
   export let avatar: string | null;

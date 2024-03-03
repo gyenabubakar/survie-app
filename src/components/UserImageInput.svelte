@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { Images, PencilSimple } from 'phosphor-svelte';
   import { toast } from 'svelte-sonner';
-  import { isSupportedImageFile } from '$lib';
+  import { isSupportedImageFile } from '#lib';
 
   const dispatch = createEventDispatcher();
 

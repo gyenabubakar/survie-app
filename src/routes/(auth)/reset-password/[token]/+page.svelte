@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { SubmitFunction } from '@sveltejs/kit';
+  import { Label, Button, Input } from 'shadcn-ui';
   import { enhance } from '$app/forms';
   import { goto } from '$app/navigation';
-  import { formFieldErrors } from '$lib/form-schemas/new-password';
-  import { Label, Button, Input } from '#shadcn-ui';
+  import { formFieldErrors } from '#lib/form-schemas/new-password';
   import { FormValidationError, FormMessage, Loading } from '#components';
 
   export let form;

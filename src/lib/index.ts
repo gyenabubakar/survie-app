@@ -1,5 +1,5 @@
-import { PNG_JPEG_REGEX, TWO_MEGABYTES } from '$lib/constants';
 import { formatDistanceToNow, parseISO } from 'date-fns';
+import { PNG_JPEG_REGEX, TWO_MEGABYTES } from '#lib/constants';
 
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

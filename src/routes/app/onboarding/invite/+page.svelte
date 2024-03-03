@@ -3,7 +3,7 @@
   import { Copy } from 'phosphor-svelte';
   import { PUBLIC_DOMAIN } from '$env/static/public';
   import { goto } from '$app/navigation';
-  import { Button, Input } from '#shadcn-ui';
+  import { Button, Input } from 'shadcn-ui';
   import { Loading } from '#components';
 
   let inviteLink = `https://${PUBLIC_DOMAIN}/invite/${crypto.randomUUID()}`;

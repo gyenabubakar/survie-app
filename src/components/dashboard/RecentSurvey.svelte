@@ -1,6 +1,6 @@
 <script lang="ts">
   import { DotsThreeOutline, Fire } from 'phosphor-svelte';
-  import { Button } from '#shadcn-ui';
+  import { Button } from 'shadcn-ui';
 
   export let id: string;
   export let title: string;

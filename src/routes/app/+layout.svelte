@@ -1,7 +1,7 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
   import { Bell, CaretDown, Pulse, SignOut } from 'phosphor-svelte';
-  import { page } from '$app/stores';
+  import { Button } from 'shadcn-ui';
   import {
     DropdownMenu,
     DropdownMenuTrigger,
@@ -9,11 +9,13 @@
     DropdownMenuSeparator,
     DropdownMenuGroup,
     DropdownMenuItem,
-  } from '#shadcn-ui/dropdown-menu';
-  import { Popover, PopoverTrigger, PopoverContent } from '#shadcn-ui/popover';
-  import { Avatar, AvatarFallback, AvatarImage } from '#shadcn-ui/avatar';
-  import { createNotificationStore } from '$lib/stores/notifications';
-  import { fakeAvatar } from '$lib/fakes';
+  } from 'shadcn-ui/dropdown-menu';
+  import { Popover, PopoverTrigger, PopoverContent } from 'shadcn-ui/popover';
+  import { Avatar, AvatarFallback, AvatarImage } from 'shadcn-ui/avatar';
+  import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
+  import { createNotificationStore } from '#lib/stores/notifications';
+  import { fakeAvatar } from '#lib/fakes';
   import { Container, Logo } from '#components';
   import { cn } from '#components/shadcn/utils';
   import { Notification } from '#components/dashboard';
@@ -118,6 +120,14 @@
           {:else}
             <p class="text-sm text-gray-500">You don't have any notifications at yet.</p>
           {/each}
+
+          {#if $notifications.length}
+            <div class="p-2">
+              <Button class="w-full" on:click={() => goto('/app/notifications')}>
+                See all notifications
+              </Button>
+            </div>
+          {/if}
         </PopoverContent>
       </Popover>
 

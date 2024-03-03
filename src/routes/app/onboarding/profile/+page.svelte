@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { SubmitFunction } from '@sveltejs/kit';
+  import { Button, Input, Label } from 'shadcn-ui';
   import { enhance } from '$app/forms';
   import { browser } from '$app/environment';
-  import { profileFormFieldErrors } from '$lib/form-schemas/onboarding';
-  import { Button, Input, Label } from '#shadcn-ui';
+  import { profileFormFieldErrors } from '#lib/form-schemas/onboarding';
   import { FormValidationError, Loading, UserImageInput } from '#components';
   import { Cropper } from '#components/cropper';
 

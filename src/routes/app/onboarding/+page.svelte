@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { SubmitFunction } from '@sveltejs/kit';
+  import { Button, Input, Label } from 'shadcn-ui';
   import { enhance } from '$app/forms';
   import { browser } from '$app/environment';
   import { PUBLIC_DOMAIN } from '$env/static/public';
-  import { companyFormFieldErrors } from '$lib/form-schemas/onboarding';
-  import { Button, Input, Label } from '#shadcn-ui';
+  import { companyFormFieldErrors } from '#lib/form-schemas/onboarding';
   import { FormValidationError, Loading, UrlSlugInput, UserImageInput } from '#components';
   import { Cropper } from '#components/cropper';
 

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { Avatar, AvatarFallback, AvatarImage } from '#shadcn-ui/avatar';
-  import type { NotificationInitiator, NotificationType } from '$lib/stores/notifications';
-  import { getInitials, getTimeElapsed } from '$lib';
+  import { Avatar, AvatarFallback, AvatarImage } from 'shadcn-ui/avatar';
+  import { getInitials, getTimeElapsed } from '#lib';
+  import type { NotificationInitiator, NotificationType } from '#lib/stores/notifications';
 
   export let id: string;
   export let type: NotificationType;
@@ -41,7 +41,7 @@
     @apply flex items-center p-4;
 
     &.unread {
-      @apply bg-blue-50;
+      @apply bg-blue-50/80;
 
       &:not(:last-child) {
         @apply border-b border-blue-200;

@@ -14,10 +14,10 @@ const config = {
     // See https://kit.svelte.dev/docs/adapters for more information about adapters.
     adapter: adapter(),
     alias: {
-      $lib: 'src/lib',
+      '#lib': 'src/lib',
       '#assets': 'src/assets',
       '#components': 'src/components',
-      '#shadcn-ui': 'src/components/shadcn/ui',
+      'shadcn-ui': 'src/components/shadcn/ui',
     },
     csrf: {
       checkOrigin: !process.env.IS_DEV,
