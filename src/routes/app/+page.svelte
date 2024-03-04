@@ -5,7 +5,12 @@
   import { Card } from 'shadcn-ui/card';
   import { cn } from '#components/shadcn/utils';
   import { Container } from '#components';
-  import { RecentResponse, RecentSurvey, Statistics } from '#components/dashboard';
+  import {
+    CreateSurveySheet,
+    RecentResponse,
+    RecentSurvey,
+    Statistics,
+  } from '#components/dashboard';
 
   export let data;
 </script>
@@ -78,7 +83,9 @@
               Click the button below and start collecting responses in minutes.
             </p>
             <div class="mt-2">
-              <Button class="w-full">Create survey</Button>
+              <CreateSurveySheet let:builders>
+                <Button class="w-full" {builders}>Create survey</Button>
+              </CreateSurveySheet>
             </div>
           </Card>
         </div>
