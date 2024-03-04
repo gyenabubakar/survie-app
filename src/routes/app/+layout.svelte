@@ -22,9 +22,10 @@
 
   const { notifications, hasUnread } = createNotificationStore();
 
-  function isActiveLink(path: string) {
-    return $page.url.pathname === path;
-  }
+  $: onDashboardPage = $page.url.pathname === '/app';
+  $: onSurveysPage = $page.url.pathname === '/app/surveys';
+  $: onResponsesPage = $page.url.pathname === '/app/responses';
+  $: onAIPage = $page.url.pathname === '/app/ai';
 </script>
 
 <header class="border-b border-b-gray-200 drop-shadow-sm">
@@ -35,16 +36,16 @@
       <nav class="">
         <ul>
           <li>
-            <a href="/app/" class:active={isActiveLink('/app')}>Dashboard</a>
+            <a href="/app/" class:active={onDashboardPage}>Dashboard</a>
           </li>
           <li>
-            <a href="/app/surveys" class:active={isActiveLink('/app/surveys')}>Surveys</a>
+            <a href="/app/surveys" class:active={onSurveysPage}>Surveys</a>
           </li>
           <li>
-            <a href="/app/responses" class:active={isActiveLink('/app/responses')}> Responses </a>
+            <a href="/app/responses" class:active={onResponsesPage}> Responses </a>
           </li>
           <li>
-            <a href="/app/ai" class:active={isActiveLink('/app/ai')}>AI</a>
+            <a href="/app/ai" class:active={onAIPage}>AI</a>
           </li>
 
           <DropdownMenu>
@@ -206,6 +207,14 @@
 
     & a {
       @apply text-red-500;
+    }
+  }
+
+  :global(main) {
+    @apply pt-12;
+
+    & :global(h1) {
+      @apply mb-4 text-3xl font-bold;
     }
   }
 </style>

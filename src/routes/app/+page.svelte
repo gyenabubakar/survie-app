@@ -16,7 +16,7 @@
 
 <main>
   <Container size="lg">
-    <h1 class="text-3xl font-bold mb-4">Dashboard</h1>
+    <h1>Dashboard</h1>
     <Statistics stats={data.stats} />
 
     <section>
@@ -87,8 +87,4 @@
   </Container>
 </main>
 
-<style lang="postcss">
-  main {
-    @apply py-12;
-  }
-</style>
+<style lang="postcss"></style>

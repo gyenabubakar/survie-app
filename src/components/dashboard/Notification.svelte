@@ -3,6 +3,7 @@
   import { getInitials, getTimeElapsed } from '#lib';
   import type { NotificationInitiator, NotificationType } from '#lib/stores/notifications';
 
+  export let large = false;
   export let id: string;
   export let type: NotificationType;
   export let initiator: NotificationInitiator;
@@ -21,7 +22,7 @@
   }
 </script>
 
-<div data-name="Notification" data-id={id} class:unread={!read}>
+<div data-name="Notification" data-id={id} class:unread={!read && !large} class:large>
   <Avatar>
     <AvatarImage src={initiator.avatar} alt="{initiator.name}'s profile picture" />
     <AvatarFallback>
@@ -50,6 +51,10 @@
 
     &:not(:last-child) {
       @apply border-b border-slate-200;
+    }
+
+    &.large {
+      @apply px-0;
     }
   }
 </style>
