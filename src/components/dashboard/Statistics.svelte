@@ -1,6 +1,6 @@
 <script lang="ts">
   import { TrendDown, TrendUp } from 'phosphor-svelte';
-  import { Card, CardContent } from '#shadcn-ui/card';
+  import { Card, CardContent } from 'shadcn-ui/card';
   import type { StatType } from '#components/dashboard/types';
 
   export let stats: StatType[];

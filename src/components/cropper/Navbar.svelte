@@ -11,7 +11,7 @@
     X,
   } from 'phosphor-svelte';
   import type { Data, NavAction } from '#components/cropper';
-  import { Button } from '#shadcn-ui';
+  import { Button } from 'shadcn-ui';
 
   const dispatch = createEventDispatcher();
 

@@ -1,11 +1,11 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
-  import { Card } from '#shadcn-ui/card';
+  import { ArrowUpRight, RocketLaunch } from 'phosphor-svelte';
+  import { Button } from 'shadcn-ui';
+  import { Card } from 'shadcn-ui/card';
+  import { cn } from '#components/shadcn/utils';
   import { Container } from '#components';
   import { RecentResponse, RecentSurvey, Statistics } from '#components/dashboard';
-  import { ArrowUpRight, RocketLaunch } from 'phosphor-svelte';
-  import { cn } from '#components/shadcn/utils';
-  import { Button } from '#shadcn-ui';
 
   export let data;
 </script>
@@ -16,7 +16,7 @@
 
 <main>
   <Container size="lg">
-    <h1 class="text-3xl font-bold mb-4">Dashboard</h1>
+    <h1>Dashboard</h1>
     <Statistics stats={data.stats} />
 
     <section>
@@ -87,8 +87,4 @@
   </Container>
 </main>
 
-<style lang="postcss">
-  main {
-    @apply py-12;
-  }
-</style>
+<style lang="postcss"></style>

@@ -1,6 +1,6 @@
 import { fail } from '@sveltejs/kit';
-import { validateForm } from '$lib/form-schemas';
-import { delay } from '$lib';
+import { validateForm } from '#lib/form-schemas';
+import { delay } from '#lib';
 
 export const actions = {
   async default({ request }) {

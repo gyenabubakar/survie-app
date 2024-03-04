@@ -1,8 +1,8 @@
 // noinspection UnnecessaryLocalVariableJS
 
 import { z } from 'zod';
-import { isSupportedImageFile } from '$lib';
-import { PNG_JPEG_REGEX, TWO_MEGABYTES } from '$lib/constants';
+import { isSupportedImageFile } from '#lib';
+import { PNG_JPEG_REGEX, TWO_MEGABYTES } from '#lib/constants';
 
 function validateImage(message: string) {
   return z.custom(
