@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { fly } from 'svelte/transition';
-  import Cropper from 'cropperjs';
+  import type Cropper from 'cropperjs';
   import {
     Navbar,
     Loader,

@@ -41,7 +41,7 @@
   {/if}
 
   <form method="post" use:enhance={handleSubmit}>
-    <div class="form-field">
+    <div class="form-group">
       <Label for="email">Email</Label>
       <Input
         type="email"
@@ -58,7 +58,7 @@
       {/if}
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <div class="flex justify-between">
         <Label for="password">Password</Label>
         <a href="/reset-password">Forgot password?</a>

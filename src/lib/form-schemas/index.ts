@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import type { z } from 'zod';
 import * as signup from './sign-up';
 import * as login from './log-in';
 import * as reset from './reset-password';

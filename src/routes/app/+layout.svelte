@@ -28,8 +28,8 @@
   $: onAIPage = $page.url.pathname === '/app/ai';
 </script>
 
-<header class="border-b border-b-gray-200 drop-shadow-sm">
-  <Container size="2xl" class="py-2 flex items-center justify-between">
+<header>
+  <Container size="2xl" class="py-3 flex items-center justify-between">
     <div class="flex items-center">
       <Logo small class="mr-8" />
 
@@ -48,7 +48,7 @@
             <a href="/app/ai" class:active={onAIPage}>AI</a>
           </li>
 
-          <DropdownMenu>
+          <DropdownMenu preventScroll={false}>
             <DropdownMenuTrigger>
               <li>
                 <!-- svelte-ignore a11y-missing-attribute -->
@@ -132,7 +132,7 @@
         </PopoverContent>
       </Popover>
 
-      <DropdownMenu>
+      <DropdownMenu preventScroll={false}>
         <DropdownMenuTrigger>
           <button class="flex items-center justify-center">
             <Avatar class="w-[35px] h-[35px]">
@@ -163,11 +163,11 @@
 
 <style lang="postcss">
   header {
-    @apply fixed left-0 right-0 top-0 bg-white;
+    @apply fixed left-0 right-0 top-0 border-b border-b-slate-200 bg-white;
   }
 
   :global(main) {
-    margin-top: 60px;
+    @apply mt-[60px] pb-24;
   }
 
   nav a {
@@ -193,11 +193,11 @@
   :global([data-menu-content]) {
     @apply focus:!outline-0;
 
-    & :global([data-menu-item]) {
+    :global([data-menu-item]) {
       @apply hover:bg-black/5;
     }
 
-    & a {
+    a {
       @apply text-base text-black;
     }
   }

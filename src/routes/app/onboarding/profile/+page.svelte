@@ -77,7 +77,7 @@
     enctype="multipart/form-data"
     use:enhance={submit}
   >
-    <div class="form-field">
+    <div class="form-group">
       <Label for="company-name">Job title</Label>
       <Input type="text" id="job-title" name="jobTitle" bind:value={jobTitle} required />
 
@@ -87,7 +87,7 @@
       {/if}
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <Label class="inline-block mb-4">Add your profile picture (optional)</Label>
       <UserImageInput
         label="Upload your profile picture"

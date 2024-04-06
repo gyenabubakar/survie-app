@@ -81,7 +81,7 @@
     enctype="multipart/form-data"
     use:enhance={submit}
   >
-    <div class="form-field">
+    <div class="form-group">
       <Label for="company-name">Company name</Label>
       <Input type="text" id="company-name" name="name" bind:value={name} required />
 
@@ -91,7 +91,7 @@
       {/if}
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <Label for="company-slug">URL slug</Label>
       <UrlSlugInput
         id="company-slug"
@@ -115,7 +115,7 @@
       {/if}
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <Label class="inline-block mb-4">Add your company icon (optional)</Label>
       <UserImageInput
         label="Upload your company icon."

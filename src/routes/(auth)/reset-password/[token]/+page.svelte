@@ -50,7 +50,7 @@
 
   {#if !form?.success}
     <form method="post" use:enhance={handleSubmit}>
-      <div class="form-field">
+      <div class="form-group">
         <Label for="password">New Password</Label>
         <Input type="password" id="password" name="password" required bind:value={password} />
 
@@ -60,7 +60,7 @@
         {/if}
       </div>
 
-      <div class="form-field">
+      <div class="form-group">
         <Label for="confirm-password">Confirm Password</Label>
         <Input
           type="password"

@@ -63,7 +63,7 @@
 
   <form method="post" use:enhance={handleSubmit}>
     <div class="flex gap-4">
-      <div class="form-field">
+      <div class="form-group">
         <Label for="first-name">First name</Label>
         <Input
           type="text"
@@ -80,7 +80,7 @@
         {/if}
       </div>
 
-      <div class="form-field">
+      <div class="form-group">
         <Label for="last-name">Last name</Label>
         <Input
           type="text"
@@ -98,7 +98,7 @@
       </div>
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <Label for="email">Email</Label>
       <Input
         type="email"
@@ -115,7 +115,7 @@
       {/if}
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <Label for="password">Password</Label>
       <Input
         type="password"
@@ -133,7 +133,7 @@
     </div>
 
     <div
-      class="form-field space-x-2"
+      class="form-group space-x-2"
       class:no-mb={showAgreedToTermsError || !!form?.validationErrors?.agreedToTerms}
     >
       <Checkbox

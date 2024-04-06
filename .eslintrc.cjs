@@ -30,5 +30,6 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/method-signature-style': ['error', 'property'],
+    '@typescript-eslint/consistent-type-imports': 'error',
   },
 };

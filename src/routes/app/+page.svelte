@@ -7,6 +7,7 @@
   import { Container } from '#components';
   import {
     CreateSurveySheet,
+    ManualSurveyForm,
     RecentResponse,
     RecentSurvey,
     Statistics,
@@ -85,6 +86,8 @@
             <div class="mt-2">
               <CreateSurveySheet let:builders>
                 <Button class="w-full" {builders}>Create survey</Button>
+
+                <ManualSurveyForm slot="manual-form" />
               </CreateSurveySheet>
             </div>
           </Card>

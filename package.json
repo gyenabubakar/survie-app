@@ -7,17 +7,18 @@
     "node": "20.x"
   },
   "scripts": {
+    "prepare": "husky",
     "dev": "IS_DEV=true vite dev",
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "test": "vitest",
-    "lint": "prettier --check . && eslint .",
+    "lint": "prettier --check .; eslint .",
     "format": "prettier --write . --log-level silent",
-    "prepare": "husky"
+    "test": "vitest"
   },
   "dependencies": {
+    "@vueuse/core": "^10.9.0",
     "bits-ui": "^0.19.3",
     "clsx": "^2.1.0",
     "cropperjs": "^1.6.1",
