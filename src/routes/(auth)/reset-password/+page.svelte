@@ -4,7 +4,7 @@
   import { Label, Button, Input } from 'shadcn-ui';
   import { enhance } from '$app/forms';
   import { formFieldErrors } from '#lib/form-schemas/reset-password';
-  import { FormValidationError, FormMessage, Loading } from '#components';
+  import { FormValidationError, FormMessage } from '#components';
 
   export let form;
 
@@ -65,16 +65,12 @@
       <Button
         type="submit"
         disabled={!canSubmitForm}
-        aria-live="polite"
+        loading={submitting}
         aria-label={!submitting
           ? 'Send verification email'
           : 'Sending verification email, please wait'}
       >
-        {#if !submitting}
-          Send verification email
-        {:else}
-          <Loading size="23px" aria-hidden="true" />
-        {/if}
+        Send verification email
       </Button>
     </form>
   {/if}

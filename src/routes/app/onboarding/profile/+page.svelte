@@ -4,7 +4,7 @@
   import { enhance } from '$app/forms';
   import { browser } from '$app/environment';
   import { profileFormFieldErrors } from '#lib/form-schemas/onboarding';
-  import { FormValidationError, Loading, UserImageInput } from '#components';
+  import { FormValidationError, UserImageInput } from '#components';
   import { Cropper } from '#components/cropper';
 
   export let form;
@@ -107,13 +107,10 @@
       class="relative mt-4"
       style="width: max-content;"
       disabled={!canSubmitForm}
-      aria-live="polite"
+      loading={submitting}
       aria-label={submitting ? 'Saving, please wait' : 'Continue'}
     >
-      <span class:invisible={submitting}>Continue</span>
-      {#if submitting}
-        <Loading size="23px" aria-hidden="true" class="absolute" />
-      {/if}
+      Continue
     </Button>
   </form>
 </main>

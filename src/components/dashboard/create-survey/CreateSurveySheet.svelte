@@ -3,14 +3,20 @@
   import { writable } from 'svelte/store';
   import { Sheet, SheetTrigger, SheetContent } from 'shadcn-ui/sheet';
   import SurveyFormOptions from './SurveyFormOptions.svelte';
-  import type { ActiveForm, Context } from './utils';
+  import type { ActiveForm, Context, ManualSurveyFormData } from './utils';
 
-  const form = writable<ActiveForm>(undefined);
+  const activeForm = writable<ActiveForm>(undefined);
+  const manualFormData = writable<ManualSurveyFormData>({
+    title: '',
+    description: '',
+    multiplePages: null,
+    collectUserInfo: null,
+  });
 
-  setContext<Context>('sheet', { form });
+  setContext<Context>('sheet', { activeForm, manualFormData });
 
   function onOpenChange(isOpen: boolean) {
-    !isOpen && form.set(undefined);
+    !isOpen && activeForm.set(undefined);
   }
 </script>
 
@@ -23,9 +29,9 @@
     <p class="text-2xl font-medium mt-8 mb-4">Create new survey</p>
 
     <div id="state" class="relative">
-      {#if !$form}
+      {#if !$activeForm}
         <SurveyFormOptions />
-      {:else if $form === 'manual-form'}
+      {:else if $activeForm === 'manual-form'}
         <slot name="manual-form" />
       {:else}
         <slot name="ai-form" />

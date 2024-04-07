@@ -1,5 +1,7 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
+  import { setContext } from 'svelte';
+  import { writable } from 'svelte/store';
   import { ArrowUpRight, RocketLaunch } from 'phosphor-svelte';
   import { Button } from 'shadcn-ui';
   import { Card } from 'shadcn-ui/card';
@@ -14,6 +16,13 @@
   } from '#components/dashboard';
 
   export let data;
+  export let form;
+
+  const actionData = writable(form);
+
+  $: actionData.set(form);
+
+  setContext('dashboard-page:form', { actionData });
 </script>
 
 <svelte:head>

@@ -1,15 +1,15 @@
 <script lang="ts">
   import { getSheetContext } from './utils';
 
-  const { form } = getSheetContext();
+  const { activeForm } = getSheetContext();
 </script>
 
-{#if $form}
+{#if $activeForm}
   <div class="flex justify-center mt-6">
     <button
       class="flex items-center text-gray-400 text-sm font-medium"
       aria-label="Back"
-      on:click={() => form.set(undefined)}
+      on:click={() => activeForm.set(undefined)}
     >
       Back to options
     </button>

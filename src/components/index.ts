@@ -5,3 +5,4 @@ export { default as FormValidationError } from './FormValidationError.svelte';
 export { default as Container } from './Container.svelte';
 export { default as UrlSlugInput } from './UrlSlugInput.svelte';
 export { default as UserImageInput } from './UserImageInput.svelte';
+export { default as OptionsButton } from './OptionsButton.svelte';

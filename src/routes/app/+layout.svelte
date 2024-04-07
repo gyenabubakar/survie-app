@@ -211,10 +211,14 @@
   }
 
   :global(main) {
-    @apply pt-12;
+    @apply flex-grow bg-slate-50/80 pt-12;
 
     & :global(h1) {
       @apply mb-4 text-3xl font-bold;
     }
+  }
+
+  :global(body > div) {
+    @apply flex h-screen flex-col;
   }
 </style>

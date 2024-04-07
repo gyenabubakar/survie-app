@@ -4,7 +4,7 @@
   import { Label, Button, Input } from 'shadcn-ui';
   import { enhance } from '$app/forms';
   import { formFieldErrors } from '#lib/form-schemas/log-in';
-  import { FormValidationError, FormMessage, Loading } from '#components';
+  import { FormValidationError, FormMessage } from '#components';
 
   export let form;
 
@@ -83,14 +83,10 @@
     <Button
       type="submit"
       disabled={!canSubmitForm}
-      aria-live="polite"
+      loading={submitting}
       aria-label={!submitting ? 'Log in' : 'Logging in, please wait'}
     >
-      {#if !submitting}
-        Log in
-      {:else}
-        <Loading size="23px" aria-hidden="true" />
-      {/if}
+      Log in
     </Button>
   </form>
 

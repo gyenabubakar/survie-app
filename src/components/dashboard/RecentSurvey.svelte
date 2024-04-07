@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { DotsThreeOutline, Fire } from 'phosphor-svelte';
-  import { Button } from 'shadcn-ui';
+  import { Fire } from 'phosphor-svelte';
+  import { OptionsButton } from '#components';
 
   export let id: string;
   export let title: string;
@@ -10,9 +10,7 @@
 </script>
 
 <div class="p-6 relative" data-id={id} data-name="RecentSurvey">
-  <Button variant="outline" size="icon" class="h-[30px] absolute right-4 top-4">
-    <DotsThreeOutline weight="fill" size="20px" class="text-gray-400" />
-  </Button>
+  <OptionsButton class="absolute right-4 top-4" />
 
   <p class="text-gray-700 text-lg font-medium">{title}</p>
   <p class="text-gray-500">{description}</p>

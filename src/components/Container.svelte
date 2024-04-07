@@ -5,7 +5,6 @@
 
   type SizeType = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   type $$Props = HTMLAttributes<HTMLDivElement> & {
     class?: string;
     size?: SizeType;

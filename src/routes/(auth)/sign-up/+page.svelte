@@ -4,7 +4,7 @@
   import { Label, Button, Input, Checkbox } from 'shadcn-ui';
   import { enhance } from '$app/forms';
   import { formFieldErrors } from '#lib/form-schemas/sign-up';
-  import { FormValidationError, FormMessage, Loading } from '#components';
+  import { FormValidationError, FormMessage } from '#components';
 
   const NAME_REGEX = /^\s*([a-zA-Z]+(?:[\s-][a-zA-Z]+)*){2,255}\s*$/;
 
@@ -151,14 +151,10 @@
     <Button
       type="submit"
       disabled={!canSubmitForm}
-      aria-live="polite"
+      loading={submitting}
       aria-label={!submitting ? 'Create Account' : 'Creating, please wait'}
     >
-      {#if !submitting}
-        Create Account
-      {:else}
-        <Loading size="23px" aria-hidden="true" />
-      {/if}
+      Create Account
     </Button>
   </form>
 

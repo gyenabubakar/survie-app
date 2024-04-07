@@ -4,7 +4,7 @@
   import { enhance } from '$app/forms';
   import { goto } from '$app/navigation';
   import { formFieldErrors } from '#lib/form-schemas/new-password';
-  import { FormValidationError, FormMessage, Loading } from '#components';
+  import { FormValidationError, FormMessage } from '#components';
 
   export let form;
 
@@ -81,14 +81,10 @@
       <Button
         type="submit"
         disabled={!canSubmitForm}
-        aria-live="polite"
+        loading={submitting}
         aria-label={!submitting ? 'Change password' : 'Changing password, please wait'}
       >
-        {#if !submitting}
-          Change password
-        {:else}
-          <Loading size="23px" aria-hidden="true" />
-        {/if}
+        Change password
       </Button>
     </form>
   {/if}
@@ -99,7 +95,8 @@
       role="link"
       class="w-full"
       aria-live="polite"
-      on:click={() => goto('/log-in')}>Log in</Button
-    >
+      on:click={() => goto('/log-in')}
+      >Log in
+    </Button>
   {/if}
 </main>

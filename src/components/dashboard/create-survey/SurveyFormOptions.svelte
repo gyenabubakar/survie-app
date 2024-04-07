@@ -2,7 +2,7 @@
   import { fly } from 'svelte/transition';
   import { getSheetContext } from './utils';
 
-  const { form } = getSheetContext();
+  const { activeForm } = getSheetContext();
 </script>
 
 <div class="form-options" transition:fly={{ x: -100, duration: 300 }}>
@@ -11,7 +11,7 @@
     role="button"
     tabindex="0"
     aria-label="Create your survey with AI"
-    on:click={() => form.set('ai-form')}
+    on:click={() => activeForm.set('ai-form')}
     on:keyup
   >
     <enhanced:img src="#assets/tabs.svg" alt="tabs illustration" class="w-16" aria-hidden="true" />
@@ -29,7 +29,7 @@
     role="button"
     tabindex="0"
     aria-label="Manually create your survey"
-    on:click={() => form.set('manual-form')}
+    on:click={() => activeForm.set('manual-form')}
     on:keyup
   >
     <enhanced:img

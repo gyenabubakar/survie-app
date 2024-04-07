@@ -5,7 +5,7 @@
   import { browser } from '$app/environment';
   import { PUBLIC_DOMAIN } from '$env/static/public';
   import { companyFormFieldErrors } from '#lib/form-schemas/onboarding';
-  import { FormValidationError, Loading, UrlSlugInput, UserImageInput } from '#components';
+  import { FormValidationError, UrlSlugInput, UserImageInput } from '#components';
   import { Cropper } from '#components/cropper';
 
   export let form;
@@ -135,13 +135,10 @@
       class="relative mt-4"
       style="width: max-content;"
       disabled={!canSubmitForm}
-      aria-live="polite"
+      loading={submitting}
       aria-label={submitting ? 'Saving, please wait' : 'Continue'}
     >
-      <span class:invisible={submitting}>Continue</span>
-      {#if submitting}
-        <Loading size="23px" aria-hidden="true" class="absolute" />
-      {/if}
+      Continue
     </Button>
   </form>
 </main>
