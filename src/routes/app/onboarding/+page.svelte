@@ -4,9 +4,10 @@
   import { enhance } from '$app/forms';
   import { browser } from '$app/environment';
   import { PUBLIC_DOMAIN } from '$env/static/public';
-  import { companyFormFieldErrors } from '#lib/form-schemas/onboarding';
+  import { companyFormFieldErrors, companyFormSchema } from '#lib/form-schemas/onboarding';
   import { FormValidationError, UrlSlugInput, UserImageInput } from '#components';
   import { Cropper } from '#components/cropper';
+  import { fieldIsValid } from '#lib/form-schemas/utils';
 
   export let form;
 
@@ -19,8 +20,8 @@
   let imageFile: File | undefined;
   let showImageCropper = false;
 
-  $: nameIsValid = name ? /^[a-zA-Z0-9\s-]{3,100}$/.test(name.trim()) : null;
-  $: slugIsValid = slug ? /^[a-z-]{3,50}$/.test(slug) : null;
+  $: nameIsValid = fieldIsValid(companyFormSchema, 'name', name);
+  $: slugIsValid = fieldIsValid(companyFormSchema, 'slug', slug);
   $: canSubmitForm = !!nameIsValid && !!slugIsValid && !submitting;
 
   function closeCropper(event: CustomEvent<File>) {

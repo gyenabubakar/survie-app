@@ -3,9 +3,10 @@
   import { Button, Input, Label } from 'shadcn-ui';
   import { enhance } from '$app/forms';
   import { browser } from '$app/environment';
-  import { profileFormFieldErrors } from '#lib/form-schemas/onboarding';
+  import { profileFormFieldErrors, profileFormSchema } from '#lib/form-schemas/onboarding';
   import { FormValidationError, UserImageInput } from '#components';
   import { Cropper } from '#components/cropper';
+  import { fieldIsValid } from '#lib/form-schemas/utils';
 
   export let form;
 
@@ -17,7 +18,7 @@
   let imageFile: File | undefined;
   let showImageCropper = false;
 
-  $: jobTitleIsValid = jobTitle ? /^[\w\s-]{3,100}$/.test(jobTitle.trim()) : null;
+  $: jobTitleIsValid = fieldIsValid(profileFormSchema, 'jobTitle', jobTitle);
   $: canSubmitForm = !!jobTitleIsValid && !submitting;
 
   function closeCropper(event: CustomEvent<File>) {

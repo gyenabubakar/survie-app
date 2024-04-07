@@ -5,6 +5,7 @@
   import { goto } from '$app/navigation';
   import { Button, Input } from 'shadcn-ui';
 
+  // TODO: Replace with actual invite link
   let inviteLink = `https://${PUBLIC_DOMAIN}/invite/${crypto.randomUUID()}`;
   let showTooltip = false;
   let copying = false;

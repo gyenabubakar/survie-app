@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { z } from 'zod';
   import type { SubmitFunction } from '@sveltejs/kit';
   import { Label, Button, Input } from 'shadcn-ui';
   import { enhance } from '$app/forms';
-  import { formFieldErrors } from '#lib/form-schemas/reset-password';
+  import { formFieldErrors, formSchema as schema } from '#lib/form-schemas/reset-password';
   import { FormValidationError, FormMessage } from '#components';
+  import { fieldIsValid } from '#lib/form-schemas/utils';
 
   export let form;
 
   let email = form?.data?.email ?? '';
   let submitting = false;
 
-  $: emailIsValid = email ? z.string().email().safeParse(email).success : null;
+  $: emailIsValid = fieldIsValid(schema, 'email', email);
   $: canSubmitForm = !!emailIsValid && !submitting;
 
   const handleSubmit: SubmitFunction = ({ cancel }) => {

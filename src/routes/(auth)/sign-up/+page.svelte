@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { z } from 'zod';
   import type { SubmitFunction } from '@sveltejs/kit';
   import { Label, Button, Input, Checkbox } from 'shadcn-ui';
   import { enhance } from '$app/forms';
-  import { formFieldErrors } from '#lib/form-schemas/sign-up';
-  import { FormValidationError, FormMessage } from '#components';
-
-  const NAME_REGEX = /^\s*([a-zA-Z]+(?:[\s-][a-zA-Z]+)*){2,255}\s*$/;
+  import { formFieldErrors, formSchema } from '#lib/form-schemas/sign-up';
+  import { FormValidationError, FormMessage, PasswordInput } from '#components';
+  import { fieldIsValid } from '#lib/form-schemas/utils';
 
   export let form;
 
@@ -19,10 +17,10 @@
   let submitting = false;
   let showAgreedToTermsError = false;
 
-  $: fnameIsValid = firstName ? NAME_REGEX.test(firstName) : null;
-  $: lnameIsValid = lastName ? NAME_REGEX.test(lastName) : null;
-  $: emailIsValid = email ? z.string().email().safeParse(email).success : null;
-  $: passwordIsValid = password ? z.string().min(8).safeParse(password).success : null;
+  $: fnameIsValid = fieldIsValid(formSchema, 'firstName', firstName);
+  $: lnameIsValid = fieldIsValid(formSchema, 'lastName', lastName);
+  $: emailIsValid = fieldIsValid(formSchema, 'email', email);
+  $: passwordIsValid = fieldIsValid(formSchema, 'password', password);
   $: textFieldsAreValid = !!fnameIsValid && !!lnameIsValid && !!emailIsValid && !!passwordIsValid;
   $: canSubmitForm = textFieldsAreValid && agreedToTerms && !submitting;
 
@@ -117,8 +115,7 @@
 
     <div class="form-group">
       <Label for="password">Password</Label>
-      <Input
-        type="password"
+      <PasswordInput
         id="password"
         name="password"
         placeholder="******"
