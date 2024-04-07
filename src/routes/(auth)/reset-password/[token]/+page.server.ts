@@ -8,6 +8,7 @@ export const actions = {
     await delay(3000);
 
     const result = await validateForm('auth-new-password', request);
+
     if ('validationErrors' in result && result.validationErrors) {
       const { validationErrors } = result;
       if (validationErrors['*']) {

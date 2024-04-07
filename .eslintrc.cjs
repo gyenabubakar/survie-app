@@ -30,5 +30,10 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/method-signature-style': ['error', 'property'],
+    '@typescript-eslint/consistent-type-imports': 'error',
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      { varsIgnorePattern: '^\\$\\$(Props|Events|Slots)$' },
+    ],
   },
 };

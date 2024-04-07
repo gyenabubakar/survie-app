@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { z } from 'zod';
   import type { SubmitFunction } from '@sveltejs/kit';
   import { Label, Button, Input, Checkbox } from 'shadcn-ui';
   import { enhance } from '$app/forms';
-  import { formFieldErrors } from '#lib/form-schemas/sign-up';
-  import { FormValidationError, FormMessage, Loading } from '#components';
-
-  const NAME_REGEX = /^\s*([a-zA-Z]+(?:[\s-][a-zA-Z]+)*){2,255}\s*$/;
+  import { formFieldErrors, formSchema } from '#lib/form-schemas/sign-up';
+  import { FormValidationError, FormMessage, PasswordInput } from '#components';
+  import { fieldIsValid } from '#lib/form-schemas/utils';
 
   export let form;
 
@@ -19,10 +17,10 @@
   let submitting = false;
   let showAgreedToTermsError = false;
 
-  $: fnameIsValid = firstName ? NAME_REGEX.test(firstName) : null;
-  $: lnameIsValid = lastName ? NAME_REGEX.test(lastName) : null;
-  $: emailIsValid = email ? z.string().email().safeParse(email).success : null;
-  $: passwordIsValid = password ? z.string().min(8).safeParse(password).success : null;
+  $: fnameIsValid = fieldIsValid(formSchema, 'firstName', firstName);
+  $: lnameIsValid = fieldIsValid(formSchema, 'lastName', lastName);
+  $: emailIsValid = fieldIsValid(formSchema, 'email', email);
+  $: passwordIsValid = fieldIsValid(formSchema, 'password', password);
   $: textFieldsAreValid = !!fnameIsValid && !!lnameIsValid && !!emailIsValid && !!passwordIsValid;
   $: canSubmitForm = textFieldsAreValid && agreedToTerms && !submitting;
 
@@ -63,7 +61,7 @@
 
   <form method="post" use:enhance={handleSubmit}>
     <div class="flex gap-4">
-      <div class="form-field">
+      <div class="form-group">
         <Label for="first-name">First name</Label>
         <Input
           type="text"
@@ -80,7 +78,7 @@
         {/if}
       </div>
 
-      <div class="form-field">
+      <div class="form-group">
         <Label for="last-name">Last name</Label>
         <Input
           type="text"
@@ -98,7 +96,7 @@
       </div>
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <Label for="email">Email</Label>
       <Input
         type="email"
@@ -115,10 +113,9 @@
       {/if}
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <Label for="password">Password</Label>
-      <Input
-        type="password"
+      <PasswordInput
         id="password"
         name="password"
         placeholder="******"
@@ -133,7 +130,7 @@
     </div>
 
     <div
-      class="form-field space-x-2"
+      class="form-group space-x-2"
       class:no-mb={showAgreedToTermsError || !!form?.validationErrors?.agreedToTerms}
     >
       <Checkbox
@@ -151,14 +148,10 @@
     <Button
       type="submit"
       disabled={!canSubmitForm}
-      aria-live="polite"
+      loading={submitting}
       aria-label={!submitting ? 'Create Account' : 'Creating, please wait'}
     >
-      {#if !submitting}
-        Create Account
-      {:else}
-        <Loading size="23px" aria-hidden="true" />
-      {/if}
+      Create Account
     </Button>
   </form>
 

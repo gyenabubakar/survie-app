@@ -3,9 +3,10 @@
   import { Button, Input, Label } from 'shadcn-ui';
   import { enhance } from '$app/forms';
   import { browser } from '$app/environment';
-  import { profileFormFieldErrors } from '#lib/form-schemas/onboarding';
-  import { FormValidationError, Loading, UserImageInput } from '#components';
+  import { profileFormFieldErrors, profileFormSchema } from '#lib/form-schemas/onboarding';
+  import { FormValidationError, UserImageInput } from '#components';
   import { Cropper } from '#components/cropper';
+  import { fieldIsValid } from '#lib/form-schemas/utils';
 
   export let form;
 
@@ -17,7 +18,7 @@
   let imageFile: File | undefined;
   let showImageCropper = false;
 
-  $: jobTitleIsValid = jobTitle ? /^[\w\s-]{3,100}$/.test(jobTitle.trim()) : null;
+  $: jobTitleIsValid = fieldIsValid(profileFormSchema, 'jobTitle', jobTitle);
   $: canSubmitForm = !!jobTitleIsValid && !submitting;
 
   function closeCropper(event: CustomEvent<File>) {
@@ -77,7 +78,7 @@
     enctype="multipart/form-data"
     use:enhance={submit}
   >
-    <div class="form-field">
+    <div class="form-group">
       <Label for="company-name">Job title</Label>
       <Input type="text" id="job-title" name="jobTitle" bind:value={jobTitle} required />
 
@@ -87,7 +88,7 @@
       {/if}
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <Label class="inline-block mb-4">Add your profile picture (optional)</Label>
       <UserImageInput
         label="Upload your profile picture"
@@ -107,13 +108,10 @@
       class="relative mt-4"
       style="width: max-content;"
       disabled={!canSubmitForm}
-      aria-live="polite"
+      loading={submitting}
       aria-label={submitting ? 'Saving, please wait' : 'Continue'}
     >
-      <span class:invisible={submitting}>Continue</span>
-      {#if submitting}
-        <Loading size="23px" aria-hidden="true" class="absolute" />
-      {/if}
+      Continue
     </Button>
   </form>
 </main>

@@ -1,13 +1,28 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
+  import { setContext } from 'svelte';
+  import { writable } from 'svelte/store';
   import { ArrowUpRight, RocketLaunch } from 'phosphor-svelte';
   import { Button } from 'shadcn-ui';
   import { Card } from 'shadcn-ui/card';
   import { cn } from '#components/shadcn/utils';
   import { Container } from '#components';
-  import { RecentResponse, RecentSurvey, Statistics } from '#components/dashboard';
+  import {
+    CreateSurveySheet,
+    ManualSurveyForm,
+    RecentResponse,
+    RecentSurvey,
+    Statistics,
+  } from '#components/dashboard';
 
   export let data;
+  export let form;
+
+  const actionData = writable(form);
+
+  $: actionData.set(form);
+
+  setContext('dashboard-page:form', { actionData });
 </script>
 
 <svelte:head>
@@ -78,7 +93,11 @@
               Click the button below and start collecting responses in minutes.
             </p>
             <div class="mt-2">
-              <Button class="w-full">Create survey</Button>
+              <CreateSurveySheet let:builders>
+                <Button class="w-full" {builders}>Create survey</Button>
+
+                <ManualSurveyForm slot="manual-form" />
+              </CreateSurveySheet>
             </div>
           </Card>
         </div>
