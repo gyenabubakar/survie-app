@@ -4,8 +4,8 @@
   import { PUBLIC_DOMAIN } from '$env/static/public';
   import { goto } from '$app/navigation';
   import { Button, Input } from 'shadcn-ui';
-  import { Loading } from '#components';
 
+  // TODO: Replace with actual invite link
   let inviteLink = `https://${PUBLIC_DOMAIN}/invite/${crypto.randomUUID()}`;
   let showTooltip = false;
   let copying = false;
@@ -34,12 +34,14 @@
 
   <div class="flex w-full items-center space-x-2">
     <Input value={inviteLink} readonly class="grow" />
-    <Button type="submit" class="relative" aria-label={ariaLabel} on:click={copyInviteLink}>
-      {#if copying}
-        <Loading size="20px" aria-hidden="true" />
-      {:else}
-        <Copy size="20px" aria-hidden="true" />
-      {/if}
+    <Button
+      type="submit"
+      class="relative"
+      loading={copying}
+      aria-label={ariaLabel}
+      on:click={copyInviteLink}
+    >
+      <Copy size="20px" aria-hidden="true" />
 
       {#if showTooltip}
         <span class="tooltip" aria-live="polite" transition:fly={{ y: 20, duration: 200 }}>

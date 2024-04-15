@@ -12,10 +12,11 @@
 
 <style lang="postcss">
   .layout {
-    & :global(h1) {
+    :global(h1) {
       @apply mb-1 mt-4 text-2xl font-medium;
     }
-    & :global(p.description) {
+
+    :global(p.description) {
       @apply mb-6 text-gray-500;
     }
   }

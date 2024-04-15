@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { z } from 'zod';
   import type { SubmitFunction } from '@sveltejs/kit';
   import { Label, Button, Input } from 'shadcn-ui';
   import { enhance } from '$app/forms';
-  import { formFieldErrors } from '#lib/form-schemas/log-in';
-  import { FormValidationError, FormMessage, Loading } from '#components';
+  import { formFieldErrors, formSchema as schema } from '#lib/form-schemas/log-in';
+  import { FormValidationError, FormMessage, PasswordInput } from '#components';
+  import { fieldIsValid } from '#lib/form-schemas/utils';
 
   export let form;
 
@@ -12,8 +12,8 @@
   let password = '';
   let submitting = false;
 
-  $: emailIsValid = email ? z.string().email().safeParse(email).success : null;
-  $: passwordIsValid = password ? z.string().min(8).safeParse(password).success : null;
+  $: emailIsValid = fieldIsValid(schema, 'email', email);
+  $: passwordIsValid = fieldIsValid(schema, 'password', password);
   $: canSubmitForm = !!emailIsValid && !!passwordIsValid && !submitting;
 
   const handleSubmit: SubmitFunction = ({ cancel }) => {
@@ -41,7 +41,7 @@
   {/if}
 
   <form method="post" use:enhance={handleSubmit}>
-    <div class="form-field">
+    <div class="form-group">
       <Label for="email">Email</Label>
       <Input
         type="email"
@@ -58,19 +58,17 @@
       {/if}
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <div class="flex justify-between">
         <Label for="password">Password</Label>
         <a href="/reset-password">Forgot password?</a>
       </div>
-      <Input
-        type="password"
+      <PasswordInput
         id="password"
         name="password"
-        placeholder="******"
         required
+        placeholder="******"
         bind:value={password}
-        canTogglePasswordVisibility
       />
 
       {#if passwordIsValid === false || form?.validationErrors?.password}
@@ -83,14 +81,10 @@
     <Button
       type="submit"
       disabled={!canSubmitForm}
-      aria-live="polite"
+      loading={submitting}
       aria-label={!submitting ? 'Log in' : 'Logging in, please wait'}
     >
-      {#if !submitting}
-        Log in
-      {:else}
-        <Loading size="23px" aria-hidden="true" />
-      {/if}
+      Log in
     </Button>
   </form>
 

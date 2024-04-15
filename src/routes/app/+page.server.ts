@@ -1,4 +1,38 @@
+import { fail, redirect } from '@sveltejs/kit';
+import { delay } from '#lib';
+import { validateForm } from '#lib/form-schemas';
 import type { RecentResponseType, RecentSurveyType, StatType } from '#components/dashboard/types';
+
+export function load() {
+  return { stats, recentSurveys, recentResponses };
+}
+
+export const actions = {
+  async createSurvey({ request }) {
+    // TODO: Remove this
+    await delay(3000);
+
+    const result = await validateForm('app-new-survey-manual', request);
+    if ('validationErrors' in result) {
+      console.log('Action: validation errors:', result.validationErrors);
+      return fail(400, {
+        action: 'createSurvey' as const,
+        data: result.data,
+        validationErrors: result.validationErrors,
+      });
+    }
+
+    const data = {
+      ...result.data,
+      multiplePages: result.data.multiplePages === 'on',
+      collectUserInfo: result.data.collectUserInfo === 'on',
+    };
+
+    console.log('Survey created:', data);
+
+    return redirect(303, `/app/surveys/${crypto.randomUUID()}`);
+  },
+};
 
 const stats: StatType[] = [
   {
@@ -75,7 +109,3 @@ const recentResponses: RecentResponseType[] = [
     completedAt: '2024-02-28T13:29:02.760Z', // always parse with toISOString
   },
 ];
-
-export function load() {
-  return { stats, recentSurveys, recentResponses };
-}

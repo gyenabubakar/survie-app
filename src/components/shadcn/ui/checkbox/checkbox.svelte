@@ -27,14 +27,14 @@
   {...$$restProps}
 >
   <CheckboxPrimitive.Indicator
-    class={cn('flex items-center justify-center text-current h-4 w-4')}
+    class={cn('flex items-center justify-center text-current h-4 w-4 relative')}
     let:isChecked
     let:isIndeterminate
   >
     {#if isIndeterminate}
-      <Minus class="h-3.5 w-3.5" />
+      <Minus class="h-3 w-3" />
     {:else}
-      <Check class={cn('h-3.5 w-3.5', !isChecked && 'text-transparent')} />
+      <Check weight="bold" class={cn('h-3 w-3', !isChecked && 'text-transparent')} />
     {/if}
   </CheckboxPrimitive.Indicator>
 

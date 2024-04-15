@@ -4,9 +4,10 @@
   import { enhance } from '$app/forms';
   import { browser } from '$app/environment';
   import { PUBLIC_DOMAIN } from '$env/static/public';
-  import { companyFormFieldErrors } from '#lib/form-schemas/onboarding';
-  import { FormValidationError, Loading, UrlSlugInput, UserImageInput } from '#components';
+  import { companyFormFieldErrors, companyFormSchema } from '#lib/form-schemas/onboarding';
+  import { FormValidationError, UrlSlugInput, UserImageInput } from '#components';
   import { Cropper } from '#components/cropper';
+  import { fieldIsValid } from '#lib/form-schemas/utils';
 
   export let form;
 
@@ -19,8 +20,8 @@
   let imageFile: File | undefined;
   let showImageCropper = false;
 
-  $: nameIsValid = name ? /^[a-zA-Z0-9\s-]{3,100}$/.test(name.trim()) : null;
-  $: slugIsValid = slug ? /^[a-z-]{3,50}$/.test(slug) : null;
+  $: nameIsValid = fieldIsValid(companyFormSchema, 'name', name);
+  $: slugIsValid = fieldIsValid(companyFormSchema, 'slug', slug);
   $: canSubmitForm = !!nameIsValid && !!slugIsValid && !submitting;
 
   function closeCropper(event: CustomEvent<File>) {
@@ -81,7 +82,7 @@
     enctype="multipart/form-data"
     use:enhance={submit}
   >
-    <div class="form-field">
+    <div class="form-group">
       <Label for="company-name">Company name</Label>
       <Input type="text" id="company-name" name="name" bind:value={name} required />
 
@@ -91,7 +92,7 @@
       {/if}
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <Label for="company-slug">URL slug</Label>
       <UrlSlugInput
         id="company-slug"
@@ -115,7 +116,7 @@
       {/if}
     </div>
 
-    <div class="form-field">
+    <div class="form-group">
       <Label class="inline-block mb-4">Add your company icon (optional)</Label>
       <UserImageInput
         label="Upload your company icon."
@@ -135,13 +136,10 @@
       class="relative mt-4"
       style="width: max-content;"
       disabled={!canSubmitForm}
-      aria-live="polite"
+      loading={submitting}
       aria-label={submitting ? 'Saving, please wait' : 'Continue'}
     >
-      <span class:invisible={submitting}>Continue</span>
-      {#if submitting}
-        <Loading size="23px" aria-hidden="true" class="absolute" />
-      {/if}
+      Continue
     </Button>
   </form>
 </main>

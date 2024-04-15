@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { z } from 'zod';
   import type { SubmitFunction } from '@sveltejs/kit';
   import { Label, Button, Input } from 'shadcn-ui';
   import { enhance } from '$app/forms';
-  import { formFieldErrors } from '#lib/form-schemas/reset-password';
-  import { FormValidationError, FormMessage, Loading } from '#components';
+  import { formFieldErrors, formSchema as schema } from '#lib/form-schemas/reset-password';
+  import { FormValidationError, FormMessage } from '#components';
+  import { fieldIsValid } from '#lib/form-schemas/utils';
 
   export let form;
 
   let email = form?.data?.email ?? '';
   let submitting = false;
 
-  $: emailIsValid = email ? z.string().email().safeParse(email).success : null;
+  $: emailIsValid = fieldIsValid(schema, 'email', email);
   $: canSubmitForm = !!emailIsValid && !submitting;
 
   const handleSubmit: SubmitFunction = ({ cancel }) => {
@@ -45,7 +45,7 @@
 
   {#if !form?.success}
     <form method="post" use:enhance={handleSubmit}>
-      <div class="form-field">
+      <div class="form-group">
         <Label for="email">Email</Label>
         <Input
           type="email"
@@ -65,16 +65,12 @@
       <Button
         type="submit"
         disabled={!canSubmitForm}
-        aria-live="polite"
+        loading={submitting}
         aria-label={!submitting
           ? 'Send verification email'
           : 'Sending verification email, please wait'}
       >
-        {#if !submitting}
-          Send verification email
-        {:else}
-          <Loading size="23px" aria-hidden="true" />
-        {/if}
+        Send verification email
       </Button>
     </form>
   {/if}

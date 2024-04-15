@@ -28,8 +28,8 @@
   $: onAIPage = $page.url.pathname === '/app/ai';
 </script>
 
-<header class="border-b border-b-gray-200 drop-shadow-sm">
-  <Container size="2xl" class="py-2 flex items-center justify-between">
+<header>
+  <Container size="2xl" class="py-3 flex items-center justify-between">
     <div class="flex items-center">
       <Logo small class="mr-8" />
 
@@ -48,7 +48,7 @@
             <a href="/app/ai" class:active={onAIPage}>AI</a>
           </li>
 
-          <DropdownMenu>
+          <DropdownMenu preventScroll={false}>
             <DropdownMenuTrigger>
               <li>
                 <!-- svelte-ignore a11y-missing-attribute -->
@@ -59,7 +59,7 @@
               </li>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent>
+            <DropdownMenuContent class="h-max">
               <DropdownMenuGroup>
                 <DropdownMenuItem>
                   <a href="/#"> Survey Settings </a>
@@ -83,7 +83,7 @@
       </nav>
     </div>
 
-    <div class="flex items-center gap-2.5" style="justify-self: flex-end;">
+    <div class="flex items-center gap-2.5">
       <Popover>
         <PopoverTrigger>
           <button class="py-0 px-2 bg-black/5 flex items-center rounded-md">
@@ -91,7 +91,7 @@
             <span style="font-family: sans-serif;">0</span>
           </button>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent class="h-max">
           <p>
             <span style="font-family: sans-serif;">{0}</span> survey responses so far this month.
           </p>
@@ -112,8 +112,8 @@
         </PopoverTrigger>
         <PopoverContent
           class={cn(
-            'w-[300px] p-0',
-            !$notifications.length && 'min-h-[115px] flex items-center justify-center'
+            'w-[300px] h-max p-0',
+            !$notifications.length && 'h-[115px] flex items-center justify-center'
           )}
         >
           {#each $notifications as notification (notification.id)}
@@ -132,7 +132,7 @@
         </PopoverContent>
       </Popover>
 
-      <DropdownMenu>
+      <DropdownMenu preventScroll={false}>
         <DropdownMenuTrigger>
           <button class="flex items-center justify-center">
             <Avatar class="w-[35px] h-[35px]">
@@ -141,7 +141,7 @@
             </Avatar>
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent class="h-max">
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <a href="/#">My account</a>
@@ -163,11 +163,11 @@
 
 <style lang="postcss">
   header {
-    @apply fixed left-0 right-0 top-0 bg-white;
+    @apply fixed left-0 right-0 top-0 h-[59px] border-b border-b-slate-200 bg-white;
   }
 
   :global(main) {
-    margin-top: 60px;
+    @apply mt-[60px] pb-24;
   }
 
   nav a {
@@ -193,11 +193,11 @@
   :global([data-menu-content]) {
     @apply focus:!outline-0;
 
-    & :global([data-menu-item]) {
+    :global([data-menu-item]) {
       @apply hover:bg-black/5;
     }
 
-    & a {
+    a {
       @apply text-base text-black;
     }
   }
@@ -211,10 +211,14 @@
   }
 
   :global(main) {
-    @apply pt-12;
+    @apply flex-grow bg-slate-50/80 pt-12;
 
     & :global(h1) {
       @apply mb-4 text-3xl font-bold;
     }
+  }
+
+  :global(body > div) {
+    @apply flex h-screen flex-col;
   }
 </style>

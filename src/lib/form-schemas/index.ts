@@ -1,9 +1,10 @@
-import { z } from 'zod';
+import type { z } from 'zod';
 import * as signup from './sign-up';
 import * as login from './log-in';
 import * as reset from './reset-password';
 import * as onboarding from './onboarding';
 import * as newPassword from './new-password';
+import * as newSurvey from './new-survey';
 
 export function getValidationErrors<T>(
   data: object,
@@ -14,6 +15,8 @@ export function getValidationErrors<T>(
   if (result.success) return null;
 
   const errors: Record<string, string> = {};
+
+  console.log('Validation errors:', { errors, data });
 
   for (const error of result.error.errors) {
     const field = error.path[0];
@@ -53,6 +56,11 @@ export function validateForm(
   request: Request
 ): Promise<ProfileValidFormResult | ProfileInvalidFormResult>;
 
+export function validateForm(
+  form: 'app-new-survey-manual',
+  request: Request
+): Promise<NewSurveyValidFormResult | NewSurveyInvalidFormResult>;
+
 export async function validateForm(
   form:
     | 'sign-up'
@@ -60,7 +68,8 @@ export async function validateForm(
     | 'reset-password'
     | 'auth-new-password'
     | 'onboarding-company'
-    | 'onboarding-profile',
+    | 'onboarding-profile'
+    | 'app-new-survey-manual',
   request: Request
 ): Promise<ValidFormResultType | InvalidFormResultType> {
   let formSchema: FormSchemaType;
@@ -93,6 +102,10 @@ export async function validateForm(
       formSchema = onboarding.profileFormSchema;
       formFieldErrors = onboarding.profileFormFieldErrors;
       break;
+    case 'app-new-survey-manual':
+      formSchema = newSurvey.manualFormSchema;
+      formFieldErrors = newSurvey.manualFormFieldErrors;
+      break;
     default:
       throw new Error('Invalid form type: ' + form);
   }
@@ -118,7 +131,8 @@ type FormSchemaType =
   | typeof reset.formSchema
   | typeof newPassword.formSchema
   | typeof onboarding.companyFormSchema
-  | typeof onboarding.profileFormSchema;
+  | typeof onboarding.profileFormSchema
+  | typeof newSurvey.manualFormSchema;
 
 type FormFieldErrorsType =
   | typeof signup.formFieldErrors
@@ -126,7 +140,8 @@ type FormFieldErrorsType =
   | typeof reset.formFieldErrors
   | typeof newPassword.formFieldErrors
   | typeof onboarding.companyFormFieldErrors
-  | typeof onboarding.profileFormFieldErrors;
+  | typeof onboarding.profileFormFieldErrors
+  | typeof newSurvey.manualFormFieldErrors;
 
 /** Overloaded `validateForm()` return types */
 
@@ -168,6 +183,12 @@ type ProfileInvalidFormResult = {
   data: onboarding.ProfileFormSchemaZodType;
 };
 
+type NewSurveyValidFormResult = ValidFormResult<newSurvey.ManualFormSchemaZodType>;
+type NewSurveyInvalidFormResult = {
+  validationErrors: typeof newSurvey.manualFormFieldErrors | null;
+  data: newSurvey.ManualFormSchemaZodType;
+};
+
 /** All return types */
 type ValidFormResultType =
   | SignupValidFormResult
@@ -175,7 +196,8 @@ type ValidFormResultType =
   | ResetValidFormResult
   | NewPasswordValidFormResult
   | CompanyInfoValidFormResult
-  | ProfileValidFormResult;
+  | ProfileValidFormResult
+  | NewSurveyValidFormResult;
 
 type InvalidFormResultType =
   | SignupInvalidFormResult
@@ -183,4 +205,5 @@ type InvalidFormResultType =
   | ResetInvalidFormResult
   | NewPasswordInvalidFormResult
   | CompanyInfoInvalidFormResult
-  | ProfileInvalidFormResult;
+  | ProfileInvalidFormResult
+  | NewSurveyInvalidFormResult;
