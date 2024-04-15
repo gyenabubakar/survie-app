@@ -11,7 +11,7 @@
     previews = [
       {
         command = [
-          "npm"
+          "bun"
           "run"
           "dev"
           "--"
