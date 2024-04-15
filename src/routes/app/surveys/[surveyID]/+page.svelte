@@ -1,8 +1,11 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
-  import { Badge } from 'shadcn-ui/badge';
   import { Button } from 'shadcn-ui';
+  import { Badge } from 'shadcn-ui/badge';
   import { Container, OptionsButton } from '#components';
+  import { page } from '$app/stores';
+
+  const surveyID = $page.params.surveyID;
 </script>
 
 <svelte:head>
@@ -35,7 +38,9 @@
         <p class="text-sm text-gray-500">
           Click on the button below to get your survey up and running.
         </p>
-        <Button class="mt-3">Add a question</Button>
+        <a href="/app/surveys/{surveyID}/create-question">
+          <Button class="mt-3">Add a question</Button>
+        </a>
       </div>
     </Container>
   </section>
@@ -49,7 +54,7 @@
       @apply relative bg-white py-14 shadow-xl shadow-slate-100;
 
       :global(#enable-survey-btn) {
-        @apply border border-green-200 bg-green-50 text-green-600;
+        @apply border border-green-200 bg-green-50 text-green-600 hover:bg-green-100/70;
       }
     }
   }

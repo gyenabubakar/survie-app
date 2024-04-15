@@ -59,6 +59,7 @@
 
           <!-- Recent responses -->
           <h2 class="text-2xl font-medium mb-4 mt-14">Recent responses</h2>
+
           <Card class={cn(data.recentSurveys.length ? 'h-auto' : 'h-[130px]')}>
             {#each data.recentResponses as response (response.id)}
               <RecentResponse {...response} />

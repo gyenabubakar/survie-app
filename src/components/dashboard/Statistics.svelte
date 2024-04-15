@@ -11,7 +11,7 @@
     <Card>
       <CardContent class="card-content">
         <p class="text-sm text-gray-500">{stat.title}</p>
-        <p class="text-3xl font-bold my-1" style="font-family: monospace">
+        <p class="text-3xl font-bold my-1 font-mono">
           {stat.value}{stat.valueUnit ?? ''}
         </p>
         <p

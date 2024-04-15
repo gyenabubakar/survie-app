@@ -33,8 +33,8 @@
 
 <style lang="postcss">
   .input-wrapper {
-    @apply relative flex h-9 w-full overflow-hidden rounded-md border border-input bg-transparent text-[15px];
-    @apply shadow-sm transition-colors placeholder:text-[15px] placeholder:text-muted-foreground;
+    @apply relative flex h-9 w-full overflow-hidden rounded-md border border-input bg-transparent text-base;
+    @apply shadow-sm transition-colors placeholder:text-base placeholder:text-muted-foreground;
     @apply focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50;
 
     &:has(input:focus-visible) {
