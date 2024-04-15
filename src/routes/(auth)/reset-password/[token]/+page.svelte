@@ -96,7 +96,8 @@
       class="w-full"
       aria-live="polite"
       on:click={() => goto('/log-in')}
-      >Log in
+    >
+      Log in
     </Button>
   {/if}
 </main>

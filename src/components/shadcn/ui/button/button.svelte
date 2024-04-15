@@ -2,7 +2,7 @@
 <script lang="ts">
   import { Button as ButtonPrimitive } from 'bits-ui';
   import { cn } from '#components/shadcn/utils';
-  import { buttonVariants, type Props, type Events, Button } from '.';
+  import { buttonVariants, type Props, type Events } from '.';
   import { Loading } from '#components';
 
   type $$Props = Props & {
@@ -15,14 +15,14 @@
   export let variant: $$Props['variant'] = 'default';
   export let size: $$Props['size'] = 'default';
   export let builders: $$Props['builders'] = [];
-  export let loading = false;
+  export let loading: boolean | undefined = undefined;
 </script>
 
 <ButtonPrimitive.Root
   {builders}
   class={cn(buttonVariants({ variant, size, className }))}
   type="button"
-  aria-live="polite"
+  aria-live={loading !== undefined ? 'polite' : undefined}
   {...$$restProps}
   on:click
   on:keydown
