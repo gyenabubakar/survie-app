@@ -1,13 +1,10 @@
 <!--suppress JSUnusedGlobalSymbols -->
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
+  import { PUBLIC_DOMAIN } from '$env/static/public';
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  type $$Props = HTMLInputAttributes & {
-    domain: string;
-  };
+  type $$Props = HTMLInputAttributes;
 
-  export let domain: string;
   export let value = '';
 
   let input: HTMLInputElement | undefined;
@@ -27,7 +24,7 @@
   on:click={handleClick}
   on:keydown|self={() => input?.focus()}
 >
-  <span>{domain}/@</span>
+  <span>{PUBLIC_DOMAIN}/@</span>
   <input bind:this={input} bind:value type="text" {...$$restProps} />
 </div>
 

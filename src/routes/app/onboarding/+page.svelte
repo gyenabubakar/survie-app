@@ -94,13 +94,7 @@
 
     <div class="form-group">
       <Label for="company-slug">URL slug</Label>
-      <UrlSlugInput
-        id="company-slug"
-        name="slug"
-        bind:value={slug}
-        domain={PUBLIC_DOMAIN}
-        required
-      />
+      <UrlSlugInput id="company-slug" name="slug" bind:value={slug} required />
 
       {#if slugIsValid}
         <span class="text-sm text-gray-400">
