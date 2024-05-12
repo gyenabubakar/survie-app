@@ -2,14 +2,11 @@
   import { createEventDispatcher } from 'svelte';
   import { fly } from 'svelte/transition';
   import type Cropper from 'cropperjs';
-  import {
-    Navbar,
-    Loader,
-    ImageEditor,
-    defaultData,
-    type Data,
-    type NavAction,
-  } from '#components/cropper';
+  import Navbar from './Navbar.svelte';
+  import Loader from './Loader.svelte';
+  import ImageEditor from './ImageEditor.svelte';
+  import { defaultData } from '#components/cropper';
+  import type { Data, NavAction } from '#components/cropper';
 
   const dispatch = createEventDispatcher();
 

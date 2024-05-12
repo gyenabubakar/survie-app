@@ -1,12 +1,19 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import type { SubmitFunction } from '@sveltejs/kit';
   import { Button, Input, Label } from 'shadcn-ui';
   import { enhance } from '$app/forms';
   import { browser } from '$app/environment';
   import { profileFormFieldErrors, profileFormSchema } from '#lib/form-schemas/onboarding';
   import { FormValidationError, UserImageInput } from '#components';
-  import { Cropper } from '#components/cropper';
   import { fieldIsValid } from '#lib/form-schemas/utils';
+  import type CropperComponent from '#components/cropper/Cropper.svelte';
+
+  function loadCropper() {
+    return import('#components/cropper/Cropper.svelte');
+  }
+
+  let Cropper: typeof CropperComponent | undefined;
 
   export let form;
 
@@ -59,6 +66,13 @@
       }
     };
   };
+
+  onMount(() => {
+    console.log('Mounted!!!');
+    loadCropper().then((module) => {
+      Cropper = module.default;
+    });
+  });
 </script>
 
 <svelte:head>
