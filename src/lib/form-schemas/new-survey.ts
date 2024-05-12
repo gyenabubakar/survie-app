@@ -1,5 +1,3 @@
-// noinspection SuspiciousTypeOfGuard
-
 import { z } from 'zod';
 
 export const manualFormSchema = z.object({

@@ -95,8 +95,3 @@ export type ToolbarTool = {
   icon: ComponentType<SvelteComponent<IconContextProps['values']>>;
   action: EditorToolbarAction;
 };
-
-export { default as ImageEditor } from './ImageEditor.svelte';
-export { default as Loader } from './Loader.svelte';
-export { default as Navbar } from './Navbar.svelte';
-export { default as Cropper } from './Cropper.svelte';
