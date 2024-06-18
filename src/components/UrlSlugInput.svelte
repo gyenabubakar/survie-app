@@ -43,7 +43,7 @@
     }
 
     & input {
-      @apply w-full flex-1 pl-2 pr-3 outline-0;
+      @apply w-full flex-1 pl-1 pr-3 outline-0;
     }
   }
 </style>

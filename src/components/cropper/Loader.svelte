@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import type { Data } from '#components/cropper';
+  import type { Data } from '#components/cropper/types';
 
   const URL = window.URL ?? window.webkitURL;
   const REGEXP_MIME_TYPE_IMAGES = /^image\/\w+$/;

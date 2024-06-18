@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import type { SubmitFunction } from '@sveltejs/kit';
   import { Button, Input, Label } from 'shadcn-ui';
   import { enhance } from '$app/forms';
@@ -7,13 +6,7 @@
   import { companyFormFieldErrors, companyFormSchema } from '#lib/form-schemas/onboarding';
   import { FormValidationError, UrlSlugInput, UserImageInput } from '#components';
   import { fieldIsValid } from '#lib/form-schemas/utils';
-  import type CropperComponent from '#components/cropper/Cropper.svelte';
-
-  function loadCropper() {
-    return import('#components/cropper/Cropper.svelte');
-  }
-
-  let Cropper: typeof CropperComponent | undefined;
+  import { Cropper } from '#components/cropper';
 
   export let form;
 
@@ -68,13 +61,6 @@
       }
     };
   };
-
-  onMount(() => {
-    console.log('Mounted!!!');
-    loadCropper().then((module) => {
-      Cropper = module.default;
-    });
-  });
 </script>
 
 <svelte:head>
@@ -151,6 +137,6 @@
   </form>
 </main>
 
-{#if imageFile && showImageCropper && Cropper}
+{#if imageFile && showImageCropper}
   <Cropper bind:file={imageFile} on:close={closeCropper} on:remove-file={removeImageFile} />
 {/if}

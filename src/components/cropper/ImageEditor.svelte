@@ -2,19 +2,19 @@
 <script lang="ts">
   import 'cropperjs/dist/cropper.css';
   import { createEventDispatcher, onMount } from 'svelte';
-  import Cropper from 'cropperjs';
-  import { defaultData, toolbarActions } from '#components/cropper';
-  import type { Data, EditorToolbarAction } from '#components/cropper';
+  import CropperJS from 'cropperjs';
+  import { defaultData, toolbarActions } from '#components/cropper/utils';
+  import type { Data, EditorToolbarAction } from '#components/cropper/types';
 
   const dispatch = createEventDispatcher();
 
   export let file: File | undefined;
   export let data: Data;
-  export let cropper: Cropper | undefined = undefined;
+  export let cropper: CropperJS | undefined = undefined;
 
-  let canvasData: Cropper.CanvasData | null = null;
-  let cropBoxData: Cropper.CropBoxData | null = null;
-  let croppedData: Cropper.Data | null = null;
+  let canvasData: CropperJS.CanvasData | null = null;
+  let cropBoxData: CropperJS.CropBoxData | null = null;
+  let croppedData: CropperJS.Data | null = null;
 
   let image: HTMLImageElement | undefined = undefined;
 
@@ -23,7 +23,7 @@
       return;
     }
 
-    cropper = new Cropper(image, {
+    cropper = new CropperJS(image, {
       autoCrop: false,
       dragMode: 'move',
       background: false,

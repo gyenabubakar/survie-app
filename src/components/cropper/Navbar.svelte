@@ -10,8 +10,8 @@
     Upload,
     X,
   } from 'phosphor-svelte';
-  import type { Data, NavAction } from '#components/cropper';
   import { Button } from 'shadcn-ui';
+  import type { Data, NavAction } from '#components/cropper/types';
 
   const dispatch = createEventDispatcher();
 

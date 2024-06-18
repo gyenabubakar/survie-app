@@ -1,12 +1,12 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { fly } from 'svelte/transition';
-  import type Cropper from 'cropperjs';
+  import type CropperJS from 'cropperjs';
   import Navbar from './Navbar.svelte';
   import Loader from './Loader.svelte';
   import ImageEditor from './ImageEditor.svelte';
-  import { defaultData } from '#components/cropper';
-  import type { Data, NavAction } from '#components/cropper';
+  import { defaultData } from '#components/cropper/utils';
+  import type { Data, NavAction } from '#components/cropper/types';
 
   const dispatch = createEventDispatcher();
 
@@ -14,7 +14,7 @@
 
   let data: Data = { ...defaultData };
   let editor: ImageEditor | undefined = undefined;
-  let cropper: Cropper | undefined = undefined;
+  let cropper: CropperJS | undefined = undefined;
 
   let localFile: File | null = null;
 
