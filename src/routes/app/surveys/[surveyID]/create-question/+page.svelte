@@ -3,7 +3,7 @@ import { page } from '$app/state';
 import { Card, CardContent } from 'shadcn/card';
 import { Input } from 'shadcn/input';
 import { Label } from 'shadcn/label';
-import { Select, SelectContent, SelectTrigger, SelectValue } from 'shadcn/select';
+import { Select, SelectContent, SelectTrigger } from 'shadcn/select';
 import { Container } from '#components';
 
 console.log(page);
@@ -30,10 +30,8 @@ console.log(page);
 
           <div class="grid grid-cols-2 gap-6">
             <div class="form-field">
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose a question type" />
-                </SelectTrigger>
+              <Select type="single">
+                <SelectTrigger>Choose a question type</SelectTrigger>
                 <SelectContent></SelectContent>
               </Select>
             </div>

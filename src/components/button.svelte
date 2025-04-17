@@ -4,7 +4,7 @@
 import { Button } from 'shadcn/button';
 import { cn } from 'shadcn/utils';
 import type { ButtonProps } from 'shadcn/button';
-import { Loading } from '#components';
+import { Loading } from '#components/index';
 
 type Props = ButtonProps & {
   loading?: boolean;

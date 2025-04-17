@@ -3,8 +3,8 @@ import { fly } from 'svelte/transition';
 import { Copy } from 'phosphor-svelte';
 import { goto } from '$app/navigation';
 import { PUBLIC_DOMAIN } from '$env/static/public';
-import { Button } from 'shadcn/button';
 import { Input } from 'shadcn/input';
+import { Button } from '#components';
 
 // TODO: Replace with actual invite link
 const INVITE_LINK = `https://${PUBLIC_DOMAIN}/invite/${crypto.randomUUID()}`;
@@ -53,7 +53,7 @@ async function copyInviteLink() {
     </Button>
   </div>
 
-  <Button class="mt-10" on:click={() => goto('/app')}>Continue</Button>
+  <Button class="mt-10" onclick={() => goto('/app')}>Continue</Button>
 </main>
 
 <style lang="postcss">

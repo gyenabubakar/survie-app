@@ -2,10 +2,9 @@
 import { enhance } from '$app/forms';
 import { goto } from '$app/navigation';
 import type { SubmitFunction } from '@sveltejs/kit';
-import { Button } from 'shadcn/button';
 import { Input } from 'shadcn/input';
 import { Label } from 'shadcn/label';
-import { FormMessage, FormValidationError } from '#components';
+import { Button, FormMessage, FormValidationError } from '#components';
 import { formFieldErrors } from '#lib/form-schemas/new-password';
 
 let { form } = $props();

@@ -2,10 +2,9 @@
 import { browser } from '$app/environment';
 import { enhance } from '$app/forms';
 import type { SubmitFunction } from '@sveltejs/kit';
-import { Button } from 'shadcn/button';
 import { Input } from 'shadcn/input';
 import { Label } from 'shadcn/label';
-import { FormValidationError, UserImageInput } from '#components';
+import { Button, FormValidationError, UserImageInput } from '#components';
 import { Cropper } from '#components/cropper';
 import { profileFormFieldErrors, profileFormSchema } from '#lib/form-schemas/onboarding';
 import { fieldIsValid } from '#lib/form-schemas/utils';

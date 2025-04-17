@@ -1,11 +1,10 @@
 <script lang="ts">
 import { enhance } from '$app/forms';
 import type { SubmitFunction } from '@sveltejs/kit';
-import { Button } from 'shadcn/button';
 import { Checkbox } from 'shadcn/checkbox';
 import { Input } from 'shadcn/input';
 import { Label } from 'shadcn/label';
-import { FormMessage, FormValidationError, PasswordInput } from '#components';
+import { Button, FormMessage, FormValidationError, PasswordInput } from '#components';
 import { formFieldErrors, formSchema } from '#lib/form-schemas/sign-up';
 import { fieldIsValid } from '#lib/form-schemas/utils';
 
@@ -138,11 +137,7 @@ const handleSubmit: SubmitFunction = ({ cancel }) => {
       class="form-group space-x-2"
       class:no-mb={showAgreedToTermsError || !!form?.validationErrors?.agreedToTerms}
     >
-      <Checkbox
-        id="terms"
-        bind:checked={agreedToTerms}
-        inputAttrs={{ id: 'terms-input', name: 'agreedToTerms' }}
-      />
+      <Checkbox id="terms" bind:checked={agreedToTerms} name="agreedToTerms" />
       <Label for="terms">I agree to the <a href="/#">terms of use</a>.</Label>
     </div>
 

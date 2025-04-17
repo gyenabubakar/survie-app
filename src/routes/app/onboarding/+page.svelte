@@ -2,10 +2,9 @@
 import { enhance } from '$app/forms';
 import { PUBLIC_DOMAIN } from '$env/static/public';
 import type { SubmitFunction } from '@sveltejs/kit';
-import { Button } from 'shadcn/button';
 import { Input } from 'shadcn/input';
 import { Label } from 'shadcn/label';
-import { FormValidationError, UrlSlugInput, UserImageInput } from '#components';
+import { Button, FormValidationError, UrlSlugInput, UserImageInput } from '#components';
 import { Cropper } from '#components/cropper';
 import { companyFormFieldErrors, companyFormSchema } from '#lib/form-schemas/onboarding';
 import { fieldIsValid } from '#lib/form-schemas/utils';

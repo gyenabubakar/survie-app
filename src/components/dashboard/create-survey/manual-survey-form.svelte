@@ -3,13 +3,12 @@ import { fly } from 'svelte/transition';
 import { Question } from 'phosphor-svelte';
 import { enhance } from '$app/forms';
 import type { SubmitFunction } from '@sveltejs/kit';
-import { Button } from 'shadcn/button';
 import { Checkbox } from 'shadcn/checkbox';
 import { Input } from 'shadcn/input';
 import { Label } from 'shadcn/label';
 import { Textarea } from 'shadcn/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from 'shadcn/tooltip';
-import { FormValidationError } from '#components';
+import { Button, FormValidationError } from '#components';
 import {
   manualFormFieldErrors as fieldErrors,
   manualFormSchema as schema,
@@ -51,7 +50,7 @@ const handleSubmit: SubmitFunction = ({ cancel }) => {
   in:fly={{ delay: 150, x: 100, duration: 300 }}
 >
   <div class="form-group">
-    <Label for="survey-title" required>Survey title</Label>
+    <Label for="survey-title">Survey title</Label>
     <Input type="text" id="survey-title" name="title" bind:value={$form.title} required />
 
     {#if titleIsValid === false || $actionData?.validationErrors?.title}
@@ -77,8 +76,11 @@ const handleSubmit: SubmitFunction = ({ cancel }) => {
   <p class="mb-3 text-sm">Survey settings</p>
   <div class="form-group flex items-center space-x-2" style="margin-bottom: 10px">
     <Checkbox
-      inputAttrs={{ id: 'multiple-pages-input', name: 'multiplePages', value: $form.multiplePages }}
+      id="multiple-pages-input"
+      name="multiplePages"
+      onCheckedChange={(checked) => ($form.multiplePages = checked ? 'on' : null)}
     />
+
     <Label for="multiple-pages-input" class="mt-0.5">
       <span>Show questions over multiple pages.</span>
       <Tooltip>
@@ -101,11 +103,9 @@ const handleSubmit: SubmitFunction = ({ cancel }) => {
 
   <div class="form-group flex items-center space-x-2">
     <Checkbox
-      inputAttrs={{
-        id: 'collect-user-info-input',
-        name: 'collectUserInfo',
-        value: $form.collectUserInfo,
-      }}
+      id="collect-user-info-input"
+      name="collectUserInfo"
+      onCheckedChange={(checked) => ($form.collectUserInfo = checked ? 'on' : null)}
     />
     <Label for="collect-user-info-input" class="mt-0.5">
       <span>Attempt to collect user info from participant.</span>

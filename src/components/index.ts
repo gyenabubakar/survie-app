@@ -1,5 +1,6 @@
 export { default as Logo } from './logo.svelte';
 export { default as Loading } from './loading.svelte';
+export { default as Button } from './button.svelte';
 export { default as FormMessage } from './form-message.svelte';
 export { default as FormValidationError } from './form-validation-error.svelte';
 export { default as Container } from './container.svelte';

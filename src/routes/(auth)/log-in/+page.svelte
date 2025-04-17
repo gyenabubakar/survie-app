@@ -1,10 +1,9 @@
 <script lang="ts">
 import { enhance } from '$app/forms';
 import type { SubmitFunction } from '@sveltejs/kit';
-import { Button } from 'shadcn/button';
 import { Input } from 'shadcn/input';
 import { Label } from 'shadcn/label';
-import { FormMessage, FormValidationError, PasswordInput } from '#components';
+import { Button, FormMessage, FormValidationError, PasswordInput } from '#components';
 import { formFieldErrors, formSchema as schema } from '#lib/form-schemas/log-in';
 import { fieldIsValid } from '#lib/form-schemas/utils';
 
