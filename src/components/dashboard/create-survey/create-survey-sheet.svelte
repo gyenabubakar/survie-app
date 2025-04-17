@@ -1,9 +1,18 @@
 <script lang="ts">
-  import { setContext } from 'svelte';
+  import { setContext, type Snippet } from 'svelte';
   import { writable } from 'svelte/store';
   import { Sheet, SheetTrigger, SheetContent } from 'shadcn-ui/sheet';
-  import SurveyFormOptions from './SurveyFormOptions.svelte';
+  import SurveyFormOptions from './survey-form-options.svelte';
   import type { ActiveForm, Context, ManualSurveyFormData } from './utils';
+  import type { Builder } from 'bits-ui';
+
+  type Props = {
+    children?: Snippet<[{ builders: Builder[] }]>;
+    manualForm?: Snippet;
+    aiForm?: Snippet;
+  };
+
+  let { children, manualForm, aiForm }: Props = $props();
 
   const activeForm = writable<ActiveForm>(undefined);
   const manualFormData = writable<ManualSurveyFormData>({
@@ -22,7 +31,7 @@
 
 <Sheet preventScroll={false} {onOpenChange}>
   <SheetTrigger asChild let:builder>
-    <slot builders={[builder]} />
+    {@render children?.({ builders: [builder] })}
   </SheetTrigger>
 
   <SheetContent id="some-id" class="w-full md:max-w-md overflow-x-hidden">
@@ -32,9 +41,9 @@
       {#if !$activeForm}
         <SurveyFormOptions />
       {:else if $activeForm === 'manual-form'}
-        <slot name="manual-form" />
+        {@render manualForm?.()}
       {:else}
-        <slot name="ai-form" />
+        {@render aiForm?.()}
       {/if}
     </div>
   </SheetContent>

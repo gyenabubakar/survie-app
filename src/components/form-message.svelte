@@ -1,12 +1,19 @@
 <script lang="ts">
-  export let variant: 'success' | 'error' = 'error';
+  import type { Snippet } from 'svelte';
 
-  $: success = variant === 'success';
-  $: error = variant === 'error';
+  type Props = {
+    variant?: 'success' | 'error';
+    children?: Snippet;
+  };
+
+  let { variant = 'error', children }: Props = $props();
+
+  let success = $derived(variant === 'success');
+  let error = $derived(variant === 'error');
 </script>
 
 <p aria-live="assertive" class:success class:error>
-  <slot />
+  {@render children?.()}
 </p>
 
 <style lang="postcss">

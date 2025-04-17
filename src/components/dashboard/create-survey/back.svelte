@@ -9,7 +9,7 @@
     <button
       class="flex items-center text-gray-400 text-sm font-medium"
       aria-label="Back"
-      on:click={() => activeForm.set(undefined)}
+      onclick={() => activeForm.set(undefined)}
     >
       Back to options
     </button>

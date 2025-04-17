@@ -1,14 +1,14 @@
-import type { Data, ToolbarTool } from '#components/cropper/types';
 import {
-  ArrowClockwise,
-  ArrowCounterClockwise,
-  ArrowsHorizontal,
-  ArrowsOutCardinal,
-  ArrowsVertical,
-  Crop,
-  MagnifyingGlassMinus,
-  MagnifyingGlassPlus,
-} from 'phosphor-svelte';
+  CropIcon,
+  FlipHorizontalIcon,
+  FlipVerticalIcon,
+  MoveIcon,
+  RotateCcwIcon,
+  RotateCwIcon,
+  ZoomInIcon,
+  ZoomOutIcon,
+} from '@lucide/svelte';
+import type { Data, ToolbarTool } from '#components/cropper/types';
 
 export const defaultData: Data = {
   cropped: false,
@@ -23,42 +23,42 @@ export const defaultData: Data = {
 export const toolbarActions: ToolbarTool[] = [
   {
     name: 'Move',
-    icon: ArrowsOutCardinal,
+    icon: MoveIcon,
     action: 'move',
   },
   {
     name: 'Crop',
-    icon: Crop,
+    icon: CropIcon,
     action: 'crop',
   },
   {
     name: 'Zoom In (I)',
-    icon: MagnifyingGlassPlus,
+    icon: ZoomInIcon,
     action: 'zoom-in',
   },
   {
     name: 'Zoom Out (O)',
-    icon: MagnifyingGlassMinus,
+    icon: ZoomOutIcon,
     action: 'zoom-out',
   },
   {
     name: 'Rotate Left (L)',
-    icon: ArrowCounterClockwise,
+    icon: RotateCcwIcon,
     action: 'rotate-left',
   },
   {
     name: 'Rotate Right (R)',
-    icon: ArrowClockwise,
+    icon: RotateCwIcon,
     action: 'rotate-right',
   },
   {
     name: 'Flip Horizontal (H)',
-    icon: ArrowsHorizontal,
+    icon: FlipHorizontalIcon,
     action: 'flip-horizontal',
   },
   {
     name: 'Flip Vertical (V)',
-    icon: ArrowsVertical,
+    icon: FlipVerticalIcon,
     action: 'flip-vertical',
   },
 ];

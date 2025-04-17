@@ -8,23 +8,23 @@
   import { fieldIsValid } from '#lib/form-schemas/utils';
   import { Cropper } from '#components/cropper';
 
-  export let form;
+  let { form } = $props();
 
-  let name = form?.data?.name ?? '';
-  let slug = form?.data?.slug ?? '';
-  let submitting = false;
-  let formElement: HTMLFormElement | undefined;
+  let name = $state(form?.data?.name ?? '');
+  let slug = $state(form?.data?.slug ?? '');
+  let submitting = $state(false);
+  let formElement: HTMLFormElement | undefined = $state();
 
-  let fileInput: HTMLInputElement | undefined;
-  let imageFile: File | undefined;
-  let showImageCropper = false;
+  let fileInput: HTMLInputElement | undefined = $state();
+  let imageFile: File | undefined = $state();
+  let showImageCropper = $state(false);
 
-  $: nameIsValid = fieldIsValid(companyFormSchema, 'name', name);
-  $: slugIsValid = fieldIsValid(companyFormSchema, 'slug', slug);
-  $: canSubmitForm = !!nameIsValid && !!slugIsValid && !submitting;
+  let nameIsValid = $derived(fieldIsValid(companyFormSchema, 'name', name));
+  let slugIsValid = $derived(fieldIsValid(companyFormSchema, 'slug', slug));
+  let canSubmitForm = $derived(!!nameIsValid && !!slugIsValid && !submitting);
 
-  function closeCropper(event: CustomEvent<File>) {
-    if (event.detail) imageFile = event.detail;
+  function closeCropper(file: File | null) {
+    if (file) imageFile = file;
     showImageCropper = false;
   }
 
@@ -115,7 +115,7 @@
         label="Upload your company icon."
         bind:input={fileInput}
         bind:file={imageFile}
-        on:edit={() => (showImageCropper = true)}
+        onEdit={() => (showImageCropper = true)}
       />
 
       {#if !!form?.validationErrors?.image && imageFile}
@@ -138,5 +138,5 @@
 </main>
 
 {#if imageFile && showImageCropper}
-  <Cropper bind:file={imageFile} on:close={closeCropper} on:remove-file={removeImageFile} />
+  <Cropper bind:file={imageFile} onClose={closeCropper} onRemoveFile={removeImageFile} />
 {/if}

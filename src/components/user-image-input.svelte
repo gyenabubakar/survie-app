@@ -1,16 +1,26 @@
+<!--suppress JSDeprecatedSymbols -->
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { preventDefault, stopPropagation } from 'svelte/legacy';
+
   import { Images, PencilSimple } from 'phosphor-svelte';
   import { toast } from 'svelte-sonner';
   import { isSupportedImageFile } from '#lib';
 
-  const dispatch = createEventDispatcher();
+  type Props = {
+    label: string;
+    input?: HTMLInputElement | undefined;
+    file?: File | undefined;
+    onEdit?: (file: File | undefined) => unknown | Promise<unknown>;
+  };
 
-  export let label: string;
-  export let input: HTMLInputElement | undefined = undefined;
-  export let file: File | undefined = undefined;
+  let {
+    label,
+    input = $bindable(undefined),
+    file = $bindable(undefined),
+    onEdit,
+  }: Props = $props();
 
-  $: temporaryImageURL = file ? URL.createObjectURL(file) : undefined;
+  let temporaryImageURL = $derived(file ? URL.createObjectURL(file) : undefined);
 
   function handleInputChanged(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -28,7 +38,8 @@
     }
   }
 
-  function handleKeyUp(event: KeyboardEvent) {
+  function handleKeyUp(e: Event) {
+    const event = e as KeyboardEvent;
     if (['Enter', ' '].includes(event.key)) {
       input?.click();
     }
@@ -40,8 +51,8 @@
   role="button"
   tabindex="0"
   aria-label="Upload a new image."
-  on:keydown|preventDefault={handleKeyUp}
-  on:click={() => input?.click()}
+  onkeydown={preventDefault(handleKeyUp)}
+  onclick={() => input?.click()}
 >
   <div
     class="image"
@@ -57,7 +68,7 @@
         type="button"
         title="Edit image"
         class="w-6 h-6 bg-pink-600 text-white rounded-full flex items-center justify-center absolute -right-1 top-0"
-        on:click|stopPropagation|capture={() => dispatch('edit', { file })}
+        onclickcapture={stopPropagation(() => onEdit?.(file))}
       >
         <PencilSimple weight="fill" />
       </button>
@@ -81,7 +92,7 @@
   accept="image/jpeg, image/png"
   maxlength="1"
   aria-hidden="true"
-  on:change={handleInputChanged}
+  onchange={handleInputChanged}
 />
 
 <style lang="postcss">

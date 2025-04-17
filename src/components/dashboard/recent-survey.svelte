@@ -2,11 +2,15 @@
   import { Fire } from 'phosphor-svelte';
   import { OptionsButton } from '#components';
 
-  export let id: string;
-  export let title: string;
-  export let description: string;
-  export let active: boolean;
-  export let responsesIn24h: number;
+  type Props = {
+    id: string;
+    title: string;
+    description: string;
+    active: boolean;
+    responsesIn24h: number;
+  };
+
+  let { id, title, description, active, responsesIn24h }: Props = $props();
 </script>
 
 <div class="p-6 relative" data-id={id} data-name="RecentSurvey">

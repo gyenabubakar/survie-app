@@ -3,4 +3,4 @@
  * Find it here — https://github.com/fengyuanchen/photo-editor.
  * */
 
-export { default as Cropper } from './Cropper.svelte';
+export { default as Cropper } from './cropper.svelte';

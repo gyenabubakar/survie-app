@@ -6,13 +6,13 @@
   import { FormValidationError, FormMessage } from '#components';
   import { fieldIsValid } from '#lib/form-schemas/utils';
 
-  export let form;
+  let { form = $bindable() } = $props();
 
-  let email = form?.data?.email ?? '';
-  let submitting = false;
+  let email = $state(form?.data?.email ?? '');
+  let submitting = $state(false);
 
-  $: emailIsValid = fieldIsValid(schema, 'email', email);
-  $: canSubmitForm = !!emailIsValid && !submitting;
+  let isValidEmail = $derived(fieldIsValid(schema, 'email', email));
+  let canSubmitForm = $derived(!!isValidEmail && !submitting);
 
   const handleSubmit: SubmitFunction = ({ cancel }) => {
     if (!canSubmitForm) return cancel();
@@ -56,7 +56,7 @@
           required
         />
 
-        {#if emailIsValid === false || !!form?.validationErrors?.email}
+        {#if isValidEmail === false || !!form?.validationErrors?.email}
           {@const message = form?.validationErrors?.email ?? formFieldErrors.email}
           <FormValidationError {message} />
         {/if}

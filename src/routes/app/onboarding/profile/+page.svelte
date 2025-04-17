@@ -8,21 +8,21 @@
   import { fieldIsValid } from '#lib/form-schemas/utils';
   import { Cropper } from '#components/cropper';
 
-  export let form;
+  let { form } = $props();
 
-  let jobTitle = form?.data?.jobTitle ?? '';
-  let submitting = false;
-  let formElement: HTMLFormElement | undefined;
+  let jobTitle = $state(form?.data?.jobTitle ?? '');
+  let submitting = $state(false);
+  let formElement: HTMLFormElement | undefined = $state();
 
-  let fileInput: HTMLInputElement | undefined;
-  let imageFile: File | undefined;
-  let showImageCropper = false;
+  let fileInput: HTMLInputElement | undefined = $state();
+  let imageFile: File | undefined = $state();
+  let showImageCropper = $state(false);
 
-  $: jobTitleIsValid = fieldIsValid(profileFormSchema, 'jobTitle', jobTitle);
-  $: canSubmitForm = !!jobTitleIsValid && !submitting;
+  let jobTitleIsValid = $derived(fieldIsValid(profileFormSchema, 'jobTitle', jobTitle));
+  let canSubmitForm = $derived(!!jobTitleIsValid && !submitting);
 
-  function closeCropper(event: CustomEvent<File>) {
-    if (event.detail) imageFile = event.detail;
+  function closeCropper(file: File | null) {
+    if (file) imageFile = file;
     showImageCropper = false;
   }
 
@@ -94,7 +94,7 @@
         label="Upload your profile picture"
         bind:input={fileInput}
         bind:file={imageFile}
-        on:edit={() => (showImageCropper = true)}
+        onEdit={() => (showImageCropper = true)}
       />
 
       {#if !!form?.validationErrors?.image && imageFile}
@@ -117,5 +117,5 @@
 </main>
 
 {#if browser && imageFile && showImageCropper}
-  <Cropper bind:file={imageFile} on:close={closeCropper} on:remove-file={removeImageFile} />
+  <Cropper bind:file={imageFile} onClose={closeCropper} onRemoveFile={removeImageFile} />
 {/if}

@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot set properties of undefined (setting 'next') -->
 <!--suppress JSUnusedGlobalSymbols, ReservedWordAsName -->
 <script lang="ts">
   import { Checkbox as CheckboxPrimitive } from 'bits-ui';

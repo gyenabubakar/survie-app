@@ -8,9 +8,13 @@
 
   type DataProp = Omit<Data, 'cropped' | 'cropping' | 'previousUrl'>;
 
-  export let data: DataProp;
+  type Props = {
+    data: DataProp;
+  };
 
-  let element: HTMLDivElement | undefined = undefined;
+  let { data = $bindable() }: Props = $props();
+
+  let element = $state<HTMLDivElement | undefined>();
 
   function read(file: File, event: Event | undefined = undefined): Promise<DataProp | undefined> {
     return new Promise((resolve, reject) => {
@@ -20,16 +24,17 @@
       }
 
       if (REGEXP_MIME_TYPE_IMAGES.test(file.type)) {
-        if (URL) {
-          resolve({
-            loaded: true,
-            name: file.name,
-            type: file.type,
-            url: URL.createObjectURL(file),
-          } as DataProp);
-        } else {
+        if (!URL) {
           reject(new Error('Your browser is not supported.'));
+          return;
         }
+
+        resolve({
+          loaded: true,
+          name: file.name,
+          type: file.type,
+          url: URL.createObjectURL(file),
+        } as DataProp);
       } else {
         reject(new Error(`Please ${event ? event.type : 'choose'} an image file.`));
       }
@@ -44,7 +49,7 @@
       read(files[0])
         .then((__data) => {
           target.value = '';
-          __data && update(__data);
+          if (__data) update(__data);
         })
         .catch((e) => {
           target.value = '';
@@ -146,9 +151,9 @@
   class="loader"
   role="button"
   tabindex="0"
-  on:dragover={dragover}
-  on:drop={drop}
-  on:change={change}
+  ondragover={dragover}
+  ondrop={drop}
+  onchange={change}
 >
   <p>
     Paste or drop image here or

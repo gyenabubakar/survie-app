@@ -6,23 +6,25 @@
   import { FormValidationError, FormMessage, PasswordInput } from '#components';
   import { fieldIsValid } from '#lib/form-schemas/utils';
 
-  export let form;
+  let { form = $bindable() } = $props();
 
-  let firstName = form?.data?.firstName ?? '';
-  let lastName = form?.data?.lastName ?? '';
-  let email = form?.data?.email ?? '';
-  let password = '';
+  let firstName = $state(form?.data?.firstName ?? '');
+  let lastName = $state(form?.data?.lastName ?? '');
+  let email = $state(form?.data?.email ?? '');
+  let password = $state('');
 
-  let agreedToTerms = form?.data?.agreedToTerms === 'on';
-  let submitting = false;
-  let showAgreedToTermsError = false;
+  let agreedToTerms = $state(form?.data?.agreedToTerms === 'on');
+  let submitting = $state(false);
+  let showAgreedToTermsError = $state(false);
 
-  $: fnameIsValid = fieldIsValid(formSchema, 'firstName', firstName);
-  $: lnameIsValid = fieldIsValid(formSchema, 'lastName', lastName);
-  $: emailIsValid = fieldIsValid(formSchema, 'email', email);
-  $: passwordIsValid = fieldIsValid(formSchema, 'password', password);
-  $: textFieldsAreValid = !!fnameIsValid && !!lnameIsValid && !!emailIsValid && !!passwordIsValid;
-  $: canSubmitForm = textFieldsAreValid && agreedToTerms && !submitting;
+  let isValidFirstName = $derived(fieldIsValid(formSchema, 'firstName', firstName));
+  let isValidLastName = $derived(fieldIsValid(formSchema, 'lastName', lastName));
+  let isValidEmail = $derived(fieldIsValid(formSchema, 'email', email));
+  let isValidPassword = $derived(fieldIsValid(formSchema, 'password', password));
+  let areValidTextFields = $derived(
+    !!isValidFirstName && !!isValidLastName && !!isValidEmail && !!isValidPassword
+  );
+  let canSubmitForm = $derived(areValidTextFields && agreedToTerms && !submitting);
 
   const handleSubmit: SubmitFunction = ({ cancel }) => {
     if (!agreedToTerms) {
@@ -72,7 +74,7 @@
           required
         />
 
-        {#if fnameIsValid === false || !!form?.validationErrors?.firstName}
+        {#if isValidFirstName === false || !!form?.validationErrors?.firstName}
           {@const message = form?.validationErrors?.firstName ?? formFieldErrors.firstName}
           <FormValidationError {message} />
         {/if}
@@ -89,7 +91,7 @@
           required
         />
 
-        {#if lnameIsValid === false || !!form?.validationErrors?.lastName}
+        {#if isValidLastName === false || !!form?.validationErrors?.lastName}
           {@const message = form?.validationErrors?.lastName ?? formFieldErrors.lastName}
           <FormValidationError {message} />
         {/if}
@@ -107,7 +109,7 @@
         required
       />
 
-      {#if emailIsValid === false || !!form?.validationErrors?.email}
+      {#if isValidEmail === false || !!form?.validationErrors?.email}
         {@const message = form?.validationErrors?.email ?? formFieldErrors.email}
         <FormValidationError {message} />
       {/if}
@@ -123,7 +125,7 @@
         required
       />
 
-      {#if passwordIsValid === false || !!form?.validationErrors?.password}
+      {#if isValidPassword === false || !!form?.validationErrors?.password}
         {@const message = form?.validationErrors?.password ?? formFieldErrors.password}
         <FormValidationError {message} />
       {/if}

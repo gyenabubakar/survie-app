@@ -6,15 +6,15 @@
   import { FormValidationError, FormMessage, PasswordInput } from '#components';
   import { fieldIsValid } from '#lib/form-schemas/utils';
 
-  export let form;
+  let { form = $bindable() } = $props();
 
-  let email = form?.data?.email ?? '';
-  let password = '';
-  let submitting = false;
+  let email = $state(form?.data?.email ?? '');
+  let password = $state('');
+  let submitting = $state(false);
 
-  $: emailIsValid = fieldIsValid(schema, 'email', email);
-  $: passwordIsValid = fieldIsValid(schema, 'password', password);
-  $: canSubmitForm = !!emailIsValid && !!passwordIsValid && !submitting;
+  let isValidEmail = $derived(fieldIsValid(schema, 'email', email));
+  let isValidPassword = $derived(fieldIsValid(schema, 'password', password));
+  let canSubmitForm = $derived(!!isValidEmail && !!isValidPassword && !submitting);
 
   const handleSubmit: SubmitFunction = ({ cancel }) => {
     if (!canSubmitForm) return cancel();
@@ -52,7 +52,7 @@
         required
       />
 
-      {#if emailIsValid === false || form?.validationErrors?.email}
+      {#if isValidEmail === false || form?.validationErrors?.email}
         {@const message = form?.validationErrors?.email ?? formFieldErrors.email}
         <FormValidationError {message} />
       {/if}
@@ -71,7 +71,7 @@
         bind:value={password}
       />
 
-      {#if passwordIsValid === false || form?.validationErrors?.password}
+      {#if isValidPassword === false || form?.validationErrors?.password}
         {@const message = form?.validationErrors?.password ?? formFieldErrors.password}
         <FormValidationError {message} />
       {/if}

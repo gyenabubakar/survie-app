@@ -1,25 +1,20 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot set properties of undefined (setting 'next') -->
 <!--suppress ReservedWordAsName -->
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
   import { Eye, EyeSlash } from 'phosphor-svelte';
   import { Input } from 'shadcn-ui';
-  import type { InputEvents } from 'shadcn-ui/input';
   import { cn } from '#components/shadcn/utils';
 
-  type $$Props = HTMLInputAttributes & {
-    class?: string;
-    value?: string;
-    canTogglePasswordVisibility?: boolean;
-  };
-  type $$Events = InputEvents;
+  let {
+    value = $bindable(undefined),
+    class: className,
+    ...restProps
+  }: HTMLInputAttributes = $props();
 
-  let className: $$Props['class'] = undefined;
-  export { className as class };
-  export let value: $$Props['value'] = undefined;
+  let inputElement = $state<HTMLInputElement | undefined>();
 
-  let inputElement: HTMLInputElement | undefined;
-
-  let showingPassword = false;
+  let showingPassword = $state(false);
 
   function togglePasswordVisibility() {
     const currentType = inputElement!.getAttribute('type') as HTMLInputAttributes['type'];
@@ -35,9 +30,13 @@
     type="button"
     aria-label={showingPassword ? 'Hide password' : 'Show password'}
     class="absolute top-1/2 right-3 transform -translate-y-1/2"
-    on:click={togglePasswordVisibility}
+    onclick={togglePasswordVisibility}
   >
-    <svelte:component this={showingPassword ? EyeSlash : Eye} class="w-5 h-5" />
+    {#if showingPassword}
+      <EyeSlash class="size-5" />
+    {:else}
+      <Eye class="size-5" />
+    {/if}
   </button>
 
   <Input
@@ -45,7 +44,7 @@
     class={cn('pr-10', className)}
     bind:value
     bind:element={inputElement}
-    {...$$restProps}
+    {...restProps}
   />
 </div>
 

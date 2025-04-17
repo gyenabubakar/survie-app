@@ -6,15 +6,16 @@
   import { Button, Input } from 'shadcn-ui';
 
   // TODO: Replace with actual invite link
-  let inviteLink = `https://${PUBLIC_DOMAIN}/invite/${crypto.randomUUID()}`;
-  let showTooltip = false;
-  let copying = false;
+  const INVITE_LINK = `https://${PUBLIC_DOMAIN}/invite/${crypto.randomUUID()}`;
 
-  $: ariaLabel = copying ? 'Copying link...' : 'Copy invite link';
+  let showTooltip = $state(false);
+  let copying = $state(false);
+
+  let ariaLabel = $derived(copying ? 'Copying link...' : 'Copy invite link');
 
   async function copyInviteLink() {
     copying = true;
-    await navigator.clipboard.writeText(inviteLink);
+    await navigator.clipboard.writeText(INVITE_LINK);
     copying = false;
 
     showTooltip = true;
@@ -33,7 +34,7 @@
   <p class="description">Share this link with people who should be part of your team.</p>
 
   <div class="flex w-full items-center space-x-2">
-    <Input value={inviteLink} readonly class="grow" />
+    <Input value={INVITE_LINK} readonly class="grow" />
     <Button
       type="submit"
       class="relative"

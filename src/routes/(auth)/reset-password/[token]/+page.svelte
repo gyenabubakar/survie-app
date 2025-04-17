@@ -6,17 +6,21 @@
   import { formFieldErrors } from '#lib/form-schemas/new-password';
   import { FormValidationError, FormMessage } from '#components';
 
-  export let form;
+  let { form = $bindable() } = $props();
 
-  let password = '';
-  let password2 = '';
-  let submitting = false;
+  let password = $state('');
+  let password2 = $state('');
+  let submitting = $state(false);
 
-  $: passwordIsValid = password ? password.length >= 8 : null;
-  $: password2IsValid = password2 ? password2.length >= 8 : null;
-  $: passwordsMatch = password === password2;
-  $: showPasswordMismatchError = !passwordsMatch && passwordIsValid && password2IsValid;
-  $: canSubmitForm = !!passwordIsValid && !!password2IsValid && !!passwordsMatch && !submitting;
+  let isValidPassword = $derived(password ? password.length >= 8 : null);
+  let isValidPassword2 = $derived(password2 ? password2.length >= 8 : null);
+  let passwordsMatch = $derived(password === password2);
+  let showingPasswordMismatchError = $derived(
+    !passwordsMatch && isValidPassword && isValidPassword2
+  );
+  let canSubmitForm = $derived(
+    !!isValidPassword && !!isValidPassword2 && !!passwordsMatch && !submitting
+  );
 
   const handleSubmit: SubmitFunction = ({ cancel }) => {
     if (!canSubmitForm) return cancel();
@@ -54,7 +58,7 @@
         <Label for="password">New Password</Label>
         <Input type="password" id="password" name="password" required bind:value={password} />
 
-        {#if passwordIsValid === false || form?.validationErrors?.password}
+        {#if isValidPassword === false || form?.validationErrors?.password}
           {@const message = form?.validationErrors?.password ?? formFieldErrors.password}
           <FormValidationError {message} />
         {/if}
@@ -70,9 +74,9 @@
           bind:value={password2}
         />
 
-        {#if showPasswordMismatchError}
+        {#if showingPasswordMismatchError}
           <FormValidationError message="Passwords do not match." />
-        {:else if password2IsValid === false || form?.validationErrors?.password}
+        {:else if isValidPassword2 === false || form?.validationErrors?.password}
           {@const message = form?.validationErrors?.confirmPassword ?? formFieldErrors.password}
           <FormValidationError {message} />
         {/if}

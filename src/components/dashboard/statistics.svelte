@@ -3,7 +3,11 @@
   import { Card, CardContent } from 'shadcn-ui/card';
   import type { StatType } from '#components/dashboard/types';
 
-  export let stats: StatType[];
+  type Props = {
+    stats: StatType[];
+  };
+
+  let { stats }: Props = $props();
 </script>
 
 <section class="grid grid-cols-4 gap-4">
@@ -24,11 +28,8 @@
             {stat.footer}
           {:else}
             {#if stat.trend !== 'none'}
-              <svelte:component
-                this={stat.trend === 'up' ? TrendUp : TrendDown}
-                weight="bold"
-                size="18px"
-              />
+              {@const SvelteComponent = stat.trend === 'up' ? TrendUp : TrendDown}
+              <SvelteComponent weight="bold" size="18px" />
             {/if}
             <span style="font-family: monospace" class="stat-footer--percentage">
               {stat.percentage}%

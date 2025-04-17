@@ -11,16 +11,16 @@
   import { fieldIsValid } from '#lib/form-schemas/utils';
   import { FormValidationError } from '#components';
   import { getDashboardFormContext, getSheetContext } from './utils';
-  import Back from './Back.svelte';
+  import Back from './back.svelte';
 
   const { manualFormData: form } = getSheetContext();
   const { actionData } = getDashboardFormContext();
 
-  let submitting = false;
+  let submitting = $state(false);
 
-  $: titleIsValid = fieldIsValid(schema, 'title', $form.title);
-  $: descriptionIsValid = fieldIsValid(schema, 'description', $form.description);
-  $: canSubmitForm = titleIsValid && descriptionIsValid && !submitting;
+  let titleIsValid = $derived(fieldIsValid(schema, 'title', $form.title));
+  let descriptionIsValid = $derived(fieldIsValid(schema, 'description', $form.description));
+  let canSubmitForm = $derived(titleIsValid && descriptionIsValid && !submitting);
 
   const handleSubmit: SubmitFunction = ({ cancel }) => {
     if (!canSubmitForm) return cancel();

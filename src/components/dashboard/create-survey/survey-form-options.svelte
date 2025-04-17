@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { createBubbler } from 'svelte/legacy';
+
+  const bubble = createBubbler();
   import { fly } from 'svelte/transition';
   import { getSheetContext } from './utils';
 
@@ -11,8 +14,8 @@
     role="button"
     tabindex="0"
     aria-label="Create your survey with AI"
-    on:click={() => activeForm.set('ai-form')}
-    on:keyup
+    onclick={() => activeForm.set('ai-form')}
+    onkeyup={bubble('keyup')}
   >
     <enhanced:img src="#assets/tabs.svg" alt="tabs illustration" class="w-16" aria-hidden="true" />
     <div class="description">
@@ -29,8 +32,8 @@
     role="button"
     tabindex="0"
     aria-label="Manually create your survey"
-    on:click={() => activeForm.set('manual-form')}
-    on:keyup
+    onclick={() => activeForm.set('manual-form')}
+    onkeyup={bubble('keyup')}
   >
     <enhanced:img
       src="#assets/typewriter.svg"

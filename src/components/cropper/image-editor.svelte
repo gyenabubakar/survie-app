@@ -1,27 +1,29 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
   import 'cropperjs/dist/cropper.css';
-  import { createEventDispatcher, onMount } from 'svelte';
+
+  import { onMount } from 'svelte';
   import CropperJS from 'cropperjs';
   import { defaultData, toolbarActions } from '#components/cropper/utils';
   import type { Data, EditorToolbarAction } from '#components/cropper/types';
 
-  const dispatch = createEventDispatcher();
+  type Props = {
+    file: File | null | undefined;
+    data: Data;
+    cropper: CropperJS | undefined;
+    onCrop?: (file: File | null) => void;
+  };
 
-  export let file: File | undefined;
-  export let data: Data;
-  export let cropper: CropperJS | undefined = undefined;
+  let { file, data = $bindable(), cropper = $bindable(), onCrop }: Props = $props();
 
-  let canvasData: CropperJS.CanvasData | null = null;
-  let cropBoxData: CropperJS.CropBoxData | null = null;
-  let croppedData: CropperJS.Data | null = null;
+  let canvasData = $state<CropperJS.CanvasData | null>(null);
+  let cropBoxData = $state<CropperJS.CropBoxData | null>(null);
+  let croppedData = $state<CropperJS.Data | null>(null);
 
-  let image: HTMLImageElement | undefined = undefined;
+  let image = $state<HTMLImageElement | undefined>();
 
   function start() {
-    if (cropper || data.cropped || !image) {
-      return;
-    }
+    if (cropper || data.cropped || !image) return;
 
     cropper = new CropperJS(image, {
       autoCrop: false,
@@ -30,25 +32,19 @@
       aspectRatio: 1,
 
       ready() {
-        if (croppedData && canvasData && cropBoxData) {
-          cropper
-            ?.crop()
-            ?.setData(croppedData)
-            ?.setCanvasData(canvasData)
-            ?.setCropBoxData(cropBoxData);
+        if (!cropper || !croppedData || !canvasData || !cropBoxData) return;
 
-          croppedData = null;
-          canvasData = null;
-          cropBoxData = null;
-        }
+        cropper.crop().setData(croppedData).setCanvasData(canvasData).setCropBoxData(cropBoxData);
+
+        croppedData = null;
+        canvasData = null;
+        cropBoxData = null;
       },
 
       crop({ detail }) {
-        if (detail.width > 0 && detail.height > 0 && !data.cropping) {
-          update({
-            cropping: true,
-          });
-        }
+        if (detail.width < 0 || detail.height < 0 || data.cropping) return;
+
+        update({ cropping: true });
       },
     });
   }
@@ -79,7 +75,7 @@
           .toDataURL(data.type),
       });
 
-      dispatch('crop', { file: await getFileFromCropper() });
+      onCrop?.(await getFileFromCropper());
 
       stop();
     }
@@ -153,10 +149,10 @@
           cropper?.rotate(90);
           break;
         case 'flip-horizontal':
-          cropper?.scaleX(-cropper?.getData?.()?.scaleX ?? -1);
+          cropper?.scaleX(-(cropper?.getData?.()?.scaleX ?? -1));
           break;
         case 'flip-vertical':
-          cropper?.scaleY(-cropper?.getData?.()?.scaleY ?? -1);
+          cropper?.scaleY(-(cropper?.getData?.()?.scaleY ?? -1));
           break;
 
         default:
@@ -180,9 +176,7 @@
       default:
     }
 
-    if (!cropper) {
-      return;
-    }
+    if (!cropper) return;
 
     switch (e.key.toLowerCase()) {
       case 'enter':
@@ -270,20 +264,21 @@
 </script>
 
 <div class="editor">
-  <div class="canvas" role="region" on:dblclick={handleDoubleClick}>
-    <img bind:this={image} src={data.url} alt={data.name} on:loadstart={start} on:load={start} />
+  <div class="canvas" role="region" ondblclick={handleDoubleClick}>
+    <img bind:this={image} src={data.url} alt={data.name} onloadstart={start} onload={start} />
   </div>
 
   {#if cropper}
     <div class="toolbar">
       {#each toolbarActions as tool, index (index)}
         <button
+          type="button"
           class="toolbar__button"
           title={tool.name}
           aria-label={tool.name}
-          on:click={handleToolbarActionClick(tool.action)}
+          onclick={handleToolbarActionClick(tool.action)}
         >
-          <svelte:component this={tool.icon} weight="bold" aria-hidden="true" />
+          <tool.icon aria-hidden="true" strokeWidth="2" />
         </button>
       {/each}
     </div>
@@ -336,15 +331,19 @@
   :global(.cropper-point) {
     @apply z-20 !h-3 !w-3 !rounded-full !bg-white !opacity-100;
   }
+
   :global(.cropper-point.point-se) {
     @apply -bottom-[5px] -right-[7px];
   }
+
   :global(.cropper-point.point-sw) {
     @apply -bottom-[5px] -left-[7px];
   }
+
   :global(.cropper-point.point-ne) {
     @apply -right-[7px] -top-[5px];
   }
+
   :global(.cropper-point.point-nw) {
     @apply -left-[7px] -top-[5px];
   }
@@ -353,9 +352,11 @@
   :global(.cropper-point.point-w) {
     @apply !h-6;
   }
+
   :global(.cropper-point.point-e) {
     @apply -right-[7px];
   }
+
   :global(.cropper-point.point-w) {
     @apply -left-[7px];
   }
@@ -364,9 +365,11 @@
   :global(.cropper-point.point-s) {
     @apply !w-6;
   }
+
   :global(.cropper-point.point-n) {
     @apply -top-[7px];
   }
+
   :global(.cropper-point.point-s) {
     @apply -bottom-[7px];
   }

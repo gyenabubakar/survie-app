@@ -1,11 +1,11 @@
 <script lang="ts">
   import { Card, CardContent } from 'shadcn-ui/card';
-  import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from 'shadcn-ui/select';
-  import { page } from '$app/stores';
+  import { Select, SelectTrigger, SelectValue, SelectContent } from 'shadcn-ui/select';
+  import { page } from '$app/state';
   import { Container } from '#components';
   import { Input, Label } from 'shadcn-ui';
 
-  console.log($page);
+  console.log(page);
 </script>
 
 <svelte:head>

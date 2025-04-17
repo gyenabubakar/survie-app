@@ -1,5 +1,5 @@
-import type { ComponentType, SvelteComponent } from 'svelte';
-import type { IconContextProps } from 'phosphor-svelte';
+import type { Component } from 'svelte';
+import type { IconProps } from '@lucide/svelte';
 
 export type NavAction = 'crop' | 'clear' | 'restore' | 'remove' | 'save';
 export type EditorToolbarAction =
@@ -24,6 +24,6 @@ export interface Data {
 
 export type ToolbarTool = {
   name: string;
-  icon: ComponentType<SvelteComponent<IconContextProps['values']>>;
+  icon: Component<IconProps>;
   action: EditorToolbarAction;
 };

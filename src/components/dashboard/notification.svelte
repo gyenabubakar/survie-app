@@ -3,14 +3,16 @@
   import { getInitials, getTimeElapsed } from '#lib';
   import type { NotificationInitiator, NotificationType } from '#lib/stores/notifications';
 
-  export let large = false;
-  export let id: string;
-  export let type: NotificationType;
-  export let initiator: NotificationInitiator;
-  export let read: boolean;
-  export let createdAt: string;
+  type Props = {
+    large?: boolean;
+    id: string;
+    type: NotificationType;
+    initiator: NotificationInitiator;
+    read: boolean;
+    createdAt: string;
+  };
 
-  $: message = getMessage(type, new Date(createdAt));
+  let { large = false, id, type, initiator, read, createdAt }: Props = $props();
 
   function getMessage(type: NotificationType, date: Date): string {
     switch (type) {
@@ -20,6 +22,8 @@
         return '';
     }
   }
+
+  const message = $derived(getMessage(type, new Date(createdAt)));
 </script>
 
 <div data-name="Notification" data-id={id} class:unread={!read && !large} class:large>

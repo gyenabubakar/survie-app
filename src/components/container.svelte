@@ -1,29 +1,25 @@
-<!--suppress JSUnusedGlobalSymbols, CssUnusedSymbol, ReservedWordAsName -->
+<!--suppress CssUnusedSymbol -->
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements';
-  import { cn } from '#components/shadcn/utils';
 
   type SizeType = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
-  type $$Props = HTMLAttributes<HTMLDivElement> & {
-    class?: string;
+  type Props = HTMLAttributes<HTMLDivElement> & {
     size?: SizeType;
   };
 
-  let className: string | undefined = undefined;
-  export { className as class };
-  export let size: SizeType = 'xl';
+  let { children, class: className, size = 'sm' }: Props = $props();
 </script>
 
 <div
-  class={cn('sv-container', className)}
+  class={['sv-container', className]}
   class:sm={size === 'sm'}
   class:md={size === 'md'}
   class:lg={size === 'lg'}
   class:xl={size === 'xl'}
   class:xxl={size === '2xl'}
 >
-  <slot />
+  {@render children?.()}
 </div>
 
 <style lang="postcss">

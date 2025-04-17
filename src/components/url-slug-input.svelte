@@ -1,13 +1,13 @@
-<!--suppress JSUnusedGlobalSymbols -->
+<!--suppress JSDeprecatedSymbols -->
 <script lang="ts">
+  import { self } from 'svelte/legacy';
+
   import type { HTMLInputAttributes } from 'svelte/elements';
   import { PUBLIC_DOMAIN } from '$env/static/public';
 
-  type $$Props = HTMLInputAttributes;
+  let { value = $bindable(''), ...restProps }: HTMLInputAttributes = $props();
 
-  export let value = '';
-
-  let input: HTMLInputElement | undefined;
+  let input: HTMLInputElement | undefined = $state();
 
   function handleClick(e: MouseEvent) {
     const target = e.target as HTMLElement;
@@ -21,11 +21,11 @@
   class="input-wrapper"
   role="textbox"
   tabindex="0"
-  on:click={handleClick}
-  on:keydown|self={() => input?.focus()}
+  onclick={handleClick}
+  onkeydown={self(() => input?.focus())}
 >
   <span>{PUBLIC_DOMAIN}/@</span>
-  <input bind:this={input} bind:value type="text" {...$$restProps} />
+  <input bind:this={input} bind:value type="text" {...restProps} />
 </div>
 
 <style lang="postcss">
@@ -34,7 +34,7 @@
     @apply shadow-sm transition-colors placeholder:text-base placeholder:text-muted-foreground;
     @apply focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50;
 
-    &:has(input:focus-visible) {
+    &:has(:global(input:focus-visible)) {
       @apply ring-1 ring-ring;
     }
 

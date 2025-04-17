@@ -1,5 +1,8 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
+  import { createBubbler } from 'svelte/legacy';
+
+  const bubble = createBubbler();
   import { Bell, CaretDown, Pulse, SignOut } from 'phosphor-svelte';
   import { Button } from 'shadcn-ui';
   import {
@@ -12,7 +15,7 @@
   } from 'shadcn-ui/dropdown-menu';
   import { Popover, PopoverTrigger, PopoverContent } from 'shadcn-ui/popover';
   import { Avatar, AvatarFallback, AvatarImage } from 'shadcn-ui/avatar';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import { goto } from '$app/navigation';
   import { createNotificationStore } from '#lib/stores/notifications';
   import { fakeAvatar } from '#lib/fakes';
@@ -20,12 +23,14 @@
   import { cn } from '#components/shadcn/utils';
   import { Notification } from '#components/dashboard';
 
+  let { children } = $props();
+
   const { notifications, hasUnread } = createNotificationStore();
 
-  $: onDashboardPage = $page.url.pathname === '/app';
-  $: onSurveysPage = $page.url.pathname === '/app/surveys';
-  $: onResponsesPage = $page.url.pathname === '/app/responses';
-  $: onAIPage = $page.url.pathname === '/app/ai';
+  let onDashboardPage = $derived(page.url.pathname === '/app');
+  let onSurveysPage = $derived(page.url.pathname === '/app/surveys');
+  let onResponsesPage = $derived(page.url.pathname === '/app/responses');
+  let onAIPage = $derived(page.url.pathname === '/app/ai');
 </script>
 
 <header>
@@ -51,8 +56,8 @@
           <DropdownMenu preventScroll={false}>
             <DropdownMenuTrigger>
               <li>
-                <!-- svelte-ignore a11y-missing-attribute -->
-                <a role="button" tabindex="0" on:keyup>
+                <!-- svelte-ignore a11y_missing_attribute -->
+                <a role="button" tabindex="0" onkeyup={bubble('keyup')}>
                   <span class="mr-1">Account</span>
                   <CaretDown size="16px" weight="bold" />
                 </a>
@@ -106,7 +111,7 @@
             {#if $hasUnread}
               <span
                 class="absolute w-3 h-3 bg-red-500 rounded-full top-0 right-0 border-2 border-white"
-              />
+              ></span>
             {/if}
           </button>
         </PopoverTrigger>
@@ -159,7 +164,7 @@
   </Container>
 </header>
 
-<slot />
+{@render children?.()}
 
 <style lang="postcss">
   header {

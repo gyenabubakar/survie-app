@@ -6,9 +6,14 @@
     required?: boolean;
   };
 
-  let className: $$Props['class'] = undefined;
-  export { className as class };
-  export let required = false;
+  interface Props {
+    class?: $$Props['class'];
+    required?: boolean;
+    children?: import('svelte').Snippet;
+    [key: string]: any;
+  }
+
+  let { class: className = undefined, required = false, children, ...rest }: Props = $props();
 </script>
 
 <LabelPrimitive.Root
@@ -16,9 +21,9 @@
     'text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
     className
   )}
-  {...$$restProps}
+  {...rest}
 >
-  <slot />
+  {@render children?.()}
   {#if required}
     &nbsp;<span class="text-red-500">*</span>
   {/if}

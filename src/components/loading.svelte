@@ -1,18 +1,28 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot set properties of undefined (setting 'next') -->
 <!--suppress CssUnusedSymbol, ReservedWordAsName -->
 <script lang="ts">
-  import { cn } from '#components/shadcn/utils';
+  import type { HTMLAttributes } from 'svelte/elements';
 
   const DURATION_UNIT_REGEX = /s|ms$/;
 
-  let className: string | undefined = undefined;
-  export { className as class };
-  export let color = '#fff';
-  export let duration = '1.2s';
-  export let size = '60px';
-  export let pause = false;
+  type Props = HTMLAttributes<HTMLDivElement> & {
+    color?: string;
+    duration?: string;
+    size?: string;
+    pause?: boolean;
+  };
 
-  let durationUnit: string = duration.match(DURATION_UNIT_REGEX)?.[0] ?? 's';
-  let durationNum: string = duration.replace(DURATION_UNIT_REGEX, '');
+  let {
+    class: className,
+    color = '#fff',
+    duration = '1.2s',
+    size = '60px',
+    pause = false,
+    ...restProps
+  }: Props = $props();
+
+  const durationUnit: string = $derived(duration.match(DURATION_UNIT_REGEX)?.[0] ?? 's');
+  const durationNum: string = $derived(duration.replace(DURATION_UNIT_REGEX, ''));
 
   function range(size: number, startAt = 0) {
     return [...Array(size).keys()].map((i) => i + startAt);
@@ -20,19 +30,19 @@
 </script>
 
 <div
-  class={cn('wrapper', className)}
+  class={['wrapper', className]}
   style:--size={size}
   style:--color={color}
   style:--duration={duration}
   aria-hidden="true"
-  {...$$restProps}
+  {...restProps}
 >
   {#each range(5, 1) as version}
     <div
       class="rect"
       class:pause-animation={pause}
       style="animation-delay: {(version - 1) * (+durationNum / 12)}{durationUnit}"
-    />
+    ></div>
   {/each}
 </div>
 

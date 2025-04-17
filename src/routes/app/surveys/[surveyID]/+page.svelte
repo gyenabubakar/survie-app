@@ -3,9 +3,9 @@
   import { Button } from 'shadcn-ui';
   import { Badge } from 'shadcn-ui/badge';
   import { Container, OptionsButton } from '#components';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
 
-  const surveyID = $page.params.surveyID;
+  const surveyID = page.params.surveyID;
 </script>
 
 <svelte:head>

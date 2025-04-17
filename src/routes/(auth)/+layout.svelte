@@ -1,11 +1,13 @@
-<script lang="ts"></script>
+<script lang="ts">
+  let { children } = $props();
+</script>
 
 <div class="layout">
-  <a href="/" class="w-max inline-block">
+  <a href="/" class="w-max inline-block" aria-label="Survie logo">
     <enhanced:img src="#assets/survie.svg" alt="Survie logo" width="40" height="40" />
   </a>
 
-  <slot />
+  {@render children?.()}
 </div>
 
 <style lang="postcss">

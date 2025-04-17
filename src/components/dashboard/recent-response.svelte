@@ -3,11 +3,15 @@
   import { Avatar, AvatarFallback, AvatarImage } from 'shadcn-ui/avatar';
   import { getInitials, getTimeElapsed } from '#lib';
 
-  export let id: string;
-  export let avatar: string | null;
-  export let username: string;
-  export let survey: string;
-  export let completedAt: string;
+  interface Props {
+    id: string;
+    avatar: string | null;
+    username: string;
+    survey: string;
+    completedAt: string;
+  }
+
+  let { id, avatar, username, survey, completedAt }: Props = $props();
 </script>
 
 <div class="flex items-center justify-between p-5" data-id={id} data-name="RecentResponse">

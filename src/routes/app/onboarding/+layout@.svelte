@@ -1,12 +1,14 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
   import { Logo, Container } from '#components';
+
+  let { children } = $props();
 </script>
 
 <div class="layout">
   <Container size="sm" class="pt-[140px]">
     <Logo />
-    <slot />
+    {@render children?.()}
   </Container>
 </div>
 

@@ -21,7 +21,7 @@
 
 <ButtonPrimitive.Root
   {builders}
-  class={cn(buttonVariants({ variant, size }), className)}
+  class={cn(buttonVariants({ variant, size, className }))}
   type="button"
   aria-live={loading !== undefined ? 'polite' : undefined}
   {...$$restProps}

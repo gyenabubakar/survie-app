@@ -15,12 +15,11 @@
     Statistics,
   } from '#components/dashboard';
 
-  export let data;
-  export let form;
+  let { data, form } = $props();
 
   const actionData = writable(form);
 
-  $: actionData.set(form);
+  $effect.pre(() => actionData.set(form));
 
   setContext('dashboard-page:form', { actionData });
 </script>
@@ -94,10 +93,13 @@
               Click the button below and start collecting responses in minutes.
             </p>
             <div class="mt-2">
-              <CreateSurveySheet let:builders>
-                <Button class="w-full" {builders}>Create survey</Button>
-
-                <ManualSurveyForm slot="manual-form" />
+              <CreateSurveySheet>
+                {#snippet children({ builders })}
+                  <Button class="w-full" {builders}>Create survey</Button>
+                {/snippet}
+                {#snippet manualForm()}
+                  <ManualSurveyForm slot="manual-form" />
+                {/snippet}
               </CreateSurveySheet>
             </div>
           </Card>
