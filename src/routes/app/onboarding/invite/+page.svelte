@@ -9,19 +9,22 @@ import { Button } from '#components';
 // TODO: Replace with actual invite link
 const INVITE_LINK = `https://${PUBLIC_DOMAIN}/invite/${crypto.randomUUID()}`;
 
-let showTooltip = $state(false);
+let showingTooltip = $state(false);
 let copying = $state(false);
 
 let ariaLabel = $derived(copying ? 'Copying link...' : 'Copy invite link');
 
 async function copyInviteLink() {
+  if (copying || showingTooltip) return;
+
   copying = true;
   await navigator.clipboard.writeText(INVITE_LINK);
   copying = false;
 
-  showTooltip = true;
+  showingTooltip = true;
+
   setTimeout(() => {
-    showTooltip = false;
+    showingTooltip = false;
   }, 2000);
 }
 </script>
@@ -34,23 +37,25 @@ async function copyInviteLink() {
   <h1>Do you want to invite any team members to help you create and review your surveys?</h1>
   <p class="description">Share this link with people who should be part of your team.</p>
 
-  <div class="flex w-full items-center space-x-2">
+  <div class="flex w-full items-center gap-2">
     <Input value={INVITE_LINK} readonly class="grow" />
-    <Button
-      type="submit"
-      class="relative"
-      loading={copying}
-      aria-label={ariaLabel}
-      onclick={copyInviteLink}
-    >
-      <Copy size="20px" aria-hidden="true" />
+    <div class="relative size-max">
+      <Button
+        type="button"
+        loading={copying}
+        disabled={copying || showingTooltip}
+        aria-label={ariaLabel}
+        onclick={copyInviteLink}
+      >
+        <Copy size="20px" aria-hidden="true" />
+      </Button>
 
-      {#if showTooltip}
+      {#if showingTooltip}
         <span class="tooltip" aria-live="polite" transition:fly={{ y: 20, duration: 200 }}>
           Link copied!
         </span>
       {/if}
-    </Button>
+    </div>
   </div>
 
   <Button class="mt-10" onclick={() => goto('/app')}>Continue</Button>
@@ -58,7 +63,7 @@ async function copyInviteLink() {
 
 <style lang="postcss">
 .tooltip {
-  @apply absolute -top-[115%] inline-block rounded-md bg-black px-2.5 py-1.5 text-sm;
+  @apply absolute -left-1/2 -top-[115%] inline-block w-[90px] rounded-md bg-black px-2.5 py-1.5 text-center text-sm text-white;
 
   &::after {
     @apply absolute -bottom-1 left-[43%] inline-block rotate-45 transform;
