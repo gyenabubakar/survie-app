@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { DotsThreeOutline } from 'phosphor-svelte';
-  import type { Props } from 'shadcn-ui/button';
-  import { Button } from 'shadcn-ui';
-  import { cn } from '#components/shadcn/utils';
+import { DotsThreeOutline } from 'phosphor-svelte';
+import { Button } from 'shadcn/button';
+import { cn } from 'shadcn/utils';
+import type { Props } from 'shadcn/button';
 
-  let { class: className, ...restProps }: Props = $props();
+let { class: className, ...restProps }: Props = $props();
 </script>
 
 <Button variant="outline" size="icon" class={cn('h-[30px]', className)} {...restProps}>

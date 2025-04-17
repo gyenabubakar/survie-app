@@ -1,40 +1,37 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
-  import { createBubbler } from 'svelte/legacy';
+import { Bell, CaretDown, Pulse, SignOut } from 'phosphor-svelte';
+import { goto } from '$app/navigation';
+import { page } from '$app/state';
+import { Avatar, AvatarFallback, AvatarImage } from 'shadcn/avatar';
+import { Button } from 'shadcn/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from 'shadcn/dropdown-menu';
+import { Popover, PopoverContent, PopoverTrigger } from 'shadcn/popover';
+import { cn } from 'shadcn/utils';
+import { Container, Logo } from '#components';
+import { Notification } from '#components/dashboard';
+import { fakeAvatar } from '#lib/fakes';
+import { createNotificationStore } from '#lib/stores/notifications';
 
-  const bubble = createBubbler();
-  import { Bell, CaretDown, Pulse, SignOut } from 'phosphor-svelte';
-  import { Button } from 'shadcn-ui';
-  import {
-    DropdownMenu,
-    DropdownMenuTrigger,
-    DropdownMenuContent,
-    DropdownMenuSeparator,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-  } from 'shadcn-ui/dropdown-menu';
-  import { Popover, PopoverTrigger, PopoverContent } from 'shadcn-ui/popover';
-  import { Avatar, AvatarFallback, AvatarImage } from 'shadcn-ui/avatar';
-  import { page } from '$app/state';
-  import { goto } from '$app/navigation';
-  import { createNotificationStore } from '#lib/stores/notifications';
-  import { fakeAvatar } from '#lib/fakes';
-  import { Container, Logo } from '#components';
-  import { cn } from '#components/shadcn/utils';
-  import { Notification } from '#components/dashboard';
+let { children } = $props();
 
-  let { children } = $props();
+const { notifications, hasUnread } = createNotificationStore();
 
-  const { notifications, hasUnread } = createNotificationStore();
-
-  let onDashboardPage = $derived(page.url.pathname === '/app');
-  let onSurveysPage = $derived(page.url.pathname === '/app/surveys');
-  let onResponsesPage = $derived(page.url.pathname === '/app/responses');
-  let onAIPage = $derived(page.url.pathname === '/app/ai');
+let onDashboardPage = $derived(page.url.pathname === '/app');
+let onSurveysPage = $derived(page.url.pathname === '/app/surveys');
+let onResponsesPage = $derived(page.url.pathname === '/app/responses');
+let onAIPage = $derived(page.url.pathname === '/app/ai');
 </script>
 
 <header>
-  <Container size="2xl" class="py-3 flex items-center justify-between">
+  <Container size="2xl" class="flex items-center justify-between py-3">
     <div class="flex items-center">
       <Logo small class="mr-8" />
 
@@ -53,37 +50,39 @@
             <a href="/app/ai" class:active={onAIPage}>AI</a>
           </li>
 
-          <DropdownMenu preventScroll={false}>
-            <DropdownMenuTrigger>
-              <li>
-                <!-- svelte-ignore a11y_missing_attribute -->
-                <a role="button" tabindex="0" onkeyup={bubble('keyup')}>
-                  <span class="mr-1">Account</span>
-                  <CaretDown size="16px" weight="bold" />
-                </a>
-              </li>
-            </DropdownMenuTrigger>
+          <li>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                {#snippet child({ props })}
+                  <!-- svelte-ignore a11y_invalid_attribute -->
+                  <a {...props} tabindex="0" href="#">
+                    <span class="mr-1">Account</span>
+                    <CaretDown size="16px" weight="bold" />
+                  </a>
+                {/snippet}
+              </DropdownMenuTrigger>
 
-            <DropdownMenuContent class="h-max">
-              <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <a href="/#"> Survey Settings </a>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <a href="/#">Company details</a>
-                </DropdownMenuItem>
+              <DropdownMenuContent class="h-max">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <a href="/#"> Survey Settings </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <a href="/#">Company details</a>
+                  </DropdownMenuItem>
 
-                <DropdownMenuSeparator />
+                  <DropdownMenuSeparator />
 
-                <DropdownMenuItem>
-                  <a href="/#">Manage team</a>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <a href="/#">Join team link</a>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  <DropdownMenuItem>
+                    <a href="/#">Manage team</a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <a href="/#">Join team link</a>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </li>
         </ul>
       </nav>
     </div>
@@ -91,7 +90,7 @@
     <div class="flex items-center gap-2.5">
       <Popover>
         <PopoverTrigger>
-          <button class="py-0 px-2 bg-black/5 flex items-center rounded-md">
+          <button class="flex items-center rounded-md bg-black/5 px-2 py-0">
             <Pulse weight="fill" class="mr-1" />
             <span style="font-family: sans-serif;">0</span>
           </button>
@@ -106,19 +105,19 @@
 
       <Popover>
         <PopoverTrigger>
-          <button class="relative flex items-center mx-3">
+          <button class="relative mx-3 flex items-center">
             <Bell size="24px" class={cn($hasUnread ? 'text-gray-600' : 'text-gray-400')} />
             {#if $hasUnread}
               <span
-                class="absolute w-3 h-3 bg-red-500 rounded-full top-0 right-0 border-2 border-white"
+                class="absolute right-0 top-0 h-3 w-3 rounded-full border-2 border-white bg-red-500"
               ></span>
             {/if}
           </button>
         </PopoverTrigger>
         <PopoverContent
           class={cn(
-            'w-[300px] h-max p-0',
-            !$notifications.length && 'h-[115px] flex items-center justify-center'
+            'h-max w-[300px] p-0',
+            !$notifications.length && 'flex h-[115px] items-center justify-center',
           )}
         >
           {#each $notifications as notification (notification.id)}
@@ -129,7 +128,7 @@
 
           {#if $notifications.length}
             <div class="p-2">
-              <Button class="w-full" on:click={() => goto('/app/notifications')}>
+              <Button class="w-full" onclick={() => goto('/app/notifications')}>
                 See all notifications
               </Button>
             </div>
@@ -137,10 +136,10 @@
         </PopoverContent>
       </Popover>
 
-      <DropdownMenu preventScroll={false}>
+      <DropdownMenu>
         <DropdownMenuTrigger>
           <button class="flex items-center justify-center">
-            <Avatar class="w-[35px] h-[35px]">
+            <Avatar class="h-[35px] w-[35px]">
               <AvatarImage src={fakeAvatar} alt="Avatar" />
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
@@ -152,7 +151,7 @@
               <a href="/#">My account</a>
             </DropdownMenuItem>
             <DropdownMenuItem id="logout-link">
-              <a href="/app/log-out" class="flex items-center justify-between w-full">
+              <a href="/app/log-out" class="flex w-full items-center justify-between">
                 <span>Log out</span>
                 <SignOut weight="bold" />
               </a>
@@ -167,63 +166,63 @@
 {@render children?.()}
 
 <style lang="postcss">
-  header {
-    @apply fixed left-0 right-0 top-0 h-[59px] border-b border-b-slate-200 bg-white;
+header {
+  @apply fixed left-0 right-0 top-0 h-[59px] border-b border-b-slate-200 bg-white;
+}
+
+:global(main) {
+  @apply mt-[60px] pb-24;
+}
+
+nav a {
+  @apply text-lg font-medium text-gray-500/80 hover:text-black;
+
+  &.active {
+    @apply text-black;
   }
 
-  :global(main) {
-    @apply mt-[60px] pb-24;
-  }
-
-  nav a {
-    @apply text-lg font-medium text-gray-500/80 hover:text-black;
-
-    &.active {
-      @apply text-black;
-    }
-
-    &[role='button'] {
-      @apply flex items-center;
-    }
-  }
-
-  ul {
+  &[role='button'] {
     @apply flex items-center;
+  }
+}
 
-    & li:not(:last-child) {
-      @apply mr-8;
-    }
+ul {
+  @apply flex items-center;
+
+  & li:not(:last-child) {
+    @apply mr-8;
+  }
+}
+
+:global([data-menu-content]) {
+  @apply focus:!outline-0;
+
+  :global([data-menu-item]) {
+    @apply hover:bg-black/5;
   }
 
-  :global([data-menu-content]) {
-    @apply focus:!outline-0;
-
-    :global([data-menu-item]) {
-      @apply hover:bg-black/5;
-    }
-
-    a {
-      @apply text-base text-black;
-    }
+  a {
+    @apply text-base text-black;
   }
+}
 
-  :global(#logout-link) {
-    @apply hover:bg-red-50;
+:global(#logout-link) {
+  @apply hover:bg-red-50;
 
-    & a {
-      @apply text-red-500;
-    }
+  & a {
+    @apply text-red-500;
   }
+}
 
-  :global(main) {
-    @apply flex-grow bg-slate-50/80 pt-12;
+:global(main) {
+  @apply flex-grow bg-slate-50/80 pt-12;
 
-    & :global(h1) {
-      @apply mb-4 text-3xl font-bold;
-    }
+  & :global(h1) {
+    @apply mb-4 text-3xl font-bold;
   }
+}
 
-  :global(body > div) {
-    @apply flex h-screen flex-col;
-  }
+:global(body > div) {
+  @apply flex h-screen flex-col;
+}
 </style>

@@ -1,36 +1,39 @@
 <!-- @migration-task Error while migrating Svelte code: Cannot set properties of undefined (setting 'next') -->
 <!--suppress ReservedWordAsName -->
 <script lang="ts">
-  import { Button as ButtonPrimitive } from 'bits-ui';
-  import { cn } from '#components/shadcn/utils';
-  import { buttonVariants, type Props, type Events } from '.';
-  import { Loading } from '#components';
+import { Button } from 'shadcn/button';
+import { cn } from 'shadcn/utils';
+import type { ButtonProps } from 'shadcn/button';
+import { Loading } from '#components';
 
-  type $$Props = Props & {
-    loading?: boolean;
-  };
-  type $$Events = Events;
+type Props = ButtonProps & {
+  loading?: boolean;
+  loadingText?: string;
+};
 
-  let className: $$Props['class'] = undefined;
-  export { className as class };
-  export let variant: $$Props['variant'] = 'default';
-  export let size: $$Props['size'] = 'default';
-  export let builders: $$Props['builders'] = [];
-  export let loading: boolean | undefined = undefined;
+let {
+  children,
+  loading,
+  loadingText = 'Processing...',
+  disabled,
+  class: className,
+  ...restProps
+}: Props = $props();
 </script>
 
-<ButtonPrimitive.Root
-  {builders}
-  class={cn(buttonVariants({ variant, size, className }))}
+<Button
   type="button"
+  disabled={disabled || loading}
   aria-live={loading !== undefined ? 'polite' : undefined}
-  {...$$restProps}
-  on:click
-  on:keydown
+  class={cn(className, 'relative')}
+  {...restProps}
 >
-  {#if !loading}
-    <slot />
-  {:else}
+  {@render children?.()}
+
+  <span
+    class="absolute bottom-0 left-0 right-0 top-0 flex h-full w-full items-center justify-center"
+    aria-label={loadingText}
+  >
     <Loading size="23px" aria-hidden="true" />
-  {/if}
-</ButtonPrimitive.Root>
+  </span>
+</Button>

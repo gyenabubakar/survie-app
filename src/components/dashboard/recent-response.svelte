@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { Button } from 'shadcn-ui';
-  import { Avatar, AvatarFallback, AvatarImage } from 'shadcn-ui/avatar';
-  import { getInitials, getTimeElapsed } from '#lib';
+import { Avatar, AvatarFallback, AvatarImage } from 'shadcn/avatar';
+import { Button } from 'shadcn/button';
+import { getInitials, getTimeElapsed } from '#lib';
 
-  interface Props {
-    id: string;
-    avatar: string | null;
-    username: string;
-    survey: string;
-    completedAt: string;
-  }
+interface Props {
+  id: string;
+  avatar: string | null;
+  username: string;
+  survey: string;
+  completedAt: string;
+}
 
-  let { id, avatar, username, survey, completedAt }: Props = $props();
+let { id, avatar, username, survey, completedAt }: Props = $props();
 </script>
 
 <div class="flex items-center justify-between p-5" data-id={id} data-name="RecentResponse">
@@ -38,9 +38,9 @@
 </div>
 
 <style lang="postcss">
-  [data-name='RecentResponse'] {
-    &:not(:last-child) {
-      @apply border-b border-slate-100;
-    }
+[data-name='RecentResponse'] {
+  &:not(:last-child) {
+    @apply border-b border-slate-100;
   }
+}
 </style>

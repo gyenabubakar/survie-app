@@ -1,15 +1,15 @@
 import type { z } from 'zod';
-import * as signup from './sign-up';
 import * as login from './log-in';
-import * as reset from './reset-password';
-import * as onboarding from './onboarding';
 import * as newPassword from './new-password';
 import * as newSurvey from './new-survey';
+import * as onboarding from './onboarding';
+import * as reset from './reset-password';
+import * as signup from './sign-up';
 
 export function getValidationErrors<T>(
   data: object,
   formSchema: z.Schema,
-  fieldErrors: Record<string, string>
+  fieldErrors: Record<string, string>,
 ): T | null {
   const result = formSchema.safeParse(data);
   if (result.success) return null;
@@ -28,37 +28,37 @@ export function getValidationErrors<T>(
 
 export function validateForm(
   form: 'sign-up',
-  request: Request
+  request: Request,
 ): Promise<SignupValidFormResult | SignupInvalidFormResult>;
 
 export function validateForm(
   form: 'log-in',
-  request: Request
+  request: Request,
 ): Promise<LoginValidFormResult | LoginInvalidFormResult>;
 
 export function validateForm(
   form: 'reset-password',
-  request: Request
+  request: Request,
 ): Promise<ResetValidFormResult | ResetInvalidFormResult>;
 
 export function validateForm(
   form: 'auth-new-password',
-  request: Request
+  request: Request,
 ): Promise<NewPasswordValidFormResult | NewPasswordInvalidFormResult>;
 
 export function validateForm(
   form: 'onboarding-company',
-  request: Request
+  request: Request,
 ): Promise<CompanyInfoValidFormResult | CompanyInfoInvalidFormResult>;
 
 export function validateForm(
   form: 'onboarding-profile',
-  request: Request
+  request: Request,
 ): Promise<ProfileValidFormResult | ProfileInvalidFormResult>;
 
 export function validateForm(
   form: 'app-new-survey-manual',
-  request: Request
+  request: Request,
 ): Promise<NewSurveyValidFormResult | NewSurveyInvalidFormResult>;
 
 export async function validateForm(
@@ -70,7 +70,7 @@ export async function validateForm(
     | 'onboarding-company'
     | 'onboarding-profile'
     | 'app-new-survey-manual',
-  request: Request
+  request: Request,
 ): Promise<ValidFormResultType | InvalidFormResultType> {
   let formSchema: FormSchemaType;
   let formFieldErrors: FormFieldErrorsType;
@@ -116,7 +116,7 @@ export async function validateForm(
   const validationErrors = getValidationErrors<typeof formFieldErrors>(
     data,
     formSchema,
-    formFieldErrors
+    formFieldErrors,
   );
 
   if ('password' in data) delete data.password;

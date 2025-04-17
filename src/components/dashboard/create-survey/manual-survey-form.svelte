@@ -1,40 +1,45 @@
 <script lang="ts">
-  import { fly } from 'svelte/transition';
-  import { Question } from 'phosphor-svelte';
-  import type { SubmitFunction } from '@sveltejs/kit';
-  import { Checkbox, Input, Label, Button } from 'shadcn-ui';
-  import { Textarea } from 'shadcn-ui/textarea';
-  import { Tooltip, TooltipTrigger, TooltipContent } from 'shadcn-ui/tooltip';
-  import { enhance } from '$app/forms';
-  import { manualFormSchema as schema } from '#lib/form-schemas/new-survey';
-  import { manualFormFieldErrors as fieldErrors } from '#lib/form-schemas/new-survey';
-  import { fieldIsValid } from '#lib/form-schemas/utils';
-  import { FormValidationError } from '#components';
-  import { getDashboardFormContext, getSheetContext } from './utils';
-  import Back from './back.svelte';
+import { fly } from 'svelte/transition';
+import { Question } from 'phosphor-svelte';
+import { enhance } from '$app/forms';
+import type { SubmitFunction } from '@sveltejs/kit';
+import { Button } from 'shadcn/button';
+import { Checkbox } from 'shadcn/checkbox';
+import { Input } from 'shadcn/input';
+import { Label } from 'shadcn/label';
+import { Textarea } from 'shadcn/textarea';
+import { Tooltip, TooltipContent, TooltipTrigger } from 'shadcn/tooltip';
+import { FormValidationError } from '#components';
+import {
+  manualFormFieldErrors as fieldErrors,
+  manualFormSchema as schema,
+} from '#lib/form-schemas/new-survey';
+import { fieldIsValid } from '#lib/form-schemas/utils';
+import Back from './back.svelte';
+import { getDashboardFormContext, getSheetContext } from './utils';
 
-  const { manualFormData: form } = getSheetContext();
-  const { actionData } = getDashboardFormContext();
+const { manualFormData: form } = getSheetContext();
+const { actionData } = getDashboardFormContext();
 
-  let submitting = $state(false);
+let submitting = $state(false);
 
-  let titleIsValid = $derived(fieldIsValid(schema, 'title', $form.title));
-  let descriptionIsValid = $derived(fieldIsValid(schema, 'description', $form.description));
-  let canSubmitForm = $derived(titleIsValid && descriptionIsValid && !submitting);
+let titleIsValid = $derived(fieldIsValid(schema, 'title', $form.title));
+let descriptionIsValid = $derived(fieldIsValid(schema, 'description', $form.description));
+let canSubmitForm = $derived(titleIsValid && descriptionIsValid && !submitting);
 
-  const handleSubmit: SubmitFunction = ({ cancel }) => {
-    if (!canSubmitForm) return cancel();
-    submitting = true;
+const handleSubmit: SubmitFunction = ({ cancel }) => {
+  if (!canSubmitForm) return cancel();
+  submitting = true;
 
-    if ($actionData?.action === 'createSurvey' && $actionData?.validationErrors) {
-      $actionData.validationErrors = null;
-    }
+  if ($actionData?.action === 'createSurvey' && $actionData?.validationErrors) {
+    $actionData.validationErrors = null;
+  }
 
-    return async ({ update }) => {
-      await update();
-      submitting = false;
-    };
+  return async ({ update }) => {
+    await update();
+    submitting = false;
   };
+};
 </script>
 
 <form
@@ -69,8 +74,8 @@
     {/if}
   </div>
 
-  <p class="text-sm mb-3">Survey settings</p>
-  <div class="form-group space-x-2 flex items-center" style="margin-bottom: 10px">
+  <p class="mb-3 text-sm">Survey settings</p>
+  <div class="form-group flex items-center space-x-2" style="margin-bottom: 10px">
     <Checkbox
       inputAttrs={{ id: 'multiple-pages-input', name: 'multiplePages', value: $form.multiplePages }}
     />
@@ -81,7 +86,7 @@
           <Question
             weight="fill"
             size="14"
-            class="text-gray-400 inline-block"
+            class="inline-block text-gray-400"
             role="button"
             tabindex={0}
           />
@@ -94,7 +99,7 @@
     </Label>
   </div>
 
-  <div class="form-group space-x-2 flex items-center">
+  <div class="form-group flex items-center space-x-2">
     <Checkbox
       inputAttrs={{
         id: 'collect-user-info-input',
@@ -109,7 +114,7 @@
           <Question
             weight="fill"
             size="14"
-            class="text-gray-400 inline-block"
+            class="inline-block text-gray-400"
             role="button"
             tabindex={0}
           />

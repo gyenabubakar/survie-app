@@ -1,19 +1,20 @@
 <script lang="ts">
-  import type { HTMLAnchorAttributes } from 'svelte/elements';
-  import { cn } from '#components/shadcn/utils';
+import type { HTMLAnchorAttributes } from 'svelte/elements';
+import { cn } from 'shadcn/utils';
 
-  type Props = HTMLAnchorAttributes & {
-    small?: boolean;
-  };
+type Props = HTMLAnchorAttributes & {
+  small?: boolean;
+};
 
-  let { small, class: className, id = 'logo', href = '/', ...restProps }: Props = $props();
+let { small, class: className, id = 'logo', href = '/', ...restProps }: Props = $props();
 </script>
 
-<a {id} {href} class={cn('w-max inline-block', className)} {...restProps}>
+<a {id} {href} class={cn('inline-block w-max', className)} {...restProps}>
   <enhanced:img
     src="#assets/survie.svg"
     alt="Survie logo"
-    width={small ? 35 : 40}
-    height={small ? 35 : 40}
+    style:--width={small ? '35px' : '40px'}
+    style:--height={small ? '35px' : '40px'}
+    style="width: var(--width); height: var(--height);"
   />
 </a>

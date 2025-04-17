@@ -1,56 +1,45 @@
-<!-- @migration-task Error while migrating Svelte code: Cannot set properties of undefined (setting 'next') -->
-<!--suppress ReservedWordAsName -->
 <script lang="ts">
-  import type { HTMLInputAttributes } from 'svelte/elements';
-  import { Eye, EyeSlash } from 'phosphor-svelte';
-  import { Input } from 'shadcn-ui';
-  import { cn } from '#components/shadcn/utils';
+import { EyeIcon, EyeOffIcon } from '@lucide/svelte';
+import type { HTMLInputAttributes } from 'svelte/elements';
+import type { WithElementRef } from 'bits-ui';
+import { Input } from 'shadcn/input';
+import { cn } from 'shadcn/utils';
+import { TooltipWrapper } from '#components';
 
-  let {
-    value = $bindable(undefined),
-    class: className,
-    ...restProps
-  }: HTMLInputAttributes = $props();
+let {
+  ref = $bindable(null),
+  value = $bindable(),
+  class: className,
+  ...restProps
+}: WithElementRef<Omit<HTMLInputAttributes, 'files'>> = $props();
 
-  let inputElement = $state<HTMLInputElement | undefined>();
+let passwordRevealed = $state(false);
 
-  let showingPassword = $state(false);
-
-  function togglePasswordVisibility() {
-    const currentType = inputElement!.getAttribute('type') as HTMLInputAttributes['type'];
-    const newType = currentType === 'password' ? 'text' : 'password';
-
-    inputElement!.setAttribute('type', newType);
-    showingPassword = newType === 'text';
-  }
+let ToggleRevealIcon = $derived(passwordRevealed ? EyeOffIcon : EyeIcon);
+let toggleTooltip = $derived(passwordRevealed ? 'Hide password' : 'Show password');
 </script>
 
-<div data-input-wrapper class="relative">
-  <button
-    type="button"
-    aria-label={showingPassword ? 'Hide password' : 'Show password'}
-    class="absolute top-1/2 right-3 transform -translate-y-1/2"
-    onclick={togglePasswordVisibility}
-  >
-    {#if showingPassword}
-      <EyeSlash class="size-5" />
-    {:else}
-      <Eye class="size-5" />
-    {/if}
-  </button>
-
+<div class="relative">
   <Input
-    type="password"
-    class={cn('pr-10', className)}
-    bind:value
-    bind:element={inputElement}
     {...restProps}
+    bind:ref
+    bind:value
+    type={passwordRevealed ? 'text' : 'password'}
+    placeholder="••••••••"
+    class={cn('pr-12', className)}
   />
-</div>
 
-<style>
-  :global(input[type='password']),
-  :global(input[type='password']::placeholder) {
-    font-family: sans-serif;
-  }
-</style>
+  <TooltipWrapper message={toggleTooltip}>
+    {#snippet children({ props })}
+      <button
+        {...props}
+        type="button"
+        tabindex="-1"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-500"
+        onclick={() => (passwordRevealed = !passwordRevealed)}
+      >
+        <ToggleRevealIcon />
+      </button>
+    {/snippet}
+  </TooltipWrapper>
+</div>

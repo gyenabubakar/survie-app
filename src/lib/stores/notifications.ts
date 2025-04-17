@@ -1,6 +1,6 @@
 import { getContext, setContext } from 'svelte';
 import { derived, writable } from 'svelte/store';
-import type { Writable, Readable } from 'svelte/store';
+import type { Readable, Writable } from 'svelte/store';
 
 export type NotificationType = 'JOINED_TEAM';
 export interface NotificationInitiator {
@@ -40,7 +40,7 @@ export function createNotificationStore(): NotificationStore {
     },
     markAllAsRead() {
       __store.update((notifications) =>
-        notifications.map((notification) => ({ ...notification, read: true }))
+        notifications.map((notification) => ({ ...notification, read: true })),
       );
     },
   };

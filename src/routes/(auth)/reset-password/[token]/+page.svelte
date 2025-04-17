@@ -1,39 +1,39 @@
 <script lang="ts">
-  import type { SubmitFunction } from '@sveltejs/kit';
-  import { Label, Button, Input } from 'shadcn-ui';
-  import { enhance } from '$app/forms';
-  import { goto } from '$app/navigation';
-  import { formFieldErrors } from '#lib/form-schemas/new-password';
-  import { FormValidationError, FormMessage } from '#components';
+import { enhance } from '$app/forms';
+import { goto } from '$app/navigation';
+import type { SubmitFunction } from '@sveltejs/kit';
+import { Button } from 'shadcn/button';
+import { Input } from 'shadcn/input';
+import { Label } from 'shadcn/label';
+import { FormMessage, FormValidationError } from '#components';
+import { formFieldErrors } from '#lib/form-schemas/new-password';
 
-  let { form = $bindable() } = $props();
+let { form } = $props();
 
-  let password = $state('');
-  let password2 = $state('');
-  let submitting = $state(false);
+let password = $state('');
+let password2 = $state('');
+let submitting = $state(false);
 
-  let isValidPassword = $derived(password ? password.length >= 8 : null);
-  let isValidPassword2 = $derived(password2 ? password2.length >= 8 : null);
-  let passwordsMatch = $derived(password === password2);
-  let showingPasswordMismatchError = $derived(
-    !passwordsMatch && isValidPassword && isValidPassword2
-  );
-  let canSubmitForm = $derived(
-    !!isValidPassword && !!isValidPassword2 && !!passwordsMatch && !submitting
-  );
+let isValidPassword = $derived(password ? password.length >= 8 : null);
+let isValidPassword2 = $derived(password2 ? password2.length >= 8 : null);
+let passwordsMatch = $derived(password === password2);
+let showingPasswordMismatchError = $derived(!passwordsMatch && isValidPassword && isValidPassword2);
+let canSubmitForm = $derived(
+  !!isValidPassword && !!isValidPassword2 && !!passwordsMatch && !submitting,
+);
 
-  const handleSubmit: SubmitFunction = ({ cancel }) => {
-    if (!canSubmitForm) return cancel();
-    submitting = true;
+const handleSubmit: SubmitFunction = ({ cancel }) => {
+  if (!canSubmitForm) return cancel();
+  submitting = true;
 
-    if (form?.validationErrors) form.validationErrors = undefined;
-    if (form?.error) form.error = undefined;
+  if (form?.validationErrors) form.validationErrors = undefined;
+  if (form?.error) form.error = undefined;
 
-    return async ({ update }) => {
-      await update();
-      submitting = false;
-    };
+  return async ({ update }) => {
+    await update();
+    submitting = false;
   };
+};
 </script>
 
 <svelte:head>
@@ -42,7 +42,7 @@
 
 <main>
   <h1 style="margin-bottom: 0;">Reset Password</h1>
-  <p class="text-sm text-gray-500 mb-6">
+  <p class="mb-6 text-sm text-gray-500">
     Set a new password for your account: <strong>john@doe.com</strong>.
   </p>
 
@@ -99,7 +99,7 @@
       role="link"
       class="w-full"
       aria-live="polite"
-      on:click={() => goto('/log-in')}
+      onclick={() => goto('/log-in')}
     >
       Log in
     </Button>

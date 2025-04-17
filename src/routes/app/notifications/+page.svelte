@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { Card } from 'shadcn-ui/card';
-  import { Container } from '#components';
-  import { Notification } from '#components/dashboard';
-  import { useNotificationStore } from '#lib/stores/notifications';
+import { Card } from 'shadcn/card';
+import { Container } from '#components';
+import { Notification } from '#components/dashboard';
+import { useNotificationStore } from '#lib/stores/notifications';
 
-  const { notifications } = useNotificationStore();
+const { notifications } = useNotificationStore();
 </script>
 
 <svelte:head>
@@ -15,7 +15,7 @@
   <Container size="md">
     <h1>Notifications</h1>
 
-    <Card class="py-4 px-8">
+    <Card class="px-8 py-4">
       {#each $notifications as notification (notification.id)}
         <Notification large {...notification} />
       {/each}

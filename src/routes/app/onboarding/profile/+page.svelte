@@ -1,64 +1,66 @@
 <script lang="ts">
-  import type { SubmitFunction } from '@sveltejs/kit';
-  import { Button, Input, Label } from 'shadcn-ui';
-  import { enhance } from '$app/forms';
-  import { browser } from '$app/environment';
-  import { profileFormFieldErrors, profileFormSchema } from '#lib/form-schemas/onboarding';
-  import { FormValidationError, UserImageInput } from '#components';
-  import { fieldIsValid } from '#lib/form-schemas/utils';
-  import { Cropper } from '#components/cropper';
+import { browser } from '$app/environment';
+import { enhance } from '$app/forms';
+import type { SubmitFunction } from '@sveltejs/kit';
+import { Button } from 'shadcn/button';
+import { Input } from 'shadcn/input';
+import { Label } from 'shadcn/label';
+import { FormValidationError, UserImageInput } from '#components';
+import { Cropper } from '#components/cropper';
+import { profileFormFieldErrors, profileFormSchema } from '#lib/form-schemas/onboarding';
+import { fieldIsValid } from '#lib/form-schemas/utils';
 
-  let { form } = $props();
+let { form } = $props();
 
-  let jobTitle = $state(form?.data?.jobTitle ?? '');
-  let submitting = $state(false);
-  let formElement: HTMLFormElement | undefined = $state();
+let jobTitle = $state(form?.data?.jobTitle ?? '');
+let submitting = $state(false);
+let formElement: HTMLFormElement | undefined = $state();
 
-  let fileInput: HTMLInputElement | undefined = $state();
-  let imageFile: File | undefined = $state();
-  let showImageCropper = $state(false);
+let fileInput: HTMLInputElement | undefined = $state();
+let imageFile: File | undefined = $state();
+let showImageCropper = $state(false);
 
-  let jobTitleIsValid = $derived(fieldIsValid(profileFormSchema, 'jobTitle', jobTitle));
-  let canSubmitForm = $derived(!!jobTitleIsValid && !submitting);
+let jobTitleIsValid = $derived(fieldIsValid(profileFormSchema, 'jobTitle', jobTitle));
+let canSubmitForm = $derived(!!jobTitleIsValid && !submitting);
 
-  function closeCropper(file: File | null) {
-    if (file) imageFile = file;
-    showImageCropper = false;
+function closeCropper(file: File | null) {
+  if (file) imageFile = file;
+  showImageCropper = false;
+}
+
+function removeImageFile() {
+  if (formElement) {
+    const input = formElement.imageFile as HTMLInputElement;
+    input.value = '';
+    imageFile = undefined;
   }
+}
 
-  function removeImageFile() {
-    if (formElement) {
-      const input = formElement.imageFile as HTMLInputElement;
-      input.value = '';
-      imageFile = undefined;
+const submit: SubmitFunction = ({ cancel, formData }) => {
+  if (!canSubmitForm) return cancel();
+  submitting = true;
+
+  if (form?.validationErrors) form.validationErrors = null;
+
+  const file = formData.get('image') as File;
+
+  if (file instanceof File) {
+    if (file.size === 0) {
+      formData.delete('image');
+    } else if (imageFile) {
+      formData.set('image', imageFile);
     }
   }
 
-  const submit: SubmitFunction = ({ cancel, formData }) => {
-    if (!canSubmitForm) return cancel();
-    submitting = true;
+  return async ({ update }) => {
+    await update();
+    submitting = false;
 
-    if (form?.validationErrors) form.validationErrors = null;
-
-    const file = formData.get('image') as File;
-
-    if (file instanceof File) {
-      if (file.size === 0) {
-        formData.delete('image');
-      } else if (imageFile) {
-        formData.set('image', imageFile);
-      }
+    if (form?.validationErrors?.image && fileInput) {
+      fileInput.value = '';
     }
-
-    return async ({ update }) => {
-      await update();
-      submitting = false;
-
-      if (form?.validationErrors?.image && fileInput) {
-        fileInput.value = '';
-      }
-    };
   };
+};
 </script>
 
 <svelte:head>
@@ -89,7 +91,7 @@
     </div>
 
     <div class="form-group">
-      <Label class="inline-block mb-4">Add your profile picture (optional)</Label>
+      <Label class="mb-4 inline-block">Add your profile picture (optional)</Label>
       <UserImageInput
         label="Upload your profile picture"
         bind:input={fileInput}

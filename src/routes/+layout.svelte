@@ -1,10 +1,11 @@
 <script lang="ts">
-  import '../app.pcss';
-  import { Toaster } from 'shadcn-ui/sonner';
+import '../app.pcss';
 
-  let { children } = $props();
+import { Toaster } from 'shadcn/sonner';
+
+let { children } = $props();
 </script>
 
-<Toaster richColors closeButton toastOptions={{ duration: 5000 }} />
+<Toaster position="top-right" duration={7_000} visibleToasts={100} richColors closeButton expand />
 
 {@render children?.()}

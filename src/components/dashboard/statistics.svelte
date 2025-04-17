@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { TrendDown, TrendUp } from 'phosphor-svelte';
-  import { Card, CardContent } from 'shadcn-ui/card';
-  import type { StatType } from '#components/dashboard/types';
+import { TrendDown, TrendUp } from 'phosphor-svelte';
+import { Card, CardContent } from 'shadcn/card';
+import type { StatType } from '#components/dashboard/types';
 
-  type Props = {
-    stats: StatType[];
-  };
+type Props = {
+  stats: StatType[];
+};
 
-  let { stats }: Props = $props();
+let { stats }: Props = $props();
 </script>
 
 <section class="grid grid-cols-4 gap-4">
@@ -15,7 +15,7 @@
     <Card>
       <CardContent class="card-content">
         <p class="text-sm text-gray-500">{stat.title}</p>
-        <p class="text-3xl font-bold my-1 font-mono">
+        <p class="my-1 font-mono text-3xl font-bold">
           {stat.value}{stat.valueUnit ?? ''}
         </p>
         <p
@@ -43,30 +43,30 @@
 </section>
 
 <style lang="postcss">
-  .stat-footer {
-    @apply flex items-center text-sm text-gray-500;
+.stat-footer {
+  @apply flex items-center text-sm text-gray-500;
 
-    & .stat-footer--percentage {
-      @apply ml-1 font-medium;
-    }
-
-    &:global(.trend-none svg),
-    &.trend-none .stat-footer--percentage {
-      @apply text-gray-600;
-    }
-
-    &:global(.trend-up svg),
-    &.trend-up .stat-footer--percentage {
-      @apply text-green-500;
-    }
-
-    &:global(.trend-down svg),
-    &.trend-down .stat-footer--percentage {
-      @apply text-red-500;
-    }
+  & .stat-footer--percentage {
+    @apply ml-1 font-medium;
   }
 
-  :global(.card-content) {
-    @apply p-4;
+  &:global(.trend-none svg),
+  &.trend-none .stat-footer--percentage {
+    @apply text-gray-600;
   }
+
+  &:global(.trend-up svg),
+  &.trend-up .stat-footer--percentage {
+    @apply text-green-500;
+  }
+
+  &:global(.trend-down svg),
+  &.trend-down .stat-footer--percentage {
+    @apply text-red-500;
+  }
+}
+
+:global(.card-content) {
+  @apply p-4;
+}
 </style>

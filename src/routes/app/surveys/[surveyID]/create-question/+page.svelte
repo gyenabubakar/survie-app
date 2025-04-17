@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { Card, CardContent } from 'shadcn-ui/card';
-  import { Select, SelectTrigger, SelectValue, SelectContent } from 'shadcn-ui/select';
-  import { page } from '$app/state';
-  import { Container } from '#components';
-  import { Input, Label } from 'shadcn-ui';
+import { page } from '$app/state';
+import { Card, CardContent } from 'shadcn/card';
+import { Input } from 'shadcn/input';
+import { Label } from 'shadcn/label';
+import { Select, SelectContent, SelectTrigger, SelectValue } from 'shadcn/select';
+import { Container } from '#components';
 
-  console.log(page);
+console.log(page);
 </script>
 
 <svelte:head>
@@ -20,7 +21,7 @@
     </div>
 
     <Card>
-      <CardContent class="py-6 px-8">
+      <CardContent class="px-8 py-6">
         <form method="post">
           <div class="form-group">
             <Label for="question">Question</Label>

@@ -1,41 +1,43 @@
 <script lang="ts">
-  import { setContext, type Snippet } from 'svelte';
-  import { writable } from 'svelte/store';
-  import { Sheet, SheetTrigger, SheetContent } from 'shadcn-ui/sheet';
-  import SurveyFormOptions from './survey-form-options.svelte';
-  import type { ActiveForm, Context, ManualSurveyFormData } from './utils';
-  import type { Builder } from 'bits-ui';
+import { setContext } from 'svelte';
+import { writable } from 'svelte/store';
+import type { Snippet } from 'svelte';
+import { Sheet, SheetContent, SheetTrigger } from 'shadcn/sheet';
+import SurveyFormOptions from './survey-form-options.svelte';
+import type { ActiveForm, Context, ManualSurveyFormData } from './utils';
 
-  type Props = {
-    children?: Snippet<[{ builders: Builder[] }]>;
-    manualForm?: Snippet;
-    aiForm?: Snippet;
-  };
+type Props = {
+  children?: Snippet<[{ props: any }]>;
+  manualForm?: Snippet;
+  aiForm?: Snippet;
+};
 
-  let { children, manualForm, aiForm }: Props = $props();
+let { children, manualForm, aiForm }: Props = $props();
 
-  const activeForm = writable<ActiveForm>(undefined);
-  const manualFormData = writable<ManualSurveyFormData>({
-    title: '',
-    description: '',
-    multiplePages: null,
-    collectUserInfo: null,
-  });
+const activeForm = writable<ActiveForm>(undefined);
+const manualFormData = writable<ManualSurveyFormData>({
+  title: '',
+  description: '',
+  multiplePages: null,
+  collectUserInfo: null,
+});
 
-  setContext<Context>('sheet', { activeForm, manualFormData });
+setContext<Context>('sheet', { activeForm, manualFormData });
 
-  function onOpenChange(isOpen: boolean) {
-    !isOpen && activeForm.set(undefined);
-  }
+function onOpenChange(isOpen: boolean) {
+  if (!isOpen) activeForm.set(undefined);
+}
 </script>
 
-<Sheet preventScroll={false} {onOpenChange}>
-  <SheetTrigger asChild let:builder>
-    {@render children?.({ builders: [builder] })}
+<Sheet {onOpenChange}>
+  <SheetTrigger>
+    {#snippet child({ props })}
+      {@render children?.({ props })}
+    {/snippet}
   </SheetTrigger>
 
-  <SheetContent id="some-id" class="w-full md:max-w-md overflow-x-hidden">
-    <p class="text-2xl font-medium mt-8 mb-4">Create new survey</p>
+  <SheetContent id="some-id" class="w-full overflow-x-hidden md:max-w-md">
+    <p class="mb-4 mt-8 text-2xl font-medium">Create new survey</p>
 
     <div id="state" class="relative">
       {#if !$activeForm}
@@ -50,7 +52,7 @@
 </Sheet>
 
 <style lang="postcss">
-  #state > :global(*) {
-    @apply absolute;
-  }
+#state > :global(*) {
+  @apply absolute;
+}
 </style>

@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { createBubbler } from 'svelte/legacy';
+import { createBubbler } from 'svelte/legacy';
+import { fly } from 'svelte/transition';
+import { getSheetContext } from './utils';
 
-  const bubble = createBubbler();
-  import { fly } from 'svelte/transition';
-  import { getSheetContext } from './utils';
+const bubble = createBubbler();
 
-  const { activeForm } = getSheetContext();
+const { activeForm } = getSheetContext();
 </script>
 
 <div class="form-options" transition:fly={{ x: -100, duration: 300 }}>
@@ -49,28 +49,28 @@
 </div>
 
 <style lang="postcss">
-  .pseudo-btn {
-    @apply flex h-max cursor-pointer items-center rounded-md border border-slate-200 p-6;
-    @apply shadow-lg shadow-slate-100 hover:shadow-none;
+.pseudo-btn {
+  @apply flex h-max cursor-pointer items-center rounded-md border border-slate-200 p-6;
+  @apply shadow-lg shadow-slate-100 hover:shadow-none;
 
-    &:not(:last-child) {
-      @apply mb-4;
-    }
+  &:not(:last-child) {
+    @apply mb-4;
+  }
 
-    .description {
-      @apply flex-grow pl-5;
+  .description {
+    @apply flex-grow pl-5;
 
-      p {
-        @apply leading-[14px];
+    p {
+      @apply leading-[14px];
 
-        &:first-child {
-          @apply font-bold;
-        }
+      &:first-child {
+        @apply font-bold;
+      }
 
-        &:last-child {
-          @apply mt-1.5 text-sm text-gray-500;
-        }
+      &:last-child {
+        @apply mt-1.5 text-sm text-gray-500;
       }
     }
   }
+}
 </style>

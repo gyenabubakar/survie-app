@@ -1,30 +1,32 @@
 <script lang="ts">
-  import type { SubmitFunction } from '@sveltejs/kit';
-  import { Label, Button, Input } from 'shadcn-ui';
-  import { enhance } from '$app/forms';
-  import { formFieldErrors, formSchema as schema } from '#lib/form-schemas/reset-password';
-  import { FormValidationError, FormMessage } from '#components';
-  import { fieldIsValid } from '#lib/form-schemas/utils';
+import { enhance } from '$app/forms';
+import type { SubmitFunction } from '@sveltejs/kit';
+import { Button } from 'shadcn/button';
+import { Input } from 'shadcn/input';
+import { Label } from 'shadcn/label';
+import { FormMessage, FormValidationError } from '#components';
+import { formFieldErrors, formSchema as schema } from '#lib/form-schemas/reset-password';
+import { fieldIsValid } from '#lib/form-schemas/utils';
 
-  let { form = $bindable() } = $props();
+let { form } = $props();
 
-  let email = $state(form?.data?.email ?? '');
-  let submitting = $state(false);
+let email = $state(form?.data?.email ?? '');
+let submitting = $state(false);
 
-  let isValidEmail = $derived(fieldIsValid(schema, 'email', email));
-  let canSubmitForm = $derived(!!isValidEmail && !submitting);
+let isValidEmail = $derived(fieldIsValid(schema, 'email', email));
+let canSubmitForm = $derived(!!isValidEmail && !submitting);
 
-  const handleSubmit: SubmitFunction = ({ cancel }) => {
-    if (!canSubmitForm) return cancel();
-    submitting = true;
+const handleSubmit: SubmitFunction = ({ cancel }) => {
+  if (!canSubmitForm) return cancel();
+  submitting = true;
 
-    if (form?.validationErrors) form.validationErrors = null;
+  if (form?.validationErrors) form.validationErrors = null;
 
-    return async ({ update }) => {
-      await update();
-      submitting = false;
-    };
+  return async ({ update }) => {
+    await update();
+    submitting = false;
   };
+};
 </script>
 
 <svelte:head>
@@ -75,7 +77,7 @@
     </form>
   {/if}
 
-  <p class="text-slate-500 text-center mt-12">
+  <p class="mt-12 text-center text-slate-500">
     Back to <a href="/log-in">log in page</a>.
   </p>
 </main>

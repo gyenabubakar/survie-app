@@ -7,3 +7,4 @@ export { default as UrlSlugInput } from './url-slug-input.svelte';
 export { default as UserImageInput } from './user-image-input.svelte';
 export { default as OptionsButton } from './options-button.svelte';
 export { default as PasswordInput } from './password-input.svelte';
+export { default as TooltipWrapper } from './tooltip-wrapper.svelte';

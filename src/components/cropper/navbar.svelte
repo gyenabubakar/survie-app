@@ -1,24 +1,24 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
-  import {
-    BanIcon,
-    CheckIcon,
-    RotateCcwIcon,
-    SaveIcon,
-    Trash2Icon,
-    UploadIcon,
-    XIcon,
-  } from '@lucide/svelte';
-  import { Button } from 'shadcn-ui/button';
-  import type { Data, NavAction } from '#components/cropper/types';
+import {
+  BanIcon,
+  CheckIcon,
+  RotateCcwIcon,
+  SaveIcon,
+  Trash2Icon,
+  UploadIcon,
+  XIcon,
+} from '@lucide/svelte';
+import { Button } from 'shadcn/button';
+import type { Data, NavAction } from '#components/cropper/types';
 
-  type Props = {
-    data: Data;
-    onClose?: () => void;
-    onChange?: (action: NavAction) => void;
-  };
+type Props = {
+  data: Data;
+  onClose?: () => void;
+  onChange?: (action: NavAction) => void;
+};
 
-  let { data, onClose, onChange }: Props = $props();
+let { data, onClose, onChange }: Props = $props();
 </script>
 
 <nav>
@@ -76,34 +76,34 @@
 </nav>
 
 <style lang="postcss">
-  nav {
-    @apply flex h-full items-center px-6;
-  }
+nav {
+  @apply flex h-full items-center px-6;
+}
 
-  :global(.nav__button) {
-    @apply mr-3 flex items-center;
+:global(.nav__button) {
+  @apply mr-3 flex items-center;
 
-    & span {
-      @apply text-lg;
-    }
+  & span {
+    @apply text-lg;
   }
+}
 
-  :global(.nav__button.danger) {
-    @apply bg-red-600 hover:bg-red-700;
-  }
+:global(.nav__button.danger) {
+  @apply bg-red-600 hover:bg-red-700;
+}
 
-  :global(.nav__button.warning) {
-    @apply bg-yellow-600 hover:bg-yellow-700;
-  }
+:global(.nav__button.warning) {
+  @apply bg-yellow-600 hover:bg-yellow-700;
+}
 
-  :global(.nav__button.success) {
-    @apply bg-green-600 hover:bg-green-700;
-  }
+:global(.nav__button.success) {
+  @apply bg-green-600 hover:bg-green-700;
+}
 
-  :global(.nav__button svg) {
-    @apply h-5 w-5 transition-none;
-  }
-  :global(.nav__button:not(.no-mr) svg) {
-    @apply mr-2;
-  }
+:global(.nav__button svg) {
+  @apply h-5 w-5 transition-none;
+}
+:global(.nav__button:not(.no-mr) svg) {
+  @apply mr-2;
+}
 </style>

@@ -1,49 +1,52 @@
 <script lang="ts">
-  import type { SubmitFunction } from '@sveltejs/kit';
-  import { Label, Button, Input, Checkbox } from 'shadcn-ui';
-  import { enhance } from '$app/forms';
-  import { formFieldErrors, formSchema } from '#lib/form-schemas/sign-up';
-  import { FormValidationError, FormMessage, PasswordInput } from '#components';
-  import { fieldIsValid } from '#lib/form-schemas/utils';
+import { enhance } from '$app/forms';
+import type { SubmitFunction } from '@sveltejs/kit';
+import { Button } from 'shadcn/button';
+import { Checkbox } from 'shadcn/checkbox';
+import { Input } from 'shadcn/input';
+import { Label } from 'shadcn/label';
+import { FormMessage, FormValidationError, PasswordInput } from '#components';
+import { formFieldErrors, formSchema } from '#lib/form-schemas/sign-up';
+import { fieldIsValid } from '#lib/form-schemas/utils';
 
-  let { form = $bindable() } = $props();
+let { form } = $props();
 
-  let firstName = $state(form?.data?.firstName ?? '');
-  let lastName = $state(form?.data?.lastName ?? '');
-  let email = $state(form?.data?.email ?? '');
-  let password = $state('');
+let firstName = $state(form?.data?.firstName ?? '');
+let lastName = $state(form?.data?.lastName ?? '');
+let email = $state(form?.data?.email ?? '');
+let password = $state('');
 
-  let agreedToTerms = $state(form?.data?.agreedToTerms === 'on');
-  let submitting = $state(false);
-  let showAgreedToTermsError = $state(false);
+let agreedToTerms = $state(form?.data?.agreedToTerms === 'on');
+let submitting = $state(false);
+let showAgreedToTermsError = $state(false);
 
-  let isValidFirstName = $derived(fieldIsValid(formSchema, 'firstName', firstName));
-  let isValidLastName = $derived(fieldIsValid(formSchema, 'lastName', lastName));
-  let isValidEmail = $derived(fieldIsValid(formSchema, 'email', email));
-  let isValidPassword = $derived(fieldIsValid(formSchema, 'password', password));
-  let areValidTextFields = $derived(
-    !!isValidFirstName && !!isValidLastName && !!isValidEmail && !!isValidPassword
-  );
-  let canSubmitForm = $derived(areValidTextFields && agreedToTerms && !submitting);
+let isValidFirstName = $derived(fieldIsValid(formSchema, 'firstName', firstName));
+let isValidLastName = $derived(fieldIsValid(formSchema, 'lastName', lastName));
+let isValidEmail = $derived(fieldIsValid(formSchema, 'email', email));
+let isValidPassword = $derived(fieldIsValid(formSchema, 'password', password));
+let areValidTextFields = $derived(
+  !!isValidFirstName && !!isValidLastName && !!isValidEmail && !!isValidPassword,
+);
+let canSubmitForm = $derived(areValidTextFields && agreedToTerms && !submitting);
 
-  const handleSubmit: SubmitFunction = ({ cancel }) => {
-    if (!agreedToTerms) {
-      showAgreedToTermsError = true;
-      return cancel();
-    }
-    if (!canSubmitForm) return cancel();
-    submitting = true;
+const handleSubmit: SubmitFunction = ({ cancel }) => {
+  if (!agreedToTerms) {
+    showAgreedToTermsError = true;
+    return cancel();
+  }
+  if (!canSubmitForm) return cancel();
+  submitting = true;
 
-    if (form?.validationErrors) {
-      form.validationErrors = null;
-      showAgreedToTermsError = false;
-    }
+  if (form?.validationErrors) {
+    form.validationErrors = null;
+    showAgreedToTermsError = false;
+  }
 
-    return async ({ update }) => {
-      await update();
-      submitting = false;
-    };
+  return async ({ update }) => {
+    await update();
+    submitting = false;
   };
+};
 </script>
 
 <svelte:head>
@@ -157,7 +160,7 @@
     </Button>
   </form>
 
-  <p class="text-slate-500 text-center mt-12">
+  <p class="mt-12 text-center text-slate-500">
     Already have an account? <a href="/log-in">Log in instead</a>.
   </p>
 </main>

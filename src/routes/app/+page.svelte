@@ -1,27 +1,27 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
-  import { setContext } from 'svelte';
-  import { writable } from 'svelte/store';
-  import { ArrowUpRight, RocketLaunch } from 'phosphor-svelte';
-  import { Button } from 'shadcn-ui';
-  import { Card } from 'shadcn-ui/card';
-  import { cn } from '#components/shadcn/utils';
-  import { Container } from '#components';
-  import {
-    CreateSurveySheet,
-    ManualSurveyForm,
-    RecentResponse,
-    RecentSurvey,
-    Statistics,
-  } from '#components/dashboard';
+import { setContext } from 'svelte';
+import { writable } from 'svelte/store';
+import { ArrowUpRight, RocketLaunch } from 'phosphor-svelte';
+import { Button } from 'shadcn/button';
+import { Card } from 'shadcn/card';
+import { cn } from 'shadcn/utils';
+import { Container } from '#components';
+import {
+  CreateSurveySheet,
+  ManualSurveyForm,
+  RecentResponse,
+  RecentSurvey,
+  Statistics,
+} from '#components/dashboard';
 
-  let { data, form } = $props();
+let { data, form } = $props();
 
-  const actionData = writable(form);
+const actionData = writable(form);
 
-  $effect.pre(() => actionData.set(form));
+$effect.pre(() => actionData.set(form));
 
-  setContext('dashboard-page:form', { actionData });
+setContext('dashboard-page:form', { actionData });
 </script>
 
 <svelte:head>
@@ -34,7 +34,7 @@
     <Statistics stats={data.stats} />
 
     <section>
-      <h2 class="text-2xl font-medium mb-4 mt-14">Recent surveys</h2>
+      <h2 class="mb-4 mt-14 text-2xl font-medium">Recent surveys</h2>
       <div class="grid grid-cols-3 gap-6">
         <div class="col-span-2">
           <Card class={cn(data.recentSurveys.length ? 'h-auto' : 'h-[130px]')}>
@@ -49,7 +49,7 @@
 
           {#if data.recentSurveys.length}
             <div class="mt-4">
-              <a href="/app/surveys" class="flex items-center font-medium max-w-max">
+              <a href="/app/surveys" class="flex max-w-max items-center font-medium">
                 <span>See all surveys</span>
                 <ArrowUpRight weight="bold" class="ml-2" />
               </a>
@@ -57,7 +57,7 @@
           {/if}
 
           <!-- Recent responses -->
-          <h2 class="text-2xl font-medium mb-4 mt-14">Recent responses</h2>
+          <h2 class="mb-4 mt-14 text-2xl font-medium">Recent responses</h2>
 
           <Card class={cn(data.recentSurveys.length ? 'h-auto' : 'h-[130px]')}>
             {#each data.recentResponses as response (response.id)}
@@ -71,7 +71,7 @@
 
           {#if data.recentSurveys.length}
             <div class="mt-4">
-              <a href="/app/responses" class="flex items-center font-medium max-w-max">
+              <a href="/app/responses" class="flex max-w-max items-center font-medium">
                 <span>See all responses</span>
                 <ArrowUpRight weight="bold" class="ml-2" />
               </a>
@@ -83,22 +83,22 @@
           <Card class="p-6">
             <div class="flex justify-center">
               <div
-                class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center"
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white"
               >
                 <RocketLaunch size="20px" />
               </div>
             </div>
-            <p class="text-center mt-2 mb-1">Create a new survey.</p>
+            <p class="mb-1 mt-2 text-center">Create a new survey.</p>
             <p class="text-center text-sm text-gray-400">
               Click the button below and start collecting responses in minutes.
             </p>
             <div class="mt-2">
               <CreateSurveySheet>
-                {#snippet children({ builders })}
-                  <Button class="w-full" {builders}>Create survey</Button>
+                {#snippet children({ props })}
+                  <Button class="w-full" {...props}>Create survey</Button>
                 {/snippet}
                 {#snippet manualForm()}
-                  <ManualSurveyForm slot="manual-form" />
+                  <ManualSurveyForm />
                 {/snippet}
               </CreateSurveySheet>
             </div>

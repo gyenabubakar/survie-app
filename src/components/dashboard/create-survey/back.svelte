@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { getSheetContext } from './utils';
+import { getSheetContext } from './utils';
 
-  const { activeForm } = getSheetContext();
+const { activeForm } = getSheetContext();
 </script>
 
 {#if $activeForm}
-  <div class="flex justify-center mt-6">
+  <div class="mt-6 flex justify-center">
     <button
-      class="flex items-center text-gray-400 text-sm font-medium"
+      class="flex items-center text-sm font-medium text-gray-400"
       aria-label="Back"
       onclick={() => activeForm.set(undefined)}
     >

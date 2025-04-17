@@ -1,32 +1,34 @@
 <script lang="ts">
-  import type { SubmitFunction } from '@sveltejs/kit';
-  import { Label, Button, Input } from 'shadcn-ui';
-  import { enhance } from '$app/forms';
-  import { formFieldErrors, formSchema as schema } from '#lib/form-schemas/log-in';
-  import { FormValidationError, FormMessage, PasswordInput } from '#components';
-  import { fieldIsValid } from '#lib/form-schemas/utils';
+import { enhance } from '$app/forms';
+import type { SubmitFunction } from '@sveltejs/kit';
+import { Button } from 'shadcn/button';
+import { Input } from 'shadcn/input';
+import { Label } from 'shadcn/label';
+import { FormMessage, FormValidationError, PasswordInput } from '#components';
+import { formFieldErrors, formSchema as schema } from '#lib/form-schemas/log-in';
+import { fieldIsValid } from '#lib/form-schemas/utils';
 
-  let { form = $bindable() } = $props();
+let { form } = $props();
 
-  let email = $state(form?.data?.email ?? '');
-  let password = $state('');
-  let submitting = $state(false);
+let email = $state(form?.data?.email ?? '');
+let password = $state('');
+let submitting = $state(false);
 
-  let isValidEmail = $derived(fieldIsValid(schema, 'email', email));
-  let isValidPassword = $derived(fieldIsValid(schema, 'password', password));
-  let canSubmitForm = $derived(!!isValidEmail && !!isValidPassword && !submitting);
+let isValidEmail = $derived(fieldIsValid(schema, 'email', email));
+let isValidPassword = $derived(fieldIsValid(schema, 'password', password));
+let canSubmitForm = $derived(!!isValidEmail && !!isValidPassword && !submitting);
 
-  const handleSubmit: SubmitFunction = ({ cancel }) => {
-    if (!canSubmitForm) return cancel();
-    submitting = true;
+const handleSubmit: SubmitFunction = ({ cancel }) => {
+  if (!canSubmitForm) return cancel();
+  submitting = true;
 
-    if (form?.validationErrors) form.validationErrors = null;
+  if (form?.validationErrors) form.validationErrors = null;
 
-    return async ({ update }) => {
-      await update();
-      submitting = false;
-    };
+  return async ({ update }) => {
+    await update();
+    submitting = false;
   };
+};
 </script>
 
 <svelte:head>
@@ -63,13 +65,8 @@
         <Label for="password">Password</Label>
         <a href="/reset-password">Forgot password?</a>
       </div>
-      <PasswordInput
-        id="password"
-        name="password"
-        required
-        placeholder="******"
-        bind:value={password}
-      />
+
+      <PasswordInput id="password" name="password" required bind:value={password} />
 
       {#if isValidPassword === false || form?.validationErrors?.password}
         {@const message = form?.validationErrors?.password ?? formFieldErrors.password}
@@ -88,7 +85,7 @@
     </Button>
   </form>
 
-  <p class="text-slate-500 text-center mt-12">
+  <p class="mt-12 text-center text-slate-500">
     Don't have an account? <a href="/sign-up">Sign up instead</a>.
   </p>
 </main>
