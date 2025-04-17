@@ -1,4 +1,3 @@
-<!-- @migration-task Error while migrating Svelte code: Cannot set properties of undefined (setting 'next') -->
 <!--suppress ReservedWordAsName -->
 <script lang="ts">
 import { Button } from 'shadcn/button';
@@ -25,15 +24,17 @@ let {
   type="button"
   disabled={disabled || loading}
   aria-live={loading !== undefined ? 'polite' : undefined}
-  class={cn(className, 'relative')}
+  class={cn(className, 'relative overflow-hidden')}
   {...restProps}
 >
   {@render children?.()}
 
-  <span
-    class="absolute bottom-0 left-0 right-0 top-0 flex h-full w-full items-center justify-center"
-    aria-label={loadingText}
-  >
-    <Loading size="23px" aria-hidden="true" />
-  </span>
+  {#if loading}
+    <span
+      class="absolute bottom-0 left-0 right-0 top-0 z-10 flex h-full w-full items-center justify-center bg-black/85"
+      aria-label={loadingText}
+    >
+      <Loading size="23px" aria-hidden="true" />
+    </span>
+  {/if}
 </Button>

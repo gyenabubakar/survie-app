@@ -54,15 +54,13 @@ let onAIPage = $derived(page.url.pathname === '/app/ai');
             <DropdownMenu>
               <DropdownMenuTrigger>
                 {#snippet child({ props })}
-                  <!-- svelte-ignore a11y_invalid_attribute -->
-                  <a {...props} tabindex="0" href="#">
+                  <a {...props} tabindex="0" role="button">
                     <span class="mr-1">Account</span>
-                    <CaretDown size="16px" weight="bold" />
+                    <CaretDown size="16px" weight="bold" class="inline" />
                   </a>
                 {/snippet}
               </DropdownMenuTrigger>
-
-              <DropdownMenuContent class="h-max">
+              <DropdownMenuContent preventScroll={false} class="h-max">
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
                     <a href="/#"> Survey Settings </a>
@@ -90,12 +88,14 @@ let onAIPage = $derived(page.url.pathname === '/app/ai');
     <div class="flex items-center gap-2.5">
       <Popover>
         <PopoverTrigger>
-          <button class="flex items-center rounded-md bg-black/5 px-2 py-0">
-            <Pulse weight="fill" class="mr-1" />
-            <span style="font-family: sans-serif;">0</span>
-          </button>
+          {#snippet child({ props })}
+            <button {...props} class="flex items-center rounded-md bg-black/5 px-2 py-0">
+              <Pulse weight="fill" class="mr-1" />
+              <span style="font-family: sans-serif;">0</span>
+            </button>
+          {/snippet}
         </PopoverTrigger>
-        <PopoverContent class="h-max">
+        <PopoverContent preventScroll={false} class="h-max">
           <p>
             <span style="font-family: sans-serif;">{0}</span> survey responses so far this month.
           </p>
@@ -105,16 +105,19 @@ let onAIPage = $derived(page.url.pathname === '/app/ai');
 
       <Popover>
         <PopoverTrigger>
-          <button class="relative mx-3 flex items-center">
-            <Bell size="24px" class={cn($hasUnread ? 'text-gray-600' : 'text-gray-400')} />
-            {#if $hasUnread}
-              <span
-                class="absolute right-0 top-0 h-3 w-3 rounded-full border-2 border-white bg-red-500"
-              ></span>
-            {/if}
-          </button>
+          {#snippet child({ props })}
+            <button {...props} class="relative mx-3 flex items-center">
+              <Bell size="24px" class={cn($hasUnread ? 'text-gray-600' : 'text-gray-400')} />
+              {#if $hasUnread}
+                <span
+                  class="absolute right-0 top-0 h-3 w-3 rounded-full border-2 border-white bg-red-500"
+                ></span>
+              {/if}
+            </button>
+          {/snippet}
         </PopoverTrigger>
         <PopoverContent
+          preventScroll={false}
           class={cn(
             'h-max w-[300px] p-0',
             !$notifications.length && 'flex h-[115px] items-center justify-center',
@@ -138,14 +141,16 @@ let onAIPage = $derived(page.url.pathname === '/app/ai');
 
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <button class="flex items-center justify-center">
-            <Avatar class="h-[35px] w-[35px]">
-              <AvatarImage src={fakeAvatar} alt="Avatar" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-          </button>
+          {#snippet child({ props })}
+            <button {...props} class="flex items-center justify-center">
+              <Avatar class="h-[35px] w-[35px]">
+                <AvatarImage src={fakeAvatar} alt="Avatar" />
+                <AvatarFallback>JD</AvatarFallback>
+              </Avatar>
+            </button>
+          {/snippet}
         </DropdownMenuTrigger>
-        <DropdownMenuContent class="h-max">
+        <DropdownMenuContent preventScroll={false} class="h-max">
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <a href="/#">My account</a>
