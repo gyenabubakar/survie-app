@@ -1,29 +1,26 @@
 import { fail } from '@sveltejs/kit';
+import { message, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { resetPasswordSchema } from '#features/auth/schemas';
 import { delay } from '#lib';
-import { validateForm } from '#lib/form-schemas';
+import { HTTPStatus } from '#lib/http-status';
+
+export async function load() {
+  return {
+    form: await superValidate(zod(resetPasswordSchema)),
+  };
+}
 
 export const actions = {
-  async default({ request }) {
+  async default(event) {
     // TODO: Remove this
     await delay(3000);
 
-    const result = await validateForm('auth-new-password', request);
+    const form = await superValidate(event, zod(resetPasswordSchema));
+    if (!form.valid) return fail(HTTPStatus.BAD_REQUEST, { form });
 
-    if ('validationErrors' in result && result.validationErrors) {
-      const { validationErrors } = result;
-      if (validationErrors['*']) {
-        const error = validationErrors['*'] as string | undefined;
-        delete validationErrors['*'];
+    console.log('Reset Password:', form.data);
 
-        return fail(400, {
-          error,
-          validationErrors: validationErrors as typeof validationErrors | undefined,
-        });
-      }
-
-      return fail(400, { validationErrors });
-    }
-
-    return { success: true };
+    return message(form, { status: 'success', text: '' });
   },
 };

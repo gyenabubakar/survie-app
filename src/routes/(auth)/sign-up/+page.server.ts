@@ -1,18 +1,26 @@
 import { fail } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { signupSchema } from '#features/auth/schemas';
 import { delay } from '#lib';
-import { validateForm } from '#lib/form-schemas';
+import { HTTPStatus } from '#lib/http-status';
+
+export async function load() {
+  return {
+    form: await superValidate(zod(signupSchema)),
+  };
+}
 
 export const actions = {
-  async default({ request }) {
+  async default(event) {
     // TODO: Remove this
     await delay(3000);
 
-    const result = await validateForm('sign-up', request);
-    if ('validationErrors' in result) {
-      const { validationErrors, data } = result;
-      return fail(400, { data, validationErrors });
-    }
+    const form = await superValidate(event, zod(signupSchema));
+    if (!form.valid) return fail(HTTPStatus.BAD_REQUEST, { form });
 
-    return { success: true };
+    console.log('Sign up:', form.data);
+
+    return { form };
   },
 };

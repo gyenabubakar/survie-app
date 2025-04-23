@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Card } from 'shadcn/card';
+import { useNotificationStore } from '#features/notifications/stores';
+import { Notification } from '#features/notifications/ui';
 import { Container } from '#components';
-import { Notification } from '#components/dashboard';
-import { useNotificationStore } from '#lib/stores/notifications';
 
 const { notifications } = useNotificationStore();
 </script>

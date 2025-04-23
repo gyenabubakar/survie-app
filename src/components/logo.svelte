@@ -9,7 +9,12 @@ type Props = HTMLAnchorAttributes & {
 let { small, class: className, id = 'logo', href = '/', ...restProps }: Props = $props();
 </script>
 
-<a {id} {href} class={cn('inline-block w-max', className)} {...restProps}>
+<a
+  {id}
+  href={href === '#' ? undefined : href}
+  class={cn('inline-block w-max', className)}
+  {...restProps}
+>
   <enhanced:img
     src="#assets/survie.svg"
     alt="Survie logo"

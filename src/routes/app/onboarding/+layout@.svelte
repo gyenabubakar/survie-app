@@ -7,7 +7,7 @@ let { children } = $props();
 
 <div class="layout">
   <Container size="sm" class="pt-[140px]">
-    <Logo />
+    <Logo href="#" />
     {@render children?.()}
   </Container>
 </div>
@@ -21,9 +21,5 @@ let { children } = $props();
   :global(p.description) {
     @apply mb-6 text-gray-500;
   }
-}
-
-:global(.layout > main) {
-  @apply pt-[100px];
 }
 </style>

@@ -1,34 +1,28 @@
 import { fail, redirect } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { manualFormSchema } from '#features/surveys/schemas';
 import { delay } from '#lib';
-import { validateForm } from '#lib/form-schemas';
-import type { RecentResponseType, RecentSurveyType, StatType } from '#components/dashboard/types';
+import type { RecentResponseType, RecentSurveyType, StatType } from '#features/dashboard/types';
 
-export function load() {
-  return { stats, recentSurveys, recentResponses };
+export async function load() {
+  return {
+    stats,
+    recentSurveys,
+    recentResponses,
+    manualSurveyForm: await superValidate(zod(manualFormSchema)),
+  };
 }
 
 export const actions = {
-  async createSurvey({ request }) {
+  async createSurvey(event) {
     // TODO: Remove this
-    await delay(3000);
+    await delay(3_000);
 
-    const result = await validateForm('app-new-survey-manual', request);
-    if ('validationErrors' in result) {
-      console.log('Action: validation errors:', result.validationErrors);
-      return fail(400, {
-        action: 'createSurvey' as const,
-        data: result.data,
-        validationErrors: result.validationErrors,
-      });
-    }
+    const form = await superValidate(event, zod(manualFormSchema));
+    if (!form.valid) return fail(400, { form });
 
-    const data = {
-      ...result.data,
-      multiplePages: result.data.multiplePages === 'on',
-      collectUserInfo: result.data.collectUserInfo === 'on',
-    };
-
-    console.log('Survey created:', data);
+    console.log('Survey created:', form.data);
 
     return redirect(303, `/app/surveys/${crypto.randomUUID()}`);
   },

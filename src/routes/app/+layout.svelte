@@ -3,22 +3,15 @@
 import { Bell, CaretDown, Pulse, SignOut } from 'phosphor-svelte';
 import { goto } from '$app/navigation';
 import { page } from '$app/state';
-import { Avatar, AvatarFallback, AvatarImage } from 'shadcn/avatar';
+import * as Avatar from 'shadcn/avatar';
 import { Button } from 'shadcn/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from 'shadcn/dropdown-menu';
-import { Popover, PopoverContent, PopoverTrigger } from 'shadcn/popover';
+import * as DropdownMenu from 'shadcn/dropdown-menu';
+import * as Popover from 'shadcn/popover';
 import { cn } from 'shadcn/utils';
+import { createNotificationStore } from '#features/notifications/stores';
+import { Notification } from '#features/notifications/ui';
 import { Container, Logo } from '#components';
-import { Notification } from '#components/dashboard';
 import { fakeAvatar } from '#lib/fakes';
-import { createNotificationStore } from '#lib/stores/notifications';
 
 let { children } = $props();
 
@@ -51,60 +44,60 @@ let onAIPage = $derived(page.url.pathname === '/app/ai');
           </li>
 
           <li>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger>
                 {#snippet child({ props })}
                   <a {...props} tabindex="0" role="button">
                     <span class="mr-1">Account</span>
                     <CaretDown size="16px" weight="bold" class="inline" />
                   </a>
                 {/snippet}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent preventScroll={false} class="h-max">
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content preventScroll={false} class="h-max">
+                <DropdownMenu.Group>
+                  <DropdownMenu.Item>
                     <a href="/#"> Survey Settings </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item>
                     <a href="/#">Company details</a>
-                  </DropdownMenuItem>
+                  </DropdownMenu.Item>
 
-                  <DropdownMenuSeparator />
+                  <DropdownMenu.Separator />
 
-                  <DropdownMenuItem>
+                  <DropdownMenu.Item>
                     <a href="/#">Manage team</a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item>
                     <a href="/#">Join team link</a>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  </DropdownMenu.Item>
+                </DropdownMenu.Group>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
           </li>
         </ul>
       </nav>
     </div>
 
     <div class="flex items-center gap-2.5">
-      <Popover>
-        <PopoverTrigger>
+      <Popover.Root>
+        <Popover.Trigger>
           {#snippet child({ props })}
             <button {...props} class="flex items-center rounded-md bg-black/5 px-2 py-0">
               <Pulse weight="fill" class="mr-1" />
               <span style="font-family: sans-serif;">0</span>
             </button>
           {/snippet}
-        </PopoverTrigger>
-        <PopoverContent preventScroll={false} class="h-max">
+        </Popover.Trigger>
+        <Popover.Content preventScroll={false} class="h-max">
           <p>
             <span style="font-family: sans-serif;">{0}</span> survey responses so far this month.
           </p>
           <p class="text-sm text-gray-500">This is will reset on the 1st of September.</p>
-        </PopoverContent>
-      </Popover>
+        </Popover.Content>
+      </Popover.Root>
 
-      <Popover>
-        <PopoverTrigger>
+      <Popover.Root>
+        <Popover.Trigger>
           {#snippet child({ props })}
             <button {...props} class="relative mx-3 flex items-center">
               <Bell size="24px" class={cn($hasUnread ? 'text-gray-600' : 'text-gray-400')} />
@@ -115,8 +108,8 @@ let onAIPage = $derived(page.url.pathname === '/app/ai');
               {/if}
             </button>
           {/snippet}
-        </PopoverTrigger>
-        <PopoverContent
+        </Popover.Trigger>
+        <Popover.Content
           preventScroll={false}
           class={cn(
             'h-max w-[300px] p-0',
@@ -136,34 +129,34 @@ let onAIPage = $derived(page.url.pathname === '/app/ai');
               </Button>
             </div>
           {/if}
-        </PopoverContent>
-      </Popover>
+        </Popover.Content>
+      </Popover.Root>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
           {#snippet child({ props })}
             <button {...props} class="flex items-center justify-center">
-              <Avatar class="h-[35px] w-[35px]">
-                <AvatarImage src={fakeAvatar} alt="Avatar" />
-                <AvatarFallback>JD</AvatarFallback>
-              </Avatar>
+              <Avatar.Root class="h-[35px] w-[35px]">
+                <Avatar.Image src={fakeAvatar} alt="Avatar" />
+                <Avatar.Fallback>JD</Avatar.Fallback>
+              </Avatar.Root>
             </button>
           {/snippet}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent preventScroll={false} class="h-max">
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content preventScroll={false} class="h-max">
+          <DropdownMenu.Group>
+            <DropdownMenu.Item>
               <a href="/#">My account</a>
-            </DropdownMenuItem>
-            <DropdownMenuItem id="logout-link">
+            </DropdownMenu.Item>
+            <DropdownMenu.Item id="logout-link">
               <a href="/app/log-out" class="flex w-full items-center justify-between">
                 <span>Log out</span>
                 <SignOut weight="bold" />
               </a>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            </DropdownMenu.Item>
+          </DropdownMenu.Group>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
     </div>
   </Container>
 </header>

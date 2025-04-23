@@ -82,11 +82,19 @@
 
 form {
   label {
-    @apply mb-2 text-base font-normal text-gray-500;
+    @apply !text-base font-normal text-gray-500;
   }
 
   input::placeholder {
     @apply text-[15px];
+  }
+
+  input {
+    @apply !mt-0;
+
+    &[type='password'] {
+      @apply font-serif;
+    }
   }
 
   button[type='submit'] {

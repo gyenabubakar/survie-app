@@ -1,27 +1,14 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts">
-import { setContext } from 'svelte';
-import { writable } from 'svelte/store';
 import { ArrowUpRight, RocketLaunch } from 'phosphor-svelte';
 import { Button } from 'shadcn/button';
 import { Card } from 'shadcn/card';
 import { cn } from 'shadcn/utils';
+import { RecentResponse, RecentSurvey, Statistics } from '#features/dashboard/ui';
+import { CreateSurveySheet, ManualSurveyForm } from '#features/surveys/ui';
 import { Container } from '#components';
-import {
-  CreateSurveySheet,
-  ManualSurveyForm,
-  RecentResponse,
-  RecentSurvey,
-  Statistics,
-} from '#components/dashboard';
 
-let { data, form } = $props();
-
-const actionData = writable(form);
-
-$effect.pre(() => actionData.set(form));
-
-setContext('dashboard-page:form', { actionData });
+let { data } = $props();
 </script>
 
 <svelte:head>
@@ -88,17 +75,20 @@ setContext('dashboard-page:form', { actionData });
                 <RocketLaunch size="20px" />
               </div>
             </div>
+
             <p class="mb-1 mt-2 text-center">Create a new survey.</p>
             <p class="text-center text-sm text-gray-400">
               Click the button below and start collecting responses in minutes.
             </p>
+
             <div class="mt-2">
               <CreateSurveySheet>
                 {#snippet children({ props })}
                   <Button class="w-full" {...props}>Create survey</Button>
                 {/snippet}
+
                 {#snippet manualForm()}
-                  <ManualSurveyForm />
+                  <ManualSurveyForm form={data.manualSurveyForm} />
                 {/snippet}
               </CreateSurveySheet>
             </div>

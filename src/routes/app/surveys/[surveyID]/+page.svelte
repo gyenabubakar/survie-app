@@ -1,4 +1,3 @@
-<!--suppress CssUnusedSymbol -->
 <script lang="ts">
 import { page } from '$app/state';
 import { Badge } from 'shadcn/badge';

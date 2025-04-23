@@ -3,13 +3,12 @@ import type { Snippet } from 'svelte';
 import type { TooltipContentProps } from 'bits-ui';
 import * as Tooltip from 'shadcn/tooltip';
 
-type Props = {
+interface Props extends Pick<TooltipContentProps, 'side' | 'class'> {
   message: string | Snippet;
-  side?: TooltipContentProps['side'];
   children: Snippet<[{ props: Record<string, unknown> }]>;
-};
+}
 
-let { message, side = 'top', children }: Props = $props();
+let { message, side = 'top', class: className, children }: Props = $props();
 </script>
 
 <Tooltip.Provider>
@@ -19,7 +18,7 @@ let { message, side = 'top', children }: Props = $props();
         {@render children({ props })}
       {/snippet}
     </Tooltip.Trigger>
-    <Tooltip.Content {side}>
+    <Tooltip.Content {side} class={className}>
       {#if typeof message === 'string'}
         <p>{message}</p>
       {:else}

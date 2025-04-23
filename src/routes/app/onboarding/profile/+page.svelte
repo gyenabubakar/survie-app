@@ -1,26 +1,29 @@
 <script lang="ts">
-import { browser } from '$app/environment';
-import { enhance } from '$app/forms';
-import type { SubmitFunction } from '@sveltejs/kit';
+import { zodClient } from 'sveltekit-superforms/adapters';
+import * as Form from 'shadcn/form';
 import { Input } from 'shadcn/input';
-import { Label } from 'shadcn/label';
-import { Button, FormValidationError, UserImageInput } from '#components';
+import { profileSchema } from '#features/onboarding/schemas';
+import { Button } from '#components';
 import { Cropper } from '#components/cropper';
-import { profileFormFieldErrors, profileFormSchema } from '#lib/form-schemas/onboarding';
-import { fieldIsValid } from '#lib/form-schemas/utils';
+import { FormFieldErrors, UserImageInput } from '#components/forms';
+import { SUPER_FORM_COMMON_OPTIONS } from '#lib/constants';
+import { createSuperForm } from '#lib/forms';
 
-let { form } = $props();
+let { data } = $props();
 
-let jobTitle = $state(form?.data?.jobTitle ?? '');
-let submitting = $state(false);
-let formElement: HTMLFormElement | undefined = $state();
+const superForm = createSuperForm(data.form, {
+  validators: zodClient(profileSchema),
+  ...SUPER_FORM_COMMON_OPTIONS,
+  dataType: 'form',
+});
+
+const { form, submitting, enhance } = superForm;
+
+const isValidForm = $derived(profileSchema.safeParse($form).success);
 
 let fileInput: HTMLInputElement | undefined = $state();
 let imageFile: File | undefined = $state();
 let showImageCropper = $state(false);
-
-let jobTitleIsValid = $derived(fieldIsValid(profileFormSchema, 'jobTitle', jobTitle));
-let canSubmitForm = $derived(!!jobTitleIsValid && !submitting);
 
 function closeCropper(file: File | null) {
   if (file) imageFile = file;
@@ -28,38 +31,10 @@ function closeCropper(file: File | null) {
 }
 
 function removeImageFile() {
-  if (formElement) {
-    const input = formElement.imageFile as HTMLInputElement;
-    input.value = '';
-    imageFile = undefined;
-  }
+  if (!fileInput) return;
+  fileInput.value = '';
+  imageFile = undefined;
 }
-
-const submit: SubmitFunction = ({ cancel, formData }) => {
-  if (!canSubmitForm) return cancel();
-  submitting = true;
-
-  if (form?.validationErrors) form.validationErrors = null;
-
-  const file = formData.get('image') as File;
-
-  if (file instanceof File) {
-    if (file.size === 0) {
-      formData.delete('image');
-    } else if (imageFile) {
-      formData.set('image', imageFile);
-    }
-  }
-
-  return async ({ update }) => {
-    await update();
-    submitting = false;
-
-    if (form?.validationErrors?.image && fileInput) {
-      fileInput.value = '';
-    }
-  };
-};
 </script>
 
 <svelte:head>
@@ -73,50 +48,51 @@ const submit: SubmitFunction = ({ cancel, formData }) => {
   </p>
 
   <form
-    bind:this={formElement}
     method="post"
     autocomplete="off"
     enctype="multipart/form-data"
-    use:enhance={submit}
+    use:enhance
+    class="grid gap-3"
   >
-    <div class="form-group">
-      <Label for="company-name">Job title</Label>
-      <Input type="text" id="job-title" name="jobTitle" bind:value={jobTitle} required />
+    <Form.Field form={superForm} name="jobTitle">
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label>Job title</Form.Label>
+          <Input {...props} bind:value={$form.jobTitle} />
+        {/snippet}
+      </Form.Control>
+      <FormFieldErrors />
+    </Form.Field>
 
-      {#if jobTitleIsValid === false || !!form?.validationErrors?.jobTitle}
-        {@const message = form?.validationErrors?.jobTitle ?? profileFormFieldErrors.jobTitle}
-        <FormValidationError {message} />
-      {/if}
-    </div>
-
-    <div class="form-group">
-      <Label class="mb-4 inline-block">Add your profile picture (optional)</Label>
-      <UserImageInput
-        label="Upload your profile picture"
-        bind:input={fileInput}
-        bind:file={imageFile}
-        onEdit={() => (showImageCropper = true)}
-      />
-
-      {#if !!form?.validationErrors?.image && imageFile}
-        {@const message = form?.validationErrors?.image ?? profileFormFieldErrors.image}
-        <FormValidationError {message} />
-      {/if}
-    </div>
+    <Form.Field form={superForm} name="image">
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label class="inline-block">Add your profile picture (optional)</Form.Label>
+          <UserImageInput
+            {...props}
+            label="Upload your profile picture."
+            bind:ref={fileInput}
+            bind:file={imageFile}
+            onEdit={() => (showImageCropper = true)}
+          />
+        {/snippet}
+      </Form.Control>
+      <FormFieldErrors />
+    </Form.Field>
 
     <Button
       type="submit"
       class="relative mt-4"
       style="width: max-content;"
-      disabled={!canSubmitForm}
-      loading={submitting}
-      aria-label={submitting ? 'Saving, please wait' : 'Continue'}
+      disabled={!isValidForm}
+      loading={$submitting}
+      aria-label={$submitting ? 'Saving, please wait' : 'Continue'}
     >
       Continue
     </Button>
   </form>
 </main>
 
-{#if browser && imageFile && showImageCropper}
+{#if imageFile && showImageCropper}
   <Cropper bind:file={imageFile} onClose={closeCropper} onRemoveFile={removeImageFile} />
 {/if}
