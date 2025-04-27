@@ -1,4 +1,3 @@
-<!--suppress ReservedWordAsName -->
 <script lang="ts">
 import { Button } from 'shadcn/button';
 import { cn } from 'shadcn/utils';

@@ -2,7 +2,7 @@ import { getContext, setContext } from 'svelte';
 import type { ActiveForm } from './utils';
 
 export class CreateSurveySheetContext {
-  static readonly KEY = 'new-survey-sheet-context';
+  static readonly KEY = Symbol('CreateSurveySheetContext');
 
   activeForm: ActiveForm = $state();
 

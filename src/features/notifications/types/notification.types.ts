@@ -3,13 +3,13 @@ export type NotificationType = 'JOINED_TEAM';
 export type NotificationInitiator = {
   id: string;
   name: string;
-  avatar: string;
+  avatar: string | null;
 };
 
-export type Notification = {
+export type AppNotification = {
   id: string;
   type: NotificationType;
   initiator: NotificationInitiator;
-  read: boolean;
+  readAt: Date | null;
   createdAt: string;
 };

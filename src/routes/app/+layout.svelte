@@ -8,14 +8,14 @@ import { Button } from 'shadcn/button';
 import * as DropdownMenu from 'shadcn/dropdown-menu';
 import * as Popover from 'shadcn/popover';
 import { cn } from 'shadcn/utils';
-import { createNotificationStore } from '#features/notifications/stores';
+import { NotificationsContext } from '#features/notifications/context';
 import { Notification } from '#features/notifications/ui';
 import { Container, Logo } from '#components';
 import { fakeAvatar } from '#lib/fakes';
 
 let { children } = $props();
 
-const { notifications, hasUnread } = createNotificationStore();
+const notifications = new NotificationsContext();
 
 let onDashboardPage = $derived(page.url.pathname === '/app');
 let onSurveysPage = $derived(page.url.pathname === '/app/surveys');
@@ -100,8 +100,11 @@ let onAIPage = $derived(page.url.pathname === '/app/ai');
         <Popover.Trigger>
           {#snippet child({ props })}
             <button {...props} class="relative mx-3 flex items-center">
-              <Bell size="24px" class={cn($hasUnread ? 'text-gray-600' : 'text-gray-400')} />
-              {#if $hasUnread}
+              <Bell
+                size="24px"
+                class={cn(notifications.hasUnread ? 'text-gray-600' : 'text-gray-400')}
+              />
+              {#if notifications.hasUnread}
                 <span
                   class="absolute right-0 top-0 h-3 w-3 rounded-full border-2 border-white bg-red-500"
                 ></span>
@@ -113,16 +116,16 @@ let onAIPage = $derived(page.url.pathname === '/app/ai');
           preventScroll={false}
           class={cn(
             'h-max w-[300px] p-0',
-            !$notifications.length && 'flex h-[115px] items-center justify-center',
+            !notifications.all.length && 'flex h-[115px] items-center justify-center',
           )}
         >
-          {#each $notifications as notification (notification.id)}
+          {#each notifications.all as notification (notification.id)}
             <Notification {...notification} />
           {:else}
             <p class="text-sm text-gray-500">You don't have any notifications at yet.</p>
           {/each}
 
-          {#if $notifications.length}
+          {#if notifications.all.length}
             <div class="p-2">
               <Button class="w-full" onclick={() => goto('/app/notifications')}>
                 See all notifications

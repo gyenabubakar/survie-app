@@ -1,18 +1,13 @@
 <script lang="ts">
 import { Avatar, AvatarFallback, AvatarImage } from 'shadcn/avatar';
 import { getInitials, getTimeElapsed } from '#lib';
-import type { NotificationInitiator, NotificationType } from '#features/notifications/types';
+import type { AppNotification, NotificationType } from '#features/notifications/types';
 
-type Props = {
+interface Props extends AppNotification {
   large?: boolean;
-  id: string;
-  type: NotificationType;
-  initiator: NotificationInitiator;
-  read: boolean;
-  createdAt: string;
-};
+}
 
-let { large = false, id, type, initiator, read, createdAt }: Props = $props();
+let { large = false, id, type, initiator, readAt, createdAt }: Props = $props();
 
 function getMessage(type: NotificationType, date: Date): string {
   switch (type) {
@@ -26,7 +21,7 @@ function getMessage(type: NotificationType, date: Date): string {
 const message = $derived(getMessage(type, new Date(createdAt)));
 </script>
 
-<div data-name="Notification" data-id={id} class:unread={!read && !large} class:large>
+<div data-name="Notification" data-id={id} class:unread={!readAt && !large} class:large>
   <Avatar>
     <AvatarImage src={initiator.avatar} alt="{initiator.name}'s profile picture" />
     <AvatarFallback>
