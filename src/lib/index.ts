@@ -5,14 +5,13 @@ export function delay(ms: number) {
 }
 
 export function getInitials(text: string) {
-  if (!text) return '--';
+  if (!text.trim()) return '--';
 
-  const words = text.split(' ');
-  if (words.length === 1) {
-    return words[0].charAt(0).toUpperCase() + words[0].charAt(1);
-  }
+  const [first, second] = text.trim().split(' ').filter(Boolean);
 
-  return words[0].charAt(0).toUpperCase() + words[1].charAt(0).toUpperCase();
+  if (first && !second) return first.charAt(0).toUpperCase() + first.charAt(1);
+
+  return first.charAt(0).toUpperCase() + second.charAt(0).toUpperCase();
 }
 
 export function getTimeElapsed(date: string | Date) {

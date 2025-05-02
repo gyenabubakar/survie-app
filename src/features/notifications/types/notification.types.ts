@@ -11,5 +11,5 @@ export type AppNotification = {
   type: NotificationType;
   initiator: NotificationInitiator;
   readAt: Date | null;
-  createdAt: string;
+  createdAt: Date;
 };

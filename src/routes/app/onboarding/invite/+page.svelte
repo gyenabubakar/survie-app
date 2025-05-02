@@ -12,7 +12,7 @@ const INVITE_LINK = `https://${PUBLIC_DOMAIN}/invite/${crypto.randomUUID()}`;
 let showingTooltip = $state(false);
 let copying = $state(false);
 
-let ariaLabel = $derived(copying ? 'Copying link...' : 'Copy invite link');
+const ariaLabel = $derived(copying ? 'Copying link...' : 'Copy invite link');
 
 async function copyInviteLink() {
   if (copying || showingTooltip) return;

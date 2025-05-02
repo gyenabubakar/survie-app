@@ -1,10 +1,11 @@
 import { getContext, setContext } from 'svelte';
+import { parseISO } from 'date-fns';
 import type { AppNotification } from '#features/notifications/types';
 
 export class NotificationsContext {
   static readonly KEY = Symbol('NotificationsContext');
 
-  private notifications: AppNotification[] = $state([getFakeNotification(), getFakeNotification()]);
+  private notifications: AppNotification[] = $state(getFakeNotifications());
 
   constructor() {
     setContext(NotificationsContext.KEY, this);
@@ -36,16 +37,29 @@ export class NotificationsContext {
   }
 }
 
-function getFakeNotification(): AppNotification {
-  return {
-    id: crypto.randomUUID(),
-    type: 'JOINED_TEAM',
-    initiator: {
-      id: '1',
-      name: 'Jane Doe',
-      avatar: 'https://randomuser.me/api/portraits/women/60.jpg',
+function getFakeNotifications(): AppNotification[] {
+  return [
+    {
+      id: crypto.randomUUID(),
+      type: 'JOINED_TEAM',
+      initiator: {
+        id: '1',
+        name: 'Jane Doe',
+        avatar: 'https://randomuser.me/api/portraits/women/60.jpg',
+      },
+      readAt: null,
+      createdAt: parseISO('2024-02-28T13:29:02.760Z'),
     },
-    readAt: new Date(),
-    createdAt: '2024-02-28T13:29:02.760Z',
-  };
+    {
+      id: crypto.randomUUID(),
+      type: 'JOINED_TEAM',
+      initiator: {
+        id: '1',
+        name: 'Jane Doe',
+        avatar: 'https://randomuser.me/api/portraits/men/34.jpg',
+      },
+      readAt: new Date(),
+      createdAt: parseISO('2024-02-28T13:29:02.760Z'),
+    },
+  ];
 }

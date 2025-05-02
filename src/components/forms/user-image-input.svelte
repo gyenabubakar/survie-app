@@ -23,7 +23,7 @@ let {
   ...restProps
 }: Props = $props();
 
-let temporaryImageURL = $derived(file ? URL.createObjectURL(file) : undefined);
+const temporaryImageURL = $derived(file ? URL.createObjectURL(file) : undefined);
 
 function handleInputChanged(event: Event) {
   const target = event.target as HTMLInputElement;

@@ -7,12 +7,9 @@ type Props = {
 };
 
 let { variant = 'error', children }: Props = $props();
-
-let success = $derived(variant === 'success');
-let error = $derived(variant === 'error');
 </script>
 
-<p aria-live="assertive" class:success class:error>
+<p aria-live="assertive" class:success={variant === 'success'} class:error={variant === 'error'}>
   {@render children?.()}
 </p>
 

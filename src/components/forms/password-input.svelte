@@ -15,8 +15,8 @@ let {
 
 let passwordRevealed = $state(false);
 
-let ToggleRevealIcon = $derived(passwordRevealed ? EyeOffIcon : EyeIcon);
-let toggleTooltip = $derived(passwordRevealed ? 'Hide password' : 'Show password');
+const ToggleRevealIcon = $derived(passwordRevealed ? EyeOffIcon : EyeIcon);
+const toggleTooltip = $derived(passwordRevealed ? 'Hide password' : 'Show password');
 </script>
 
 <div class="relative">
