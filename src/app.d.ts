@@ -1,4 +1,4 @@
-// See https://kit.svelte.dev/docs/types#app
+// See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
 declare global {
   namespace App {
@@ -7,6 +7,13 @@ declare global {
     // interface PageData {}
     // interface PageState {}
     // interface Platform {}
+
+    namespace Superforms {
+      type Message = {
+        status: 'success' | 'info' | 'warning' | 'error';
+        text: string;
+      };
+    }
   }
 }
 

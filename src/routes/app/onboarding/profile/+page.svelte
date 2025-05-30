@@ -1,64 +1,40 @@
 <script lang="ts">
-  import type { SubmitFunction } from '@sveltejs/kit';
-  import { Button, Input, Label } from 'shadcn-ui';
-  import { enhance } from '$app/forms';
-  import { browser } from '$app/environment';
-  import { profileFormFieldErrors, profileFormSchema } from '#lib/form-schemas/onboarding';
-  import { FormValidationError, UserImageInput } from '#components';
-  import { Cropper } from '#components/cropper';
-  import { fieldIsValid } from '#lib/form-schemas/utils';
+import { zodClient } from 'sveltekit-superforms/adapters';
+import * as Form from 'shadcn/form';
+import { Input } from 'shadcn/input';
+import { profileSchema } from '#features/onboarding/schemas';
+import { Button } from '#components';
+import { Cropper } from '#components/cropper';
+import { FormFieldErrors, UserImageInput } from '#components/forms';
+import { SUPER_FORM_COMMON_OPTIONS } from '#lib/constants';
+import { createSuperForm } from '#lib/forms';
 
-  export let form;
+let { data } = $props();
 
-  let jobTitle = form?.data?.jobTitle ?? '';
-  let submitting = false;
-  let formElement: HTMLFormElement | undefined;
+const superForm = createSuperForm(data.form, {
+  validators: zodClient(profileSchema),
+  ...SUPER_FORM_COMMON_OPTIONS,
+  dataType: 'form',
+});
 
-  let fileInput: HTMLInputElement | undefined;
-  let imageFile: File | undefined;
-  let showImageCropper = false;
+const { form, submitting, enhance } = superForm;
 
-  $: jobTitleIsValid = fieldIsValid(profileFormSchema, 'jobTitle', jobTitle);
-  $: canSubmitForm = !!jobTitleIsValid && !submitting;
+const isValidForm = $derived(profileSchema.safeParse($form).success);
 
-  function closeCropper(event: CustomEvent<File>) {
-    if (event.detail) imageFile = event.detail;
-    showImageCropper = false;
-  }
+let fileInput: HTMLInputElement | undefined = $state();
+let imageFile: File | undefined = $state();
+let showImageCropper = $state(false);
 
-  function removeImageFile() {
-    if (formElement) {
-      const input = formElement.imageFile as HTMLInputElement;
-      input.value = '';
-      imageFile = undefined;
-    }
-  }
+function closeCropper(file: File | null) {
+  if (file) imageFile = file;
+  showImageCropper = false;
+}
 
-  const submit: SubmitFunction = ({ cancel, formData }) => {
-    if (!canSubmitForm) return cancel();
-    submitting = true;
-
-    if (form?.validationErrors) form.validationErrors = null;
-
-    const file = formData.get('image') as File;
-
-    if (file instanceof File) {
-      if (file.size === 0) {
-        formData.delete('image');
-      } else if (imageFile) {
-        formData.set('image', imageFile);
-      }
-    }
-
-    return async ({ update }) => {
-      await update();
-      submitting = false;
-
-      if (form?.validationErrors?.image && fileInput) {
-        fileInput.value = '';
-      }
-    };
-  };
+function removeImageFile() {
+  if (!fileInput) return;
+  fileInput.value = '';
+  imageFile = undefined;
+}
 </script>
 
 <svelte:head>
@@ -72,50 +48,51 @@
   </p>
 
   <form
-    bind:this={formElement}
     method="post"
     autocomplete="off"
     enctype="multipart/form-data"
-    use:enhance={submit}
+    use:enhance
+    class="grid gap-3"
   >
-    <div class="form-group">
-      <Label for="company-name">Job title</Label>
-      <Input type="text" id="job-title" name="jobTitle" bind:value={jobTitle} required />
+    <Form.Field form={superForm} name="jobTitle">
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label>Job title</Form.Label>
+          <Input {...props} bind:value={$form.jobTitle} />
+        {/snippet}
+      </Form.Control>
+      <FormFieldErrors />
+    </Form.Field>
 
-      {#if jobTitleIsValid === false || !!form?.validationErrors?.jobTitle}
-        {@const message = form?.validationErrors?.jobTitle ?? profileFormFieldErrors.jobTitle}
-        <FormValidationError {message} />
-      {/if}
-    </div>
-
-    <div class="form-group">
-      <Label class="inline-block mb-4">Add your profile picture (optional)</Label>
-      <UserImageInput
-        label="Upload your profile picture"
-        bind:input={fileInput}
-        bind:file={imageFile}
-        on:edit={() => (showImageCropper = true)}
-      />
-
-      {#if !!form?.validationErrors?.image && imageFile}
-        {@const message = form?.validationErrors?.image ?? profileFormFieldErrors.image}
-        <FormValidationError {message} />
-      {/if}
-    </div>
+    <Form.Field form={superForm} name="image">
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label class="inline-block">Add your profile picture (optional)</Form.Label>
+          <UserImageInput
+            {...props}
+            label="Upload your profile picture."
+            bind:ref={fileInput}
+            bind:file={imageFile}
+            onEdit={() => (showImageCropper = true)}
+          />
+        {/snippet}
+      </Form.Control>
+      <FormFieldErrors />
+    </Form.Field>
 
     <Button
       type="submit"
       class="relative mt-4"
       style="width: max-content;"
-      disabled={!canSubmitForm}
-      loading={submitting}
-      aria-label={submitting ? 'Saving, please wait' : 'Continue'}
+      disabled={!isValidForm}
+      loading={$submitting}
+      aria-label={$submitting ? 'Saving, please wait' : 'Continue'}
     >
       Continue
     </Button>
   </form>
 </main>
 
-{#if browser && imageFile && showImageCropper}
-  <Cropper bind:file={imageFile} on:close={closeCropper} on:remove-file={removeImageFile} />
+{#if imageFile && showImageCropper}
+  <Cropper bind:file={imageFile} onClose={closeCropper} onRemoveFile={removeImageFile} />
 {/if}

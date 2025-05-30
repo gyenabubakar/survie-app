@@ -1,67 +1,41 @@
 <script lang="ts">
-  import type { SubmitFunction } from '@sveltejs/kit';
-  import { Button, Input, Label } from 'shadcn-ui';
-  import { enhance } from '$app/forms';
-  import { browser } from '$app/environment';
-  import { PUBLIC_DOMAIN } from '$env/static/public';
-  import { companyFormFieldErrors, companyFormSchema } from '#lib/form-schemas/onboarding';
-  import { FormValidationError, UrlSlugInput, UserImageInput } from '#components';
-  import { Cropper } from '#components/cropper';
-  import { fieldIsValid } from '#lib/form-schemas/utils';
+import { zodClient } from 'sveltekit-superforms/adapters';
+import { PUBLIC_DOMAIN } from '$env/static/public';
+import * as Form from 'shadcn/form';
+import { Input } from 'shadcn/input';
+import { companyFormSchema } from '#features/onboarding/schemas';
+import { Button } from '#components';
+import { Cropper } from '#components/cropper';
+import { FormFieldErrors, UrlSlugInput, UserImageInput } from '#components/forms';
+import { SUPER_FORM_COMMON_OPTIONS } from '#lib/constants';
+import { createSuperForm } from '#lib/forms';
 
-  export let form;
+let { data } = $props();
 
-  let name = form?.data?.name ?? '';
-  let slug = form?.data?.slug ?? '';
-  let submitting = false;
-  let formElement: HTMLFormElement | undefined;
+const superForm = createSuperForm(data.form, {
+  validators: zodClient(companyFormSchema),
+  ...SUPER_FORM_COMMON_OPTIONS,
+  dataType: 'form',
+});
 
-  let fileInput: HTMLInputElement | undefined;
-  let imageFile: File | undefined;
-  let showImageCropper = false;
+const { form, submitting, enhance } = superForm;
 
-  $: nameIsValid = fieldIsValid(companyFormSchema, 'name', name);
-  $: slugIsValid = fieldIsValid(companyFormSchema, 'slug', slug);
-  $: canSubmitForm = !!nameIsValid && !!slugIsValid && !submitting;
+const isValidForm = $derived(companyFormSchema.safeParse($form).success);
 
-  function closeCropper(event: CustomEvent<File>) {
-    if (event.detail) imageFile = event.detail;
-    showImageCropper = false;
-  }
+let fileInput: HTMLInputElement | undefined = $state();
+let imageFile: File | undefined = $state();
+let showImageCropper = $state(false);
 
-  function removeImageFile() {
-    if (formElement) {
-      const input = formElement.imageFile as HTMLInputElement;
-      input.value = '';
-      imageFile = undefined;
-    }
-  }
+function closeCropper(file: File | null) {
+  if (file) imageFile = file;
+  showImageCropper = false;
+}
 
-  const submit: SubmitFunction = ({ cancel, formData }) => {
-    if (!canSubmitForm) return cancel();
-    submitting = true;
-
-    if (form?.validationErrors) form.validationErrors = null;
-
-    const file = formData.get('image') as File;
-
-    if (file instanceof File) {
-      if (file.size === 0) {
-        formData.delete('image');
-      } else if (imageFile) {
-        formData.set('image', imageFile);
-      }
-    }
-
-    return async ({ update }) => {
-      await update();
-      submitting = false;
-
-      if (form?.validationErrors?.image && fileInput) {
-        fileInput.value = '';
-      }
-    };
-  };
+function removeImageFile() {
+  if (!fileInput) return;
+  fileInput.value = '';
+  imageFile = undefined;
+}
 </script>
 
 <svelte:head>
@@ -76,74 +50,74 @@
   </p>
 
   <form
-    bind:this={formElement}
     method="post"
     autocomplete="off"
     enctype="multipart/form-data"
-    use:enhance={submit}
+    use:enhance
+    class="grid gap-3"
   >
-    <div class="form-group">
-      <Label for="company-name">Company name</Label>
-      <Input type="text" id="company-name" name="name" bind:value={name} required />
+    <Form.Field form={superForm} name="name">
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label>Company name</Form.Label>
+          <Input {...props} bind:value={$form.name} />
+        {/snippet}
+      </Form.Control>
+      <FormFieldErrors />
+    </Form.Field>
 
-      {#if nameIsValid === false || !!form?.validationErrors?.name}
-        {@const message = form?.validationErrors?.name ?? companyFormFieldErrors.name}
-        <FormValidationError {message} />
-      {/if}
-    </div>
+    <Form.Field form={superForm} name="slug" data-company-slug>
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label>URL slug</Form.Label>
+          <UrlSlugInput {...props} bind:value={$form.slug} />
+        {/snippet}
+      </Form.Control>
 
-    <div class="form-group">
-      <Label for="company-slug">URL slug</Label>
-      <UrlSlugInput
-        id="company-slug"
-        name="slug"
-        bind:value={slug}
-        domain={PUBLIC_DOMAIN}
-        required
-      />
-
-      {#if slugIsValid}
+      <FormFieldErrors>
         <span class="text-sm text-gray-400">
           Your company's URL will be <strong>
-            {PUBLIC_DOMAIN}/@<span class="text-black">{slug}</span>
+            {PUBLIC_DOMAIN}/@<span class="text-black">{$form.slug}</span>
           </strong>
         </span>
-      {/if}
+      </FormFieldErrors>
+    </Form.Field>
 
-      {#if slugIsValid === false || !!form?.validationErrors?.slug}
-        {@const message = form?.validationErrors?.slug ?? companyFormFieldErrors.slug}
-        <FormValidationError {message} />
-      {/if}
-    </div>
-
-    <div class="form-group">
-      <Label class="inline-block mb-4">Add your company icon (optional)</Label>
-      <UserImageInput
-        label="Upload your company icon."
-        bind:input={fileInput}
-        bind:file={imageFile}
-        on:edit={() => (showImageCropper = true)}
-      />
-
-      {#if !!form?.validationErrors?.image && imageFile}
-        {@const message = form?.validationErrors?.image ?? companyFormFieldErrors.image}
-        <FormValidationError {message} />
-      {/if}
-    </div>
+    <Form.Field form={superForm} name="image">
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label class="inline-block">Add your company icon (optional)</Form.Label>
+          <UserImageInput
+            {...props}
+            label="Upload your company icon."
+            bind:ref={fileInput}
+            bind:file={imageFile}
+            onEdit={() => (showImageCropper = true)}
+          />
+        {/snippet}
+      </Form.Control>
+      <FormFieldErrors />
+    </Form.Field>
 
     <Button
       type="submit"
       class="relative mt-4"
       style="width: max-content;"
-      disabled={!canSubmitForm}
-      loading={submitting}
-      aria-label={submitting ? 'Saving, please wait' : 'Continue'}
+      disabled={!isValidForm}
+      loading={$submitting}
+      aria-label={$submitting ? 'Saving, please wait' : 'Continue'}
     >
       Continue
     </Button>
   </form>
 </main>
 
-{#if browser && imageFile && showImageCropper}
-  <Cropper bind:file={imageFile} on:close={closeCropper} on:remove-file={removeImageFile} />
+{#if imageFile && showImageCropper}
+  <Cropper bind:file={imageFile} onClose={closeCropper} onRemoveFile={removeImageFile} />
 {/if}
+
+<style lang="postcss">
+:global([data-company-slug] [data-fs-field-errors]) {
+  @apply !mt-1;
+}
+</style>

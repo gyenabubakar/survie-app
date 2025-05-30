@@ -1,30 +1,24 @@
 <script lang="ts">
-  import type { SubmitFunction } from '@sveltejs/kit';
-  import { Label, Button, Input } from 'shadcn-ui';
-  import { enhance } from '$app/forms';
-  import { formFieldErrors, formSchema as schema } from '#lib/form-schemas/reset-password';
-  import { FormValidationError, FormMessage } from '#components';
-  import { fieldIsValid } from '#lib/form-schemas/utils';
+import { zodClient } from 'sveltekit-superforms/adapters';
+import * as Form from 'shadcn/form';
+import { Input } from 'shadcn/input';
+import { Label } from 'shadcn/label';
+import { forgotPasswordSchema } from '#features/auth/schemas';
+import { Button } from '#components';
+import { FormFieldErrors, FormMessage } from '#components/forms';
+import { SUPER_FORM_COMMON_OPTIONS } from '#lib/constants';
+import { createSuperForm } from '#lib/forms';
 
-  export let form;
+let { data } = $props();
 
-  let email = form?.data?.email ?? '';
-  let submitting = false;
+const superForm = createSuperForm(data.form, {
+  validators: zodClient(forgotPasswordSchema),
+  ...SUPER_FORM_COMMON_OPTIONS,
+});
 
-  $: emailIsValid = fieldIsValid(schema, 'email', email);
-  $: canSubmitForm = !!emailIsValid && !submitting;
+const { form, submitting, message, enhance } = superForm;
 
-  const handleSubmit: SubmitFunction = ({ cancel }) => {
-    if (!canSubmitForm) return cancel();
-    submitting = true;
-
-    if (form?.validationErrors) form.validationErrors = null;
-
-    return async ({ update }) => {
-      await update();
-      submitting = false;
-    };
-  };
+const isValidForm = $derived(forgotPasswordSchema.safeParse($form).success);
 </script>
 
 <svelte:head>
@@ -34,39 +28,35 @@
 <main>
   <h1>Reset Password</h1>
 
-  {#if form && 'error' in form}
-    <FormMessage>{form.error}</FormMessage>
-  {:else if form?.success}
+  {#if $message?.status === 'error'}
+    <FormMessage>{$message.text}</FormMessage>
+  {:else if $message?.status === 'success'}
     <FormMessage variant="success">
       We sent you an email to verify that it's you.<br />
       Follow the link in the email to reset your password.
     </FormMessage>
-  {/if}
-
-  {#if !form?.success}
-    <form method="post" use:enhance={handleSubmit}>
-      <div class="form-group">
-        <Label for="email">Email</Label>
-        <Input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="name@company.com"
-          bind:value={email}
-          required
-        />
-
-        {#if emailIsValid === false || !!form?.validationErrors?.email}
-          {@const message = form?.validationErrors?.email ?? formFieldErrors.email}
-          <FormValidationError {message} />
-        {/if}
-      </div>
+  {:else}
+    <form method="post" use:enhance class="grid gap-1">
+      <Form.Field form={superForm} name="email" class="form-group">
+        <Form.Control>
+          {#snippet children({ props })}
+            <Label>Email</Label>
+            <Input
+              {...props}
+              type="email"
+              placeholder="name@company.com"
+              bind:value={$form.email}
+            />
+          {/snippet}
+        </Form.Control>
+        <FormFieldErrors />
+      </Form.Field>
 
       <Button
         type="submit"
-        disabled={!canSubmitForm}
-        loading={submitting}
-        aria-label={!submitting
+        disabled={!isValidForm}
+        loading={$submitting}
+        aria-label={!$submitting
           ? 'Send verification email'
           : 'Sending verification email, please wait'}
       >
@@ -75,7 +65,7 @@
     </form>
   {/if}
 
-  <p class="text-slate-500 text-center mt-12">
+  <p class="mt-12 text-center text-slate-500">
     Back to <a href="/log-in">log in page</a>.
   </p>
 </main>

@@ -1,4 +1,56 @@
-# Ignore files for PNPM, NPM and YARN
+node_modules
+.husky
+
+# Output
+.output
+.vercel
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# IDE
+.idea
+
+# lock files
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
+bun.lockb
+
+# misc
+.prettierignore
+.eslintignore
+.gitignore
+.npmrc
+
+*.png
+*.jpg
+*.svg
+
+# misc
+static
+
+.gitkeep
+
+*.toml
+
+*.sql
+
+.dockerignore
+Dockerfile
+fly.toml
+
+src/lib/server/drizzle/schema.ts
+src/lib/server/drizzle/relations.ts
+src/lib/server/drizzle/meta

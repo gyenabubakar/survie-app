@@ -1,0 +1,55 @@
+export default {
+  useTabs: false,
+  tabWidth: 2,
+  singleQuote: true,
+  trailingComma: 'all',
+  printWidth: 100,
+  plugins: [
+    'prettier-plugin-svelte',
+    'prettier-plugin-tailwindcss',
+    '@ianvs/prettier-plugin-sort-imports',
+  ],
+  overrides: [
+    {
+      files: '*.svelte',
+      options: {
+        parser: 'svelte',
+      },
+    },
+  ],
+  svelteSortOrder: 'options-scripts-markup-styles',
+  svelteAllowShorthand: true,
+  svelteIndentScriptAndStyle: false,
+  importOrder: [
+    '^svelte$',
+    '^svelte/.+$',
+    '^@sveltejs/.+',
+    '^bits-ui(/.+)?',
+    '<THIRD_PARTY_MODULES>',
+    '^\\$.+',
+    '<TYPES>^svelte(/.+)?',
+    '<TYPES>^@sveltejs/.+',
+    '<TYPES>^bits-ui(/.)+',
+    '<TYPES><THIRD_PARTY_MODULES>',
+    '<TYPES>^\\$.+',
+    '<TYPES>',
+
+    '^shadcn$',
+    'shadcn/(?!(utils(.(j|t)s)?)|(hooks(/.*)?)b).+',
+    'shadcn/hooks(/.*)?',
+    'shadcn/utils(.(j|t)s)?',
+    '<TYPES>^shadcn',
+
+    '^#features',
+    '^#components',
+    '^#lib',
+    '^#assets',
+    '<TYPES>^#features',
+    '<TYPES>^#components',
+    '<TYPES>^#lib',
+
+    '^[.]',
+    '<TYPES>^[.]',
+    '',
+  ],
+};

@@ -1,14 +1,17 @@
 {
-  "$schema": "https://shadcn-svelte.com/schema.json",
-  "style": "new-york",
+  "$schema": "https://next.shadcn-svelte.com/schema.json",
+  "style": "default",
   "tailwind": {
-    "config": "tailwind.config.js",
-    "css": "src/app.pcss",
+    "config": "tailwind.config.ts",
+    "css": "src/app.css",
     "baseColor": "slate"
   },
   "aliases": {
-    "components": "#components/shadcn",
-    "utils": "#components/shadcn/utils"
+    "components": "shadcn",
+    "utils": "shadcn/utils",
+    "ui": "shadcn",
+    "hooks": "shadcn/hooks"
   },
-  "typescript": true
+  "typescript": true,
+  "registry": "https://next.shadcn-svelte.com/registry"
 }

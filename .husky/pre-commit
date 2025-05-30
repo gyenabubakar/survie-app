@@ -8,10 +8,4 @@ if [ "$BRANCH" = "main" ]; then
   exit 1
 fi
 
-# run code quality checks
-npm run check
-npm run format
-npm run lint
-
-# stage the changes
-git add .
+bunx lint-staged@latest

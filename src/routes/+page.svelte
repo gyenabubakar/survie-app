@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { Button } from 'shadcn-ui/button';
+import { goto } from '$app/navigation';
+import { Button } from 'shadcn/button';
 </script>
 
-<Button on:click={() => goto('/sign-up')}>Sign up</Button>
+<Button onclick={() => goto('/sign-up')}>Sign up</Button>
